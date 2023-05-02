@@ -1,0 +1,9 @@
+data_dir: data/imdb_reviews_debug
+train_file: train
+test_file: test
+dev_file: dev
+text_column: text
+label_column: label
+file_format: jsonl
+nlp_task: CLS
+

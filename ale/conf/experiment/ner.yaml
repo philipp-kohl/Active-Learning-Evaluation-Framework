@@ -1,0 +1,6 @@
+initial_data_ratio: 0.1
+tracking_metrics: "['spans_sc_f']"
+step_size: 8000
+seeds: [42, 4711]
+
+

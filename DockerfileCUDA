@@ -1,0 +1,80 @@
+FROM nvidia/cuda:11.6.1-base-ubuntu18.04 as base
+
+ENV SOURCE_DIR=/app
+ENV POETRY_PATH=/etc/poetry
+
+ENV POETRY_VERSION=1.2.0b2
+
+LABEL maintainer="p.kohl@fh-aachen.de" \
+        name="MLFlow Active-Learning-Service" \
+        version="0.1.0"
+
+# Install python 3.8
+RUN : \
+    && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        software-properties-common \
+    && add-apt-repository -y ppa:deadsnakes \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        python3.8-venv \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && :
+
+RUN python3.8 -m venv /venv
+ENV PATH=/venv/bin:$PATH
+
+RUN apt-get update -y && \
+    apt-get dist-upgrade -y && \
+    apt-get install curl -y && \
+    apt-get install -y git wget && \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install miniconda
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py38_4.12.0-Linux-x86_64.sh -O ~/miniconda.sh && \
+     /bin/bash ~/miniconda.sh -b -p /opt/conda
+
+# Put conda in path so we can use conda activate
+ENV PATH=/opt/conda/bin:${PATH}
+
+RUN conda install -c conda-forge mamba
+
+COPY ale-cuda.yaml ale-cuda.yaml
+RUN mamba env create -f ale-cuda.yaml
+
+# Install poetry
+RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=${POETRY_PATH} python3 -
+
+ENV PATH="${POETRY_PATH}/bin:${PATH}"
+
+FROM base as dev
+
+COPY . ${SOURCE_DIR}/
+WORKDIR ${SOURCE_DIR}
+
+COPY ale ${SOURCE_DIR}/ale/
+
+RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
+
+FROM base as runtime
+
+RUN apt-get update -y && \
+    apt-get dist-upgrade -y && \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=dev ${SOURCE_DIR}/requirements.txt ${SOURCE_DIR}/
+
+RUN conda run --no-capture-output -n ale-cuda pip install -r ${SOURCE_DIR}/requirements.txt
+
+COPY ale/ ${SOURCE_DIR}/ale
+COPY pyproject.toml README.md ${SOURCE_DIR}/
+COPY spacy_config/ ${SOURCE_DIR}/spacy_config/
+COPY .git/ ${SOURCE_DIR}/.git/
+
+RUN conda run --no-capture-output -n ale-cuda pip install -e ${SOURCE_DIR}
+
+#lokal klappt die übergabe durch -P, hier allerdings nicht.
+WORKDIR ${SOURCE_DIR}
+CMD ["conda", "run", "--no-capture-output", "-n", "ale-cuda", "python", "ale/main.py"]

@@ -1,0 +1,61 @@
+services:
+    mlflow-db:
+      image: postgres:15-alpine
+      restart: always
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=mlflowdb
+      ports:
+        - '5432:5432'
+      volumes:
+        - db:/var/lib/postgresql/data
+
+    mlflow-artifact-server:
+      command: server /data --console-address ":9001"
+      environment:
+        MINIO_ROOT_USER: "minio_id"
+        MINIO_ROOT_PASSWORD: "minio_key"
+      image: quay.io/minio/minio:latest
+      ports:
+        - '9000:9000'
+        - '9001:9001'
+      volumes:
+        - minio:/data
+
+    create-buckets:
+      image: minio/mc
+      depends_on:
+        - mlflow-artifact-server
+      entrypoint: >
+        /bin/sh -c "
+        /usr/bin/mc alias set myminio http://mlflow-artifact-server:9000 minio_id minio_key;
+        /usr/bin/mc mb myminio/mlflow;
+        /usr/bin/mc policy set public myminio/mlflow;
+        exit 0;"
+
+    mlflow-tracking-server:
+      build:
+        context: mlflow-server
+        dockerfile: Dockerfile
+      command:
+        - --backend-store-uri=postgresql://postgres:postgres@mlflow-db:5432/mlflowdb
+        - --artifacts-destination=s3://mlflow/mlflow-artifacts
+        - --serve-artifacts
+        - --host=0.0.0.0
+        - --port=5000
+      volumes:
+        - mlflow:/home/mlflow/
+      ports:
+        - 5000:5000
+      depends_on:
+        - mlflow-db
+        - create-buckets
+      environment:
+        MLFLOW_S3_ENDPOINT_URL: http://mlflow-artifact-server:9000
+        AWS_ACCESS_KEY_ID: "minio_id"
+        AWS_SECRET_ACCESS_KEY: "minio_key"
+volumes:
+  db:
+  minio:
+  mlflow:

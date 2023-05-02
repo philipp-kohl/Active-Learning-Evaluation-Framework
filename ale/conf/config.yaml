@@ -1,0 +1,10 @@
+defaults:
+  - data: trec_coarse
+  - teacher: k_means
+  - trainer: spacy_cls
+  - mlflow: localhost
+  - experiment: cls
+  - converter: spacy
+  - technical: default
+  - override hydra/job_logging: custom
+  - override hydra/hydra_logging: custom

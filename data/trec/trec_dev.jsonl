@@ -1,0 +1,546 @@
+{"text":"Where is Poe 's birthplace ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"How you can raise your IQ ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What multitalented Academy-award-winning director failed a college course in motion-picture production ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the lens behind the iris in the eye called ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"Where 's the GUM department store ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What country 's northernmost city is Darwin ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"What is `` snoogans '' ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What Texas surgeon performed the first artificial heart transplant ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What penalty space lies between Baltic Avenue and Reading Railroad on a Monopoly board ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"How did the jack-o '-lantern get it 's name ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"Who invented the lawnmower ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What city is wiener schnitzel named for ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What is the origin of the name Katie ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"How do I love thee ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What cancer is commonly associated with AIDS ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"What is D.B. Cooper known for ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"What was a California prayer book to an Old West gambler ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What is the longest river in the United States ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is a fear of being cold ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"How many varieties of twins are there ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What is a serigraph ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the largest city in the world ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What European capital celebrated its 2 , 000th anniversary in 1951 ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What is form drag ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"How does Cos Cob , CT get its name ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"Which Ventura County police department seized the largest cocaine shipment in it 's history ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"How do clouds form ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What does R.E.M. stand for , as in the rock group R.E.M. ?","coarse_label":"ABBR","fine_label":"ABBR-exp"}
+{"text":"Who were the Yankee 's frequent enemies ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"How many hands does Bjorn Borg use when hitting his forehand ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What was the sister ship of the Olympic ?","coarse_label":"ENTY","fine_label":"ENTY-veh"}
+{"text":"What historical event happened in Dogtown in 1899 ?","coarse_label":"ENTY","fine_label":"ENTY-event"}
+{"text":"Which of the five senses develops first ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"How many quarters equal a pound ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What are the major differences in the Catholic and Methodist religions ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"Who is the director and editor of the movie Big starring Tom Hanks ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the abbreviation of the company name ` General Motors ' ?","coarse_label":"ABBR","fine_label":"ABBR-abb"}
+{"text":"What knighted actor narrates TV 's The World at War ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How many letters appear with the numbers 2 to 9 on a telephone dial ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Which is the best opening move in chess ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What is DEET ?","coarse_label":"ABBR","fine_label":"ABBR-exp"}
+{"text":"What fast food is prepared with a `` secret blend of 11 herbs and spices ? ''","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"What animal received royal assent as an emblem of Canada on March 24 , 1975 ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What plant has the largest seed ?","coarse_label":"ENTY","fine_label":"ENTY-plant"}
+{"text":"What are people doing to help prevent the extinction of birds ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What are the 7 principles of learning from the Institute for Research on Learning , IRL ?","coarse_label":"ENTY","fine_label":"ENTY-techmeth"}
+{"text":"How many rings are there on a five-zone archery target ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What was the verdict in the trial of Lizzie Borden ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What is usenet for the Internet ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"How many people died because of a smoking problem in 1997 ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What are the five richest countries in the world ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"How long does James Bond like his eggs boiled ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"What color is an Arctic fox in winter ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"What is one of the languages spoken by the Sioux called ?","coarse_label":"ENTY","fine_label":"ENTY-lang"}
+{"text":"What New York Yankee was known as The Iron Horse ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What does Nicholas Cage do for a living ?","coarse_label":"HUM","fine_label":"HUM-title"}
+{"text":"What German city do Italians call The Monaco of Bavaria ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What country is Mount Everest in ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"Who played Sally Rogers on The Dick Van Dyke Show ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How do I get a complete list of all the people that are living with the last name Kilvington ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What 's the home of the Rockettes ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What do Hank Aaron , Jimmy Stewart , and Howard K. Smith have in common ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What is the definition of a cascade ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What 's new in the postal world in 1999 ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What Pope inaugurated Vatican International Radio ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How many layers does a bottle of Yoo-Hoo settle into ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What is hydrogen ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Name the organization that is presided by a Security Council .","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What do ladybugs eat ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"What is the name of the American literary era that includes 1896 ?","coarse_label":"ENTY","fine_label":"ENTY-event"}
+{"text":"What does a heliologist study ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"How can I get a CCT diagram ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What is a person called that likes fire ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What famous actress made her first appearance on stage at the age of five in the year 191 as `` Baby '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What star-faring race brought about the Inhumans on Marvel 's Earth ?","coarse_label":"ENTY","fine_label":"ENTY-sport"}
+{"text":"How many Grammys did Michael Jackson win in 1983 ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"How many Superbowls have the ers won ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What are the Greek numerals ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What 's the No. 1 killer in industrialized countries ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"Where did Honecker rule ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is the most popular last name ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Which city in Canada is the least-populated ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"Who invented the fax machine ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Name a flying mammal .","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What department store heir is responsible for raising a three-ton safe from the underwater wreckage of the Andrea Doria ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Where can I find a tape or book to help me say , write and understand Japanese ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What city gained renown for its pea-soup fogs ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What is chromatology ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Where is Trinidad ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is the fastest fish in the world ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What are the 10 plagues of Egypt ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"What was the rallying cry of the early American revolutionaries ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What is the origin of the ethnic category `` caucasian '' ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"Name a film in which Jude Law acted .","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What are a baseball team 's firemen ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the origin of the word , magic ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What constitutes an adult ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What brand of jeans did Calvin Klein admit in a 1984 interview he felt more comfortable wearing ?","coarse_label":"ENTY","fine_label":"ENTY-product"}
+{"text":"What problems contributed to the high failure rate of Plains farmers in the 1800s ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"What is the name of Joan Jett 's band ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"When was the first railroad from the east coast to the west coast completed ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What prison is found in Ossining , New York ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Where did the real St. Nicholas live ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What countries have the best math students ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"What makes Black Hills , South Dakota a tourist attraction ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"What literary classic centers on the search for a treasure in gold worth 7 , 0 pounds ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What is a storm surge ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What Russian novel embracing more the 5 characters is set in the Napoleonic Wars ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"How do you clean up a cache ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"How far do you have to run if you hit a home run ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"What did John F. Kennedy consider his greatest blunder in office ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What is IOC an abbreviation of ?","coarse_label":"ABBR","fine_label":"ABBR-exp"}
+{"text":"How do telephones work ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"Why are there letters on the telephone ? Why are there no Q or Z ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"What is troilism ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the shape of a football as stated in the NFL rulebook ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"In what year did Ireland elect its first woman president ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Who was Thucydides ?","coarse_label":"HUM","fine_label":"HUM-desc"}
+{"text":"What is infomatics ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What does a polyorchid man have at least three of ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"Where was chop suey invented ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is a fear of slime ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"When does menstruation begin ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What foods contain vitamin B12 ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"What is chronic constipation a symptom of ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"Name an American made motorcycle .","coarse_label":"ENTY","fine_label":"ENTY-veh"}
+{"text":"Mississippi is nicknamed what ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"How can you be happy ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What U.S. President had brothers-in-law in the Confederate army ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How do you get bubblegum out of carpet ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"Who was Quetzalcoatl ?","coarse_label":"HUM","fine_label":"HUM-desc"}
+{"text":"What sign is the best love match for a horoscope sign ?","coarse_label":"ENTY","fine_label":"ENTY-symbol"}
+{"text":"What is the state nickname of Mississippi ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"What auto race was Wilbur Reed the first to win three times ?","coarse_label":"ENTY","fine_label":"ENTY-sport"}
+{"text":"What is the origin of the term `` buffalo wings '' that is used as a menu item in bars across the nation for chicken wings in a spicey sauce ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"Who invented `` The Muppets '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What National League baseball team employed 72 third baseemen in its first 2 seasons ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Which mayonnaise refers to itself as `` real '' mayonnaise ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"When did the Jurassic Period end ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is being done about the millennium bug ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is Drew Barrymore 's middle name ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What trade did the 15th and 16th century Portuguese hope to control between Asia and Europe ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What river does the Grand Coulee Dam dam ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What 's the most popular form of gambling with women in Las Vegas ?","coarse_label":"ENTY","fine_label":"ENTY-sport"}
+{"text":"What landmark Italian restaurant can be found at 239 West 48th Street , New York City ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who was the girl in Peter Sellers 's soup ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Who was the prophet of the Muslim people ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What animals did The Amazing Three masquerade as ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What is Cabarnet Sauvignon ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What American won the world Grand Prix driving championship in 1978 ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What instrument does Benny Carter play ?","coarse_label":"ENTY","fine_label":"ENTY-instru"}
+{"text":"What were the first frozen foods ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"Who was the first woman golfer to earn a million ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How many events make up the decathlon ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Who was Israel 's first prime minister ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What American naval officer broke Japan 's isolationist policy in 1853 ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What web sites are linked to the Report on Genesis Eldercare ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who invented the Wonderbra ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Whose cupboard was bare ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What musical instrument did Prewitt play in James Jones 's From Here to Eternity ?","coarse_label":"ENTY","fine_label":"ENTY-instru"}
+{"text":"How many years did it take James Joyce to write Ulysses ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What terror of the sea did Johnny Horton sing about ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What is the mascot for Notre Dame University ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"When did CNN begin broadcasting ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Why did the world enter a global depression in 1929 ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"How many islands does Fiji have ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Who was the 1st U.S. President ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the name of a Salt Lake City newspaper ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"Who is the composer of `` Canon in D Major '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How many meters are in a mile ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What kind of suit did true hepcats wear in 1942 ?","coarse_label":"ENTY","fine_label":"ENTY-product"}
+{"text":"What television network flogged its sports programming on Inga Nielsen 's body in 197 ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Who was the inventor of the stove ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What fictional character is known as the `` melancholy Dane '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Whose special bear 's creator was born on January 18 , 1779 ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What 's known as The queen of Drinks ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"Who was Shakespeare 's Moorish general ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is Zionism ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is Boston Kreme ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"How many endangered species are there in the world ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What 1927 silent film received an international revival in 1981 ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What is prepared mustard ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What NFL team did Vince Lombardi end his coaching career with ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"How many real fruit juices are there in a can of Hawaiian Punch ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What does camera-ready art mean ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What harmful chemicals are in bug spray ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"What is the belt of low pressure around the equator called ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"Where can I find a lesson plan for teaching the metric system conversion to American standard ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who is the prime minister of Australia ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What 's the name of a hotel in Indianapolis ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is the oldest profession ?","coarse_label":"HUM","fine_label":"HUM-title"}
+{"text":"How many points is a bullseye worth in darts ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What continent is Bolivia on ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"When did President Kennedy , Lee Harvey Oswald , and Jack Ruby all die ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"When was the San Francisco fire ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What are the capital cities of the two large countries that occupy the Iberian peninsula in Europe ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"Why do recipe books recommend starting with cold water when you boil something ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"How long does it take the typical hen to lay 19 dozen eggs ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"What was Nine Tailors , the television show from 1974 , about ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What significant battle was fought in Belgium in 1815 ?","coarse_label":"ENTY","fine_label":"ENTY-event"}
+{"text":"What is the definition of cecum ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What incident of 1933 did the German Nazis use to justify emergency decrees , imprisoning opponents and vesting more power in themselves ?","coarse_label":"ENTY","fine_label":"ENTY-event"}
+{"text":"What book was F. Scott Fitzgerald working on when he died in Hollywood in 194 ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What was John F. Kennedy 's 1960 campaign song ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"How many grooves are on a dime ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Who was the first English circumnavigator of the globe ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What comedian was born Allen Stewart Konigsberg ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What color Poker chip is usually assigned the lowest value ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"What is humidity ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"How old was Gene Siskel ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"What is the name of Jamiroquai new album ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What type is a snail ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What is the virus HIV ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What age is Benny Carter ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"How many spears are there on Kenya 's flag ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Whose autobiography is titled Yes I Can ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What writer-journalist made his mark describing colorful Broadway and underworld characters ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How can I find online spelling ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"How can I call a friend in another country when I do not know the telephone number ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"Name the On Stage character whose face was never seen .","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What New York City landmark has 168 steps to its crown ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What age followed the Bronze Age ?","coarse_label":"ENTY","fine_label":"ENTY-event"}
+{"text":"What heavyweight boxer was known as The Wild Bull of the Pampas ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Who was the last woman executed in England ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"In what year did Thatcher become prime minister ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is the difference between a fruit and a vegetable ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What does it mean `` Rupee Depreciates '' ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who made the rotary engine automobile ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Independent silversmith 's account for what percentage of silver production ?","coarse_label":"NUM","fine_label":"NUM-perc"}
+{"text":"What 1966 boob tube bomb took astronauts back to prehistoric times ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What is a fear of money ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"Which leg does a cat move with its left front leg when walking - its left rear or right rear leg ?","coarse_label":"ENTY","fine_label":"ENTY-body"}
+{"text":"What is the Islamic counterpart to the Red Cross ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"What happened to Moon Maiden ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"Who are the two sons of Ozzie and Harriet Nelson ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What was the first Lifesaver flavor ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"What film had Bette Davis creating a scandal by wearing a daring red gown to a society ball ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What Hall of Fame pitcher started three World Series Games for the New York Yankees in 1962 ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is `` flintknapping '' ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What was the tallest building in America in 1922 ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What North American city would you visit to see Cleopatra 's Needle ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"Who were the four famous founders of United Artists ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What U.S. state borders Illinois to the north ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"What is the difference between hair and fur ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"Who is known as `` the world 's oldest teenager '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What powdered soft drink mix went into space ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"What is the frequency of VHF ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"What is the horsepower of the shuttle boosters ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"What is Bill Gross 's email address ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who discovered electricity ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What are three ways in which wind is created on the earth ?","coarse_label":"ENTY","fine_label":"ENTY-techmeth"}
+{"text":"How big is a quart ?","coarse_label":"NUM","fine_label":"NUM-volsize"}
+{"text":"What are the Valdez Principles ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is a Jellicle Cat ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What Vladimir Nabokov novel features Professor Humbert in love with a 12-year-old girl ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What is the high pitched sound that you hear in your ear every now and then , but then it goes away , after a while ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What is a fear of fish ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"How old is the Italian artist Maurizio Pellegrin ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"How many villi are found in the small intestine ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Name the various super-teams to which the Angel has belonged .","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"How many stars are there in Big Dipper ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"How do I start a web based business ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What organ contains the islands of Langerhans ?","coarse_label":"ENTY","fine_label":"ENTY-body"}
+{"text":"How many states have a lottery ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Which U.S. President is buried in Washington , D.C. ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the brand name of daminozide ?","coarse_label":"ENTY","fine_label":"ENTY-product"}
+{"text":"What city is served by Logan International Airport ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What 's the name of Jacques Cousteau 's research ship ?","coarse_label":"ENTY","fine_label":"ENTY-veh"}
+{"text":"Which college did Dikembe Mutombo play basketball at ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Who famously rode to warn the people of Massachusetts that the British were coming ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How many people died on South Carolina highways in 1998 ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"How many points are there on a Backgammon board ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What interesting method was used to run the credits in the early Popeye cartoons ?","coarse_label":"ENTY","fine_label":"ENTY-techmeth"}
+{"text":"Who are the Challengers of the Unknown ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What does Final Four refer to in the sports world ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"How long does a pig 's orgasm last ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"Name a female figure skater .","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Who is the owner of CNN ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is a fear of jealousy ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"What is the Pennsylvania state income tax rate ?","coarse_label":"NUM","fine_label":"NUM-perc"}
+{"text":"Who is the creator of `` The Muppets '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What mountain range marks the border of France and Spain ?","coarse_label":"LOC","fine_label":"LOC-mount"}
+{"text":"Where is the Virtual Desk Reference ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is a fear of cold ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"How many CDs has Garth Brooks sold ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What animals can live the longest without food ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What 's the green variety of beryl called ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"How do you stop junk snail mail ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What four tournaments make up tennis ' Grand Slam ?","coarse_label":"ENTY","fine_label":"ENTY-sport"}
+{"text":"Who created the character of Scrooge ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What famed clown appeared on an early Howdy Doody Show and insisted that Clarabell be made up as a real clown ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What 1956 Grace Metalious novel was on the best-seller list for two years ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What U.S. state has the second-longest coastline ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"What was the name of the Titanic 's captain ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What group was formed in 1969 after police met resistance from patrons at the Stonewall , a Greenwich Village gay bar ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What is the Peloponnesian League ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"How long would it take to get from Earth to Mars ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"How long should a person wash their hands before they are clean ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"How many liberty bells have there been ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"How many people visit the Pope each month ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What 's the name of the Tokyo Stock Exchange ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"Who was the only person convicted in the My Lai Massacre ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What 's the most commonly-spoken language in Belgium ?","coarse_label":"ENTY","fine_label":"ENTY-lang"}
+{"text":"What common plant has a button , cap , cup , gills , and ring ?","coarse_label":"ENTY","fine_label":"ENTY-plant"}
+{"text":"What international sport was originally called hurley ?","coarse_label":"ENTY","fine_label":"ENTY-sport"}
+{"text":"What device provided a new way to listen to music in 1963 ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"Who 's the only man to have won the Olympic decathlon twice ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the length of border between the Ukraine and Russia ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"What is the acreage of the Chappellet vineyard ?","coarse_label":"NUM","fine_label":"NUM-volsize"}
+{"text":"Where did the term `` 86ed '' come from ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What was the highest mountain on earth before Mount Everest was discovered ?","coarse_label":"LOC","fine_label":"LOC-mount"}
+{"text":"What is a fear of points ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"What Ivy League school plays its home games at Palmer Stadium ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Who said : `` What contemptible scoundrel stole the cork from my lunch ? ''","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How many questions do you have on your database ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What is the dot on an the letter i called ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"What is Megan 's law ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"When did Mount St. Helen last have a significant eruption ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What 's a perfect score in a gymnastics exercise ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"What is the best distance education university or college ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What soft drink held a national flavor poll in 1967 ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"How many children under 18 are victims of some sort of Physical Abuse each year ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Who was the first coach of the Cleveland Browns ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"When was John D. Rockefeller born ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What comic strip sometimes features a mailman named Beasley ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"How did ` stat ' come to be used as an expression for quickly ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What is a good book to read for people who hate to read ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"Who appointed the chair of the Federal Reserve ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the executor in a will ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What well-known actor is the father of star Alan Alda ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What did Louis Cartier invent for aviator Santos Dumont in 1940 ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What gaming devices were dubbed `` Mississippi marbles '' and `` Memphis dominoes '' ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What company 's trademark was His Master 's Voice ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Who was chairman of the Senate select committee that tried to get to the bottom of Watergate ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How much does it cost , average or whatever is available , to produce and send junk mail catalogues in the US ? , DT CD NN NN ,","coarse_label":"NUM","fine_label":"NUM-money"}
+{"text":"How far can you see ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"What series of trials followed World War II ?","coarse_label":"ENTY","fine_label":"ENTY-event"}
+{"text":"How many types of cheese are there in France ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Who played for the Chicago Bears , Houston Oilers and Oakland Raiders in a 26-year pro football career ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What do manatees eat ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"How many websites are there in the world ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"How many neurons are in the human brain ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What famed library can you reach by dialing 22-287-5 ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What cathedral was Thomas Becket murdered in ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What do the names Andrew and Christina mean ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What non-conformist abstract painter was dubbed Jack The Dripper by Time ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Who is the premier of China ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What kind of greeting is appropriate to send on Yom Kippur ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What country was Hitler the chancellor of ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"What are the stars made of ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"How can I easily remove red wine stains from t-shirts ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"When did the Carolingian period begin ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What was the name of the Confederate mounted guerrilla group with which Jesse James and Coleman Younger had ridden ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What is Srpska Krajina ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What English word contains the most letters ?","coarse_label":"ENTY","fine_label":"ENTY-word"}
+{"text":"How many colored squares are there on a Rubik 's Cube ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What TV character sired a horse named Thunder ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How do doctors diagnose bone cancer ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"How do vending machines tell if your dollar is a 1 or a 5 ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What 's the singular of dice ?","coarse_label":"ENTY","fine_label":"ENTY-word"}
+{"text":"What kind of animal is Babar ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What volcano showers ash on Sicily ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is President Nixon 's birthdate ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Who says , `` If you don 't look good , we don 't look good '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What playing card symbolizes death ?","coarse_label":"ENTY","fine_label":"ENTY-symbol"}
+{"text":"What is a hyperlink ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Why do heavier objects travel downhill faster ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"Where is the largest post office building in the world ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who directed The Wild Bunch ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What 's the literary term for a play on words ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"Which breakfast cereal brought you `` the best each morning '' ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"Who was the only U.S. President to wear a Nazi uniform ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What does an average daycare provider get paid in New England ?","coarse_label":"NUM","fine_label":"NUM-money"}
+{"text":"What do I have to do to get good grades in school ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What is widely used to detect birth defects ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What city was Martin Luther King Jr. assassinated in ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"Which king signed the Magna Carta ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Who wrote The Collector ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What are the statistics for drunken drivers in Maryland ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"What seven digits follow the area code in the number for long distance information ?","coarse_label":"NUM","fine_label":"NUM-code"}
+{"text":"What keeps clouds in the air ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"Who said , `` I shall return . '' during World War Two ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"When was Microsoft established ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Where did marijuana come from ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What TV series featured Neal , a martini-drinking St. Bernard ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What comedian has a legendary reputation for stealing jokes ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What are the words to `` My Way '' written by Paul Anka ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"How do you find oxidation numbers ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What robust U.S. President imported his own instructor after seeing a judo match ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What are the names of all the seas in the world and what ocean do they drain into ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Which country is known as `` Big Bear '' ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"What was the importance of Magellan ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What two South American countries do n't border Brazil ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"When does the average teenager first have intercourse ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What Nantucket shipwreck killed more divers exploring it than the 52 people it sank with ?","coarse_label":"ENTY","fine_label":"ENTY-veh"}
+{"text":"What state in the United States covers the largest area ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"What was the first TV set to include a remote control ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"How do you box train a cat ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What civilization invented the arch ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Who killed Kurt Cobain ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What planet would you visit to see Bebrenia , Arcadia , and Amazonis ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What molecules include fluorine , sodium and magnesium ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"What effect does LSD have on the brain ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What state produces the best lobster to eat ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"Where did Woodstock take place ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is the size of the student body at the University of Massachusetts in Amherst ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"Who was Hitler 's minister of propaganda ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What are the side effects of mevacor ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What was the occupation of Mandy Rice-Davies ?","coarse_label":"HUM","fine_label":"HUM-title"}
+{"text":"In what sport are these following numbers relevant : 118 , 126 , 134 , 142 , 15 , 158 , 167 , 177 , and 19 ?","coarse_label":"ENTY","fine_label":"ENTY-sport"}
+{"text":"Who said of Super Bowl III in 1969 : `` We 'll win- I guarantee it '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What hockey team did Wayne Gretzky play for ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Who is the father of the computer ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"In the song `` Yankee Doodle , '' why did Yankee Doodle stick a feather in his cap and call it macaroni ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"What is a firewall ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What double talking `` professor '' holds a doctorate in Nothing ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What 's the fifth-largest country in the world ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"What 's the population of Mississippi ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"What did Dan Aykroyd and John Belushi quit Saturday Night Live to become ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"How many miles is it from London , England to Plymouth , England ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Which drug is commonly used to treat AIDS ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"What British general surrendered to the colonial army at Saratoga ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How is energy created ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What was the name of the cook on Rawhide ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is Judy Garland 's date of birth ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"How can you tell if someone is lying ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What was the non-fiction best-seller of 1952 , 1953 and 1954 ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"Why is Rush 's 2112 called 2112 ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"Who made the largest cocaine seizure in Ventura County history ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Who was the famous door-to-door brush salesman ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What country has the most time zones , with 11 ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"How does a rainbow form ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What is Olestra ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"How can I find out my Moon sign ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What does the River Seine empty into ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"How many sides does a heptagon have ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What is the present Pope named ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What poem contains the line , `` grow old with me the best is yet to be '' .","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What did San Francisco 's Milt Harper grow that measured 24 inches from tip to tip in 1974 ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What is the design of the ship Titanic ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What is the meaning of caliente , in English , ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What college football team did Knute Rockne build into a power ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"How many people in Tucson ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What are the two largest birds on earth ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"Name a band which was famous in the 1960 's .","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Who invented the game bowling ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What was the worst hurricane ?","coarse_label":"ENTY","fine_label":"ENTY-event"}
+{"text":"Who shot Lee Harvey Oswald ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How do you select wine ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What six-foot temperance advocate wielded her hatchet on saloons ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What basketball player is credited with 23 , 924 rebounds ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Which of these are authors ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"On which flight did Fawaz Younis commit air piracy and hostage taking ?","coarse_label":"ENTY","fine_label":"ENTY-veh"}
+{"text":"Where do chihuahuas come from ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"How many square feet is Bill Gates ' home ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What U.S. general was court-martialled for criticizing American air power ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What province is Edmonton located in ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"What line of luggage is named after a famous American flier ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What bay divides Maryland 's Eastern and Western Shores ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who is Desmond Tutu ?","coarse_label":"HUM","fine_label":"HUM-desc"}
+{"text":"What color beans did the ancient Romans refuse to eat ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"How did Super President gain his powers on the animated series ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What lake is Sheboygan on ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Name the four stories contained in Edith Wharton 's `` Old New York . ''","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"Jude Law acted in which film ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What are the ingredients of Coca-Cola ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"What arch can you see from the Place de la Concorde ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What government department did The Untouchables work for ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What is the origin of blue for boys and pink for girls ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What Polynesian people inhabit New Zealand ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Who portrayed Carl Bernstein in All the President 's Men ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Who invented the Moog Synthesizer ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Where are the busiest Amtrak rail stations in the U.S. ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"How do I start a bank ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"How does a scientific calculator work ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What whisky is `` known by the company it keeps '' ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"What is the chance of conceiving quadruplets ?","coarse_label":"NUM","fine_label":"NUM-perc"}
+{"text":"Who created Big Ben ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What 's a water funnel ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What London museum features a Chamber of Horrors ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"How many countries watch MTV Europe ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What amount of folic acid should an expectant mother take daily ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"How many small businesses are there in the U.S .","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"How many years is Johnnie Walker Black Label aged ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What country is the biggest producer of tungsten ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"What is `` the airline built for professional travelers '' ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Who is the son-in-law of Sen. Everett Dirkson who was also a senator in the '70 's ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What ratio of children of ages between two and eleven watch ` The Simpsons ' ?","coarse_label":"NUM","fine_label":"NUM-perc"}
+{"text":"When was Queen Victoria born ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Who made the first surfboard ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What are the ten safest American cities for pedestrians ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"How many degrees cooler is the inside of a cucumber than the air outside ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"How old is Jeremy Piven ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"How many milliseconds in a second ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What London street is the home of British journalism ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What Michelangelo sculpture is in Saint Peter 's Cathedral , Basilica , ?","coarse_label":"ENTY","fine_label":"ENTY-cremat"}
+{"text":"What product did Robert Conrad dare people to knock off his shoulder ?","coarse_label":"ENTY","fine_label":"ENTY-product"}
+{"text":"What university fired Angela Davis ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What is LMDS ?","coarse_label":"ABBR","fine_label":"ABBR-exp"}
+{"text":"What author of the Days of Our Lives Cookbook signed on in 198 as Liz Chandler in TV 's Days of Our Lives ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Why do we have to go to school ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"Name the scar-faced bounty hunter of The Old West .","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How many hearts does an octopus have ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What is `` the only cigarette made with no leftovers '' ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What is the chromosome number of an elephant ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Why are there no white lines on pro footballs ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"By how much will the California state gas tax rise by the year 2000 ?","coarse_label":"NUM","fine_label":"NUM-money"}
+{"text":"Where is Tornado Alley ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is e-commerce ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Kosovo is a province of what country ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"Give a reason for American Indians oftentimes dropping out of school .","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"What 's the largest U.S. city on the Great Lakes ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What 's the third month of the Gregorian calendar ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Who is Dear Abby ?","coarse_label":"HUM","fine_label":"HUM-desc"}
+{"text":"What actress 's autobiography is titled Shelley : Also Known as Shirley ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What are the different approaches of systems analysis ?","coarse_label":"ENTY","fine_label":"ENTY-techmeth"}
+{"text":"Who made the first airplane that could fly ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What is the Hub of London ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Which airplane did Fawaz Younis hijack ?","coarse_label":"ENTY","fine_label":"ENTY-veh"}
+{"text":"How does a bill become law ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What Pope inaugurated Vatican International Radio ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What Honeymooners actress did Television magazine name as 1953 's most promising star ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is a fear of passing high objects ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"What Chilean president was killed in a 1973 coup d 'etat ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What was the first Funk 'N Lata , Brazilian group , success ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What famous New York City mayor wrote the hit song , `` Will You Love Me in December as You Do in May ? ''","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"In what year was the movie the Ten Commandments released ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What was the role of the Medieval Guild ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the name of the dog on the Cracker Jack box ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What English word has the most letters ?","coarse_label":"ENTY","fine_label":"ENTY-word"}
+{"text":"Who invented basketball ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What causes asthma ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"Why can 't you taste anything when you have a cold ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"How many sides does an obelisk have ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What Cruise Line does Kathie Lee Gifford advertise for ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"How do plants make food ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"Who was Jinnah ?","coarse_label":"HUM","fine_label":"HUM-desc"}
+{"text":"Where is the Mayo Clinic ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What president kissed the Queen Mother on the lips ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Who was the oldest U.S. president ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How much money does a back injury lawsuit get ?","coarse_label":"NUM","fine_label":"NUM-money"}
+{"text":"What is the most heavily caffeinated soft drink ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"When was `` the Great Depression '' ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is a transistor ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What explosive do you get by mixing charcoal , sulfur and saltpeter ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"Mississippi has what name for a state nickname ?","coarse_label":"LOC","fine_label":"LOC-state"}
