@@ -16,8 +16,7 @@ Provides features:
 - **Reproducible**: Tracking parameters, models, git revision enables reproducible research
 - Simulation with **different seeds**: to avoid "lucky punches" and inspect model's and strategy's stability
 - Arbitrary usage of **datasets**
-- Arbitrary usage of **ML/DL framework**: we inspect the NLP domain, and therefore we provide a [spaCy](https://spacy.io/)
-- implementation.
+- Arbitrary usage of **ML/DL framework**: we inspect the NLP domain, and therefore we provide a [spaCy](https://spacy.io/) implementation.
 - Experiment with **cold start phase**: analog to the active learning strategy, the framework enables researcher to test
   strategies to select the first data increment.
 - **Parallel computation**: different experiments can be run in parallel and report the results to a central MLFlow instance.
