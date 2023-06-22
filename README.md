@@ -24,6 +24,10 @@ Provides features:
 
 ## Getting started
 
+Prerequisite:
+- [git](https://git-scm.com/)
+- [docker](https://www.docker.com/)
+
 Set up dependencies:
 
 ```
@@ -32,6 +36,8 @@ conda activate ale-cuda
 poetry config virtualenvs.create false --local
 poetry install
 ```
+
+If poetry complains about not finding any specific version, try `poetry update`.
 
 ### Prepare machine for docker GPU usage
 
@@ -44,19 +50,19 @@ docker run --rm --gpus all nvidia/cuda:11.6.2-base-ubuntu20.04 nvidia-smi
 
 ### Load Data
 
-Run [load_conll](ale/data/huggingface_load_dataset_conll.py) and store the files in the data directory.
+Run [load_conll](ale/data/huggingface_load_dataset_conll.py) and store the files in the data directory (data/conll2003).
 
 
 ## Run ALE locally:
 
 ```bash
-python ale/main.py
+mlflow ui
 ```
 
 And in another terminal:
 
 ```bash
-mlflow ui
+python ale/main.py
 ```
 
 ## Start Your Experiments with Docker
@@ -75,10 +81,11 @@ docker build -f DockerfileCUDA -t ale-cuda .
 
 3. Start your experiment:
 
+Please replace `</absolute/path/to/your/data/folder>` with your data folder path in the following command:
 ```
 docker run -it --network host \
 --gpus '"device=0"' \
--v /absolute/path/to/your/data/folder:/app/data/ \
+-v </absolute/path/to/your/data/folder>:/app/data/ \
 ale-cuda \
 conda run --no-capture-output -n ale-cuda python ale/main.py teacher=randomizer mlflow.experiment_name=randomizer mlflow.url=http://localhost:5000
 ```

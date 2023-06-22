@@ -274,3 +274,4 @@ outputs/
 .vscode/**/**
 /mlruns.db
 /mlartifacts/
+/data/conll2003/
