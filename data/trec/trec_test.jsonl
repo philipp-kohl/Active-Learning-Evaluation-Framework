@@ -1,0 +1,500 @@
+{"text":"How far is it from Denver to Aspen ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"What county is Modesto , California in ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"Who was Galileo ?","coarse_label":"HUM","fine_label":"HUM-desc"}
+{"text":"What is an atom ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"When did Hawaii become a state ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"How tall is the Sears Building ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"George Bush purchased a small interest in which baseball team ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What is Australia 's national flower ?","coarse_label":"ENTY","fine_label":"ENTY-plant"}
+{"text":"Why does the moon turn orange ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"What is autism ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What city had a world fair in 1900 ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What person 's head is on a dime ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the average weight of a Yellow Labrador ?","coarse_label":"NUM","fine_label":"NUM-weight"}
+{"text":"Who was the first man to fly across the Pacific Ocean ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"When did Idaho become a state ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is the life expectancy for crickets ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"What metal has the highest melting point ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"Who developed the vaccination against polio ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is epilepsy ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What year did the Titanic sink ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Who was the first American to walk in space ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is a biosphere ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What river in the US is known as the Big Muddy ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is bipolar disorder ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is cholesterol ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who developed the Macintosh computer ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is caffeine ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What imaginary line is halfway between the North and South Poles ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Where is John Wayne airport ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What hemisphere is the Philippines in ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is the average speed of the horses at the Kentucky Derby ?","coarse_label":"NUM","fine_label":"NUM-speed"}
+{"text":"Where are the Rocky Mountains ?","coarse_label":"LOC","fine_label":"LOC-mount"}
+{"text":"What are invertebrates ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the temperature at the center of the earth ?","coarse_label":"NUM","fine_label":"NUM-temp"}
+{"text":"When did John F. Kennedy get elected as President ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"How old was Elvis Presley when he died ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"Where is the Orinoco River ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"How far is the service line from the net in tennis ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"How much fiber should you have per day ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"How many Great Lakes are there ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Material called linen is made from what plant ?","coarse_label":"ENTY","fine_label":"ENTY-plant"}
+{"text":"What is Teflon ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is amitriptyline ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is a shaman ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the proper name for a female walrus ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What is a group of turkeys called ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"How long did Rip Van Winkle sleep ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"What are triglycerides ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"How many liters in a gallon ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What is the name of the chocolate company in San Francisco ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What are amphibians ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who discovered x-rays ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Which comedian 's signature line is `` Can we talk '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is fibromyalgia ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is done with worn or outdated flags ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What does cc in engines mean ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"When did Elvis Presley die ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is the capital of Yugoslavia ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"Where is Milan ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What is the speed hummingbirds fly ?","coarse_label":"NUM","fine_label":"NUM-speed"}
+{"text":"What is the oldest city in the United States ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What was W.C. Fields ' real name ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What river flows between Fargo , North Dakota and Moorhead , Minnesota ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What do bats eat ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"What state did the Battle of Bighorn take place in ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"Who was Abraham Lincoln ?","coarse_label":"HUM","fine_label":"HUM-desc"}
+{"text":"What do you call a newborn kangaroo ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"What are spider veins ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What day and month did John Lennon die ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What strait separates North America from Asia ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is the population of Seattle ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"How much was a ticket for the Titanic ?","coarse_label":"NUM","fine_label":"NUM-money"}
+{"text":"What is the largest city in the world ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What American composer wrote the music for `` West Side Story '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Where is the Mall of the America ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is the pH scale ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What type of currency is used in Australia ?","coarse_label":"ENTY","fine_label":"ENTY-currency"}
+{"text":"How tall is the Gateway Arch in St. Louis , MO ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"How much does the human adult female brain weigh ?","coarse_label":"NUM","fine_label":"NUM-weight"}
+{"text":"Who was the first governor of Alaska ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is a prism ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"When was the first liver transplant ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Who was elected president of South Africa in 1994 ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the population of China ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"When was Rosa Parks born ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Why is a ladybug helpful ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"What is amoxicillin ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who was the first female United States Representative ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What are xerophytes ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What country did Ponce de Leon come from ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"The U.S. Department of Treasury first issued paper currency for the U.S. during which war ?","coarse_label":"ENTY","fine_label":"ENTY-event"}
+{"text":"What is desktop publishing ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the temperature of the sun 's surface ?","coarse_label":"NUM","fine_label":"NUM-temp"}
+{"text":"What year did Canada join the United Nations ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is the oldest university in the US ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"Where is Prince Edward Island ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Mercury , what year was it discovered ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is cryogenics ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What are coral reefs ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the longest major league baseball-winning streak ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What is neurology ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who invented the calculator ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How do you measure earthquakes ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"Who is Duke Ellington ?","coarse_label":"HUM","fine_label":"HUM-desc"}
+{"text":"What county is Phoenix , AZ in ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What is a micron ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"The sun 's core , what is the temperature ?","coarse_label":"NUM","fine_label":"NUM-temp"}
+{"text":"What is the Ohio state bird ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"When were William Shakespeare 's twins born ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is the highest dam in the U.S. ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What color is a poison arrow frog ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"What is acupuncture ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the length of the coastline of the state of Alaska ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"What is the name of Neil Armstrong 's wife ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is Hawaii 's state flower ?","coarse_label":"ENTY","fine_label":"ENTY-plant"}
+{"text":"Who won Ms. American in 1989 ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"When did the Hindenberg crash ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What mineral helps prevent osteoporosis ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"What was the last year that the Chicago Cubs won the World Series ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Where is Perth ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What year did WWII begin ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is the diameter of a golf ball ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"What is an eclipse ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who discovered America ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the earth 's diameter ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"Which president was unmarried ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How wide is the Milky Way galaxy ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"During which season do most thunderstorms occur ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is Wimbledon ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the gestation period for a cat ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"How far is a nautical mile ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"Who was the abolitionist who led the raid on Harper 's Ferry in 1859 ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What does target heart rate mean ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What was the first satellite to go into space ?","coarse_label":"ENTY","fine_label":"ENTY-product"}
+{"text":"What is foreclosure ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the major fault line near Kentucky ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"Where is the Holland Tunnel ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who wrote the hymn `` Amazing Grace '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What position did Willie Davis play in baseball ?","coarse_label":"HUM","fine_label":"HUM-title"}
+{"text":"What are platelets ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is severance pay ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the name of Roy Roger 's dog ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"Where are the National Archives ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is a baby turkey called ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What is poliomyelitis ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the longest bone in the human body ?","coarse_label":"ENTY","fine_label":"ENTY-body"}
+{"text":"Who is a German philosopher ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What were Christopher Columbus ' three ships ?","coarse_label":"ENTY","fine_label":"ENTY-veh"}
+{"text":"What does Phi Beta Kappa mean ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is nicotine ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is another name for vitamin B1 ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"Who discovered radium ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What are sunspots ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"When was Algeria colonized ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What baseball team was the first to make numbers part of their uniform ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What continent is Egypt on ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is the capital of Mongolia ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What is nanotechnology ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"In the late 1700 's British convicts were used to populate which colony ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What state is the geographic center of the lower 48 states ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"What is an obtuse angle ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What are polymers ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"When is hurricane season in the Caribbean ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Where is the volcano Mauna Loa ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is another astronomic term for the Northern Lights ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"What peninsula is Spain part of ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"When was Lyndon B. Johnson born ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is acetaminophen ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What state has the least amount of rain per year ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"Who founded American Red Cross ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What year did the Milwaukee Braves become the Atlanta Braves ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"How fast is alcohol absorbed ?","coarse_label":"NUM","fine_label":"NUM-speed"}
+{"text":"When is the summer solstice ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is supernova ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Where is the Shawnee National Forest ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What U.S. state 's motto is `` Live free or Die '' ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"Where is the Lourve ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"When was the first stamp issued ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What primary colors do you mix to make orange ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"How far is Pluto from the sun ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"What body of water are the Canary Islands in ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is neuropathy ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Where is the Euphrates River ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is cryptography ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is natural gas composed of ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"Who is the Prime Minister of Canada ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What French ruler was defeated at the battle of Waterloo ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is leukemia ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Where did Howard Hughes die ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is the birthstone for June ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"What is the sales tax in Minnesota ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What is the distance in miles from the earth to the sun ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"What is the average life span for a chicken ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"When was the first Wal-Mart store opened ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is relative humidity ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What city has the zip code of 35824 ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What currency is used in Algeria ?","coarse_label":"ENTY","fine_label":"ENTY-currency"}
+{"text":"Who invented the hula hoop ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What was the most popular toy in 1957 ?","coarse_label":"ENTY","fine_label":"ENTY-product"}
+{"text":"What is pastrami made of ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"What is the name of the satellite that the Soviet Union sent into space in 1957 ?","coarse_label":"ENTY","fine_label":"ENTY-product"}
+{"text":"What city 's newspaper is called `` The Enquirer '' ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"Who invented the slinky ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What are the animals that don 't have backbones called ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What is the melting point of copper ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"Where is the volcano Olympus Mons located ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who was the 23rd president of the United States ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the average body temperature ?","coarse_label":"NUM","fine_label":"NUM-temp"}
+{"text":"What does a defibrillator do ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What is the effect of acid rain ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What year did the United States abolish the draft ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"How fast is the speed of light ?","coarse_label":"NUM","fine_label":"NUM-speed"}
+{"text":"What province is Montreal in ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"What New York City structure is also known as the Twin Towers ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is fungus ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the most frequently spoken language in the Netherlands ?","coarse_label":"ENTY","fine_label":"ENTY-lang"}
+{"text":"What is sodium chloride ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What are the spots on dominoes called ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"How many pounds in a ton ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What is influenza ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is ozone depletion ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What year was the Mona Lisa painted ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What does `` Sitting Shiva '' mean ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the electrical output in Madrid , Spain ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"Which mountain range in North America stretches from Maine to Georgia ?","coarse_label":"LOC","fine_label":"LOC-mount"}
+{"text":"What is plastic made of ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"What is the population of Nigeria ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"What does your spleen do ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"Where is the Grand Canyon ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who invented the telephone ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What year did the U.S. buy Alaska ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is the name of the leader of Ireland ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is phenylalanine ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"How many gallons of water are there in a cubic foot ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What are the two houses of the Legislative branch ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What is sonar ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"In Poland , where do most people live ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is phosphorus ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the location of the Sea of Tranquility ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"How fast is sound ?","coarse_label":"NUM","fine_label":"NUM-speed"}
+{"text":"What French province is cognac produced in ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"What is Valentine 's Day ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What causes gray hair ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"What is hypertension ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is bandwidth ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the longest suspension bridge in the U.S. ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is a parasite ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is home equity ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What do meteorologists do ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What is the criterion for being legally blind ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"Who is the tallest man in the world ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What are the twin cities ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What did Edward Binney and Howard Smith invent in 1903 ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What is the statue of liberty made of ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"What is pilates ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What planet is known as the `` red '' planet ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is the depth of the Nile river ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"What is the colorful Korean traditional dress called ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"What is Mardi Gras ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Mexican pesos are worth what in U.S. dollars ?","coarse_label":"NUM","fine_label":"NUM-money"}
+{"text":"Who was the first African American to play for the Brooklyn Dodgers ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Who was the first Prime Minister of Canada ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How many Admirals are there in the U.S. Navy ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What instrument did Glenn Miller play ?","coarse_label":"ENTY","fine_label":"ENTY-instru"}
+{"text":"How old was Joan of Arc when she died ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"What does the word fortnight mean ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is dianetics ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the capital of Ethiopia ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"For how long is an elephant pregnant ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"How did Janice Joplin die ?","coarse_label":"DESC","fine_label":"DESC-manner"}
+{"text":"What is the primary language in Iceland ?","coarse_label":"ENTY","fine_label":"ENTY-lang"}
+{"text":"What is the difference between AM radio stations and FM radio stations ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What is osteoporosis ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who was the first woman governor in the U.S. ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is peyote ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the esophagus used for ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"What is viscosity ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What year did Oklahoma become a state ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is the abbreviation for Texas ?","coarse_label":"ABBR","fine_label":"ABBR-abb"}
+{"text":"What is a mirror made out of ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"Where on the body is a mortarboard worn ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What was J.F.K. 's wife 's name ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What does I.V. stand for ?","coarse_label":"ABBR","fine_label":"ABBR-exp"}
+{"text":"What is the chunnel ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Where is Hitler buried ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What are antacids ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is pulmonary fibrosis ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What are Quaaludes ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is naproxen ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is strep throat ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the largest city in the U.S. ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What is foot and mouth disease ?","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"What is the life expectancy of a dollar bill ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"What do you call a professional map drawer ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"What are Aborigines ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is hybridization ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What color is indigo ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"How old do you have to be in order to rent a car in Italy ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"What does a barometer measure ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What color is a giraffe 's tongue ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"What does USPS stand for ?","coarse_label":"ABBR","fine_label":"ABBR-exp"}
+{"text":"What year did the NFL go on strike ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is solar wind ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What date did Neil Armstrong land on the moon ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"When was Hiroshima bombed ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Where is the Savannah River ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who was the first woman killed in the Vietnam War ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What planet has the strongest magnetic field of all the planets ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who is the governor of Alaska ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What year did Mussolini seize power in Italy ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is the capital of Persia ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"Where is the Eiffel Tower ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"How many hearts does an octopus have ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What is pneumonia ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the deepest lake in the US ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is a fuel cell ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who was the first U.S. president to appear on TV ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Where is the Little League Museum ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What are the two types of twins ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What is the brightest star ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is diabetes ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"When was President Kennedy shot ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is TMJ ?","coarse_label":"ABBR","fine_label":"ABBR-exp"}
+{"text":"What color is yak milk ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"What date was Dwight D. Eisenhower born ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What does the technical term ISDN mean ?","coarse_label":"ABBR","fine_label":"ABBR-exp"}
+{"text":"Why is the sun yellow ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"What is the conversion rate between dollars and pounds ?","coarse_label":"NUM","fine_label":"NUM-money"}
+{"text":"When was Abraham Lincoln born ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is the Milky Way ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is mold ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What year was Mozart born ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is a group of frogs called ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What is the name of William Penn 's ship ?","coarse_label":"ENTY","fine_label":"ENTY-veh"}
+{"text":"What is the melting point of gold ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"What is the street address of the White House ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is semolina ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What fruit is Melba sauce made from ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"What is Ursa Major ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the percentage of water content in the human body ?","coarse_label":"NUM","fine_label":"NUM-perc"}
+{"text":"How much does water weigh ?","coarse_label":"NUM","fine_label":"NUM-weight"}
+{"text":"What was President Lyndon Johnson 's reform program called ?","coarse_label":"ENTY","fine_label":"ENTY-event"}
+{"text":"What is the murder rate in Windsor , Ontario ?","coarse_label":"NUM","fine_label":"NUM-perc"}
+{"text":"Who is the only president to serve 2 non-consecutive terms ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the population of Australia ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"Who painted the ceiling of the Sistine Chapel ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Name a stimulant .","coarse_label":"ENTY","fine_label":"ENTY-dismed"}
+{"text":"What is the effect of volcanoes on the climate ?","coarse_label":"DESC","fine_label":"DESC-desc"}
+{"text":"What year did the Andy Griffith show begin ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is acid rain ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the date of Mexico 's independence ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is the location of Lake Champlain ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is the Illinois state flower ?","coarse_label":"ENTY","fine_label":"ENTY-plant"}
+{"text":"What is Maryland 's state bird ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What is quicksilver ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who wrote `` The Divine Comedy '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the speed of light ?","coarse_label":"NUM","fine_label":"NUM-speed"}
+{"text":"What is the width of a football field ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"Why in tennis are zero points called love ?","coarse_label":"DESC","fine_label":"DESC-reason"}
+{"text":"What kind of dog was Toto in the Wizard of Oz ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What is a thyroid ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What does ciao mean ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the only artery that carries blue blood from the heart to the lungs ?","coarse_label":"ENTY","fine_label":"ENTY-body"}
+{"text":"How often does Old Faithful erupt at Yellowstone National Park ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"What is acetic acid ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the elevation of St. Louis , MO ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"What color does litmus paper turn when it comes into contact with a strong acid ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"What are the colors of the German flag ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"What is the Moulin Rouge ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What soviet seaport is on the Black Sea ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is the atomic weight of silver ?","coarse_label":"NUM","fine_label":"NUM-weight"}
+{"text":"What currency do they use in Brazil ?","coarse_label":"ENTY","fine_label":"ENTY-currency"}
+{"text":"What are pathogens ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is mad cow disease ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Name a food high in zinc .","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"When did North Carolina enter the union ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"Where do apple snails live ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What are ethics ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What does CPR stand for ?","coarse_label":"ABBR","fine_label":"ABBR-exp"}
+{"text":"What is an annuity ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who killed John F. Kennedy ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Who was the first vice president of the U.S. ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What birthstone is turquoise ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"Who was the first US President to ride in an automobile to his inauguration ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"How old was the youngest president of the United States ?","coarse_label":"NUM","fine_label":"NUM-period"}
+{"text":"When was Ulysses S. Grant born ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is Muscular Dystrophy ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who lived in the Neuschwanstein castle ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is propylene glycol ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is a panic disorder ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who invented the instant Polaroid camera ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is a carcinogen ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is a baby lion called ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What is the world 's population ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"What is nepotism ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is die-casting ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is myopia ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the sales tax rate in New York ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"Developing nations comprise what percentage of the world 's population ?","coarse_label":"NUM","fine_label":"NUM-perc"}
+{"text":"What is the fourth highest mountain in the world ?","coarse_label":"LOC","fine_label":"LOC-mount"}
+{"text":"What is Shakespeare 's nickname ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the heaviest naturally occurring element ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"When is Father 's Day ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What does the acronym NASA stand for ?","coarse_label":"ABBR","fine_label":"ABBR-exp"}
+{"text":"How long is the Columbia River in miles ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"What city 's newspaper is called `` The Star '' ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What is carbon dioxide ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Where is the Mason/Dixon line ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"When was the Boston tea party ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is metabolism ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Which U.S.A. president appeared on `` Laugh-In '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What are cigarettes made of ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"What is the capital of Zimbabwe ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What does NASA stand for ?","coarse_label":"ABBR","fine_label":"ABBR-exp"}
+{"text":"What is the state flower of Michigan ?","coarse_label":"ENTY","fine_label":"ENTY-plant"}
+{"text":"What are semiconductors ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is nuclear power ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is a tsunami ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who is the congressman from state of Texas on the armed forces committee ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"Who was president in 1913 ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"When was the first kidney transplant ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What are Canada 's two territories ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What was the name of the plane Lindbergh flew solo across the Atlantic ?","coarse_label":"ENTY","fine_label":"ENTY-veh"}
+{"text":"What is genocide ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What continent is Argentina on ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What monastery was raided by Vikings in the late eighth century ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What is an earthquake ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Where is the tallest roller coaster located ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What are enzymes ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"Who discovered oxygen ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is bangers and mash ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the name given to the Tiger at Louisiana State University ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"Where are the British crown jewels kept ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who was the first person to reach the North Pole ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is an ulcer ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is vertigo ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is the spirometer test ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"When is the official first day of summer ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What does the abbreviation SOS mean ?","coarse_label":"ABBR","fine_label":"ABBR-exp"}
+{"text":"What is the smallest bird in Britain ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"Who invented Trivial Pursuit ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What gasses are in the troposphere ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"Which country has the most water pollution ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"What is the scientific name for elephant ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"Who is the actress known for her role in the movie `` Gypsy '' ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What breed of hunting dog did the Beverly Hillbillies own ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What is the rainiest place on Earth ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"Who was the first African American to win the Nobel Prize in literature ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"When is St. Patrick 's Day ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What was FDR 's dog 's name ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What colors need to be mixed to get the color pink ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"What is the most popular sport in Japan ?","coarse_label":"ENTY","fine_label":"ENTY-sport"}
+{"text":"What is the active ingredient in baking soda ?","coarse_label":"ENTY","fine_label":"ENTY-food"}
+{"text":"When was Thomas Jefferson born ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"How cold should a refrigerator be ?","coarse_label":"NUM","fine_label":"NUM-temp"}
+{"text":"When was the telephone invented ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"What is the most common eye color ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"Where was the first golf course in the United States ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is schizophrenia ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is angiotensin ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What did Jesse Jackson organize ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What is New York 's state bird ?","coarse_label":"ENTY","fine_label":"ENTY-animal"}
+{"text":"What is the National Park in Utah ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is Susan B. Anthony 's birthday ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"In which state would you find the Catskill Mountains ?","coarse_label":"LOC","fine_label":"LOC-state"}
+{"text":"What do you call a word that is spelled the same backwards and forwards ?","coarse_label":"ENTY","fine_label":"ENTY-termeq"}
+{"text":"What are pediatricians ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What chain store is headquartered in Bentonville , Arkansas ?","coarse_label":"HUM","fine_label":"HUM-gr"}
+{"text":"What are solar cells ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is compounded interest ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What are capers ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is an antigen ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What currency does Luxembourg use ?","coarse_label":"ENTY","fine_label":"ENTY-currency"}
+{"text":"What is the population of Venezuela ?","coarse_label":"NUM","fine_label":"NUM-other"}
+{"text":"What type of polymer is used for bulletproof vests ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"What currency does Argentina use ?","coarse_label":"ENTY","fine_label":"ENTY-currency"}
+{"text":"What is a thermometer ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What Canadian city has the largest population ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"What color are crickets ?","coarse_label":"ENTY","fine_label":"ENTY-color"}
+{"text":"Which country gave New York the Statue of Liberty ?","coarse_label":"LOC","fine_label":"LOC-country"}
+{"text":"What was the name of the first U.S. satellite sent into space ?","coarse_label":"ENTY","fine_label":"ENTY-product"}
+{"text":"What precious stone is a form of pure carbon ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"What kind of gas is in a fluorescent bulb ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"What is rheumatoid arthritis ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What river runs through Rowe , Italy ?","coarse_label":"LOC","fine_label":"LOC-other"}
+{"text":"What is cerebral palsy ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What city is also known as `` The Gateway to the West '' ?","coarse_label":"LOC","fine_label":"LOC-city"}
+{"text":"How far away is the moon ?","coarse_label":"NUM","fine_label":"NUM-dist"}
+{"text":"What is the source of natural gas ?","coarse_label":"ENTY","fine_label":"ENTY-other"}
+{"text":"In what spacecraft did U.S. astronaut Alan Shepard make his historic 1961 flight ?","coarse_label":"ENTY","fine_label":"ENTY-veh"}
+{"text":"What is pectin ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What is bio-diversity ?","coarse_label":"DESC","fine_label":"DESC-def"}
+{"text":"What 's the easiest way to remove wallpaper ?","coarse_label":"ENTY","fine_label":"ENTY-techmeth"}
+{"text":"What year did the Titanic start on its journey ?","coarse_label":"NUM","fine_label":"NUM-date"}
+{"text":"How much of an apple is water ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"Who was the 22nd President of the US ?","coarse_label":"HUM","fine_label":"HUM-ind"}
+{"text":"What is the money they use in Zambia ?","coarse_label":"ENTY","fine_label":"ENTY-currency"}
+{"text":"How many feet in a mile ?","coarse_label":"NUM","fine_label":"NUM-count"}
+{"text":"What is the birthstone of October ?","coarse_label":"ENTY","fine_label":"ENTY-substance"}
+{"text":"What is e-coli ?","coarse_label":"DESC","fine_label":"DESC-def"}
