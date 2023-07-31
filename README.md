@@ -4,7 +4,7 @@ The framework allows the comparison of different active learning strategies (que
 process in the domain of natural language processing. This facilitates to build best practices for different use cases
 and enables practitioners and researchers to make more informed decisions.
 
-This is the repository for the paper [TODO after DOI announcement]().
+This is the repository for the paper [ALE: A Simulation-Based Active Learning Evaluation Framework for the Parameter-Driven Comparison of Query Strategies for NLP](https://doi.org/10.1007/978-3-031-39059-3_16).
 
 Provides features:
 - Sophisticated **configuration system** with [hydra](https://github.com/facebookresearch/hydra)
@@ -134,5 +134,24 @@ The configuration will be instantiated into python objects (see ale/conf/).
 |              | language              | Language abbreviation (en, de, etc. )                                                                                                                                                                                                                                                  |
 
 ## Citation
+If you find this code useful in your research, please cite:
 
-TODO after DOI announcement
+```
+@inproceedings{kohlALESimulationBasedActive2023,
+  title = {{{ALE}}: {{A Simulation-Based Active Learning Evaluation Framework}} for the {{Parameter-Driven Comparison}} of {{Query Strategies}} for {{NLP}}},
+  shorttitle = {{{ALE}}},
+  booktitle = {Deep {{Learning Theory}} and {{Applications}}},
+  author = {Kohl, Philipp and Freyer, Nils and Kr{\"a}mer, Yoka and Werth, Henri and Wolf, Steffen and Kraft, Bodo and Meinecke, Matthias and Z{\"u}ndorf, Albert},
+  editor = {Conte, Donatello and Fred, Ana and Gusikhin, Oleg and Sansone, Carlo},
+  year = {2023},
+  series = {Communications in {{Computer}} and {{Information Science}}},
+  pages = {235--253},
+  publisher = {{Springer Nature Switzerland}},
+  address = {{Cham}},
+  doi = {10.1007/978-3-031-39059-3\_16},
+  copyright = {All rights reserved},
+  isbn = {978-3-031-39059-3},
+  langid = {english},
+  keywords = {Active learning,Deep learning,Natural language processing,Query learning,Reproducible research}
+}
+```
