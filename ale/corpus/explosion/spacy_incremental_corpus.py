@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 @CorpusRegistry.register("spacy")
 class SpacyIncrementalCorpus(Corpus):
-    def __init__(self, path: Union[str, Path], cfg: TrainerConfig):
-        super().__init__(path, cfg)
+    def __init__(self, path: Union[str, Path]):
+        super().__init__(path)
         try:
             Doc.set_extension("active_learning_id", default=-1)
         except ValueError as e:
@@ -25,7 +25,8 @@ class SpacyIncrementalCorpus(Corpus):
                 raise e
 
         doc_bin = DocBin().from_disk(self.train_path)
-        model = spacy.blank(self.cfg.language)
+        # model = spacy.blank(self.cfg.language) # TODO make multi language
+        model = spacy.blank("en")
         logger.info("Start indexing spacy corpus")
         self.index: Dict[int, Doc] = {}
         docs = doc_bin.get_docs(model.vocab)

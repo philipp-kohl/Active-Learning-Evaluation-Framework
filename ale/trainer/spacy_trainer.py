@@ -1,4 +1,3 @@
-import importlib
 import logging
 import re
 import sys
@@ -6,7 +5,7 @@ import tempfile
 from pathlib import Path
 from typing import Callable, Dict, Union, Optional, Any, List
 
-import mlflow
+
 import spacy
 from mlflow.store.artifact.artifact_repository_registry import get_artifact_repository
 
@@ -50,7 +49,6 @@ class SpacyOnlineTrainer(PredictionTrainer):
         nlp_task: NLPTask,
         recreate_pipeline_each_run: bool
     ):
-        importlib.import_module("spacy_logger")
         self.temp_dir = tempfile.TemporaryDirectory()
         self.use_gpu = use_gpu
         self.train_path = Path(self.temp_dir.name) / "train.spacy"

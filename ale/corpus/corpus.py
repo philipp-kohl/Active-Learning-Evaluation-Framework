@@ -1,12 +1,9 @@
 from mlflow.artifacts import download_artifacts
 
-import ale.mlflowutils.mlflow_utils as utils
-import tempfile
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import List, Union, Any, Dict
 
-import mlflow
 import srsly
 from mlflow.entities import Run
 import ale.mlflowutils.mlflow_utils as mlflow_utils
@@ -18,9 +15,8 @@ class Corpus(ABC):
 
     ARTIFACT_FILE = "relevant_ids.json"
 
-    def __init__(self, path: Union[str, Path], cfg: TrainerConfig):
-        self.train_path = path
-        self.cfg = cfg
+    def __init__(self, train_path: Union[str, Path]):
+        self.train_path = train_path
         self.relevant_ids = []
 
     def add_increment(self, ids: List[int]):

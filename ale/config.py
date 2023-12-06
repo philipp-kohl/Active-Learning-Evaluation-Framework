@@ -29,7 +29,7 @@ class TrainerConfig:
 @dataclass
 class TeacherConfig:
     strategy: str
-    budget: int
+    sampling_budget: int
 
 
 @dataclass
@@ -39,6 +39,7 @@ class Experiment:
     initial_data_strategy: str
     tracking_metrics: List[str]
     seeds: List[int]
+    annotation_budget: int
 
 
 @dataclass
@@ -85,8 +86,8 @@ class AppConfig:
         teacher: TeacherConfig = values.get("teacher")
         experiment: Experiment = values.get("experiment")
 
-        if teacher.budget < experiment.step_size and teacher.budget != -1:
-            raise ValueError(f"Teacher.budget ({teacher.budget}) must be >= experiment.step_size ({experiment.step_size})")
+        if teacher.sampling_budget < experiment.step_size and teacher.sampling_budget != -1:
+            raise ValueError(f"Teacher.budget ({teacher.sampling_budget}) must be >= experiment.step_size ({experiment.step_size})")
 
         return values
 
