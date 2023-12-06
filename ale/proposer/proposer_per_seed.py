@@ -1,10 +1,7 @@
 import logging
-import random
-import time
 from pathlib import Path
 from typing import Any, List, Tuple, Optional
 
-import mlflow
 from mlflow import MlflowClient
 from mlflow.entities import RunStatus, Run
 from mlflow.utils import mlflow_tags
@@ -41,7 +38,7 @@ class AleBartenderPerSeed:
 
         logger.info(f"Use corpus mananger: {self.cfg.trainer.corpus_manager}")
         corpus_class = CorpusRegistry.get_instance(self.cfg.trainer.corpus_manager)
-        self.corpus = corpus_class(train_file_converted, self.cfg.trainer)
+        self.corpus = corpus_class(train_file_converted)
         logger.info(f"Use trainer: {self.cfg.trainer.trainer_name}")
         trainer_class = TrainerRegistry.get_instance(
             self.cfg.trainer.trainer_name
@@ -100,13 +97,18 @@ class AleBartenderPerSeed:
             self.corpus.restore_from_artifacts(newest_run)
             old_run = newest_run
         else:
-            initial_data_ids = self.initial_teacher.propose(all_ids, first_step_size, self.cfg.teacher.budget)
+            initial_data_ids = self.initial_teacher.propose(all_ids, first_step_size, self.cfg.teacher.sampling_budget)
             self.corpus.add_increment(initial_data_ids)
             initial_train_evaluation_metrics, run = self.initial_train(self.corpus, self.seed)
             old_run = run
             self.teacher.after_initial_train(initial_train_evaluation_metrics)
 
+        annotation_budget: int = self.cfg.experiment.annotation_budget
         while self.corpus.do_i_have_to_annotate():
+            if len(self.corpus) >= annotation_budget:
+                logger.info(f"Stop seed run due to exceeded annotation budget ({annotation_budget})")
+                break
+
             self.propose_new_data(self.corpus)
 
             evaluation_metrics, new_run = self.train(
@@ -179,21 +181,17 @@ class AleBartenderPerSeed:
 
         potential_ids = corpus.get_not_annotated_data_points_ids()
 
-        step_size = min(len(potential_ids), self.cfg.experiment.step_size)
-        budget = self.cfg.teacher.budget
-        if len(potential_ids) < budget:
-            budget = len(potential_ids)
+        sampling_budget, step_size = self.determine_step_size(len(corpus), potential_ids)
 
-        logger.info(f"Using step_size ({step_size}) and budget ({budget}).")
         new_data_points = self.teacher.propose(
-            potential_ids, step_size, budget
+            potential_ids, step_size, sampling_budget
         )
 
         detected_step_size = len(new_data_points)
         if corpus.do_i_have_to_annotate() and \
                 detected_step_size != self.cfg.experiment.step_size:
             error_message = f"Step size deviation detected: " \
-                            f"Actual '{detected_step_size}', expected '{self.cfg.experiment.step_size}' "\
+                            f"Actual '{detected_step_size}', expected '{self.cfg.experiment.step_size}' " \
                             f"(Corpus not exhausted!)"
             if not self.cfg.technical.adjust_wrong_step_size:
                 raise ValueError(error_message)
@@ -203,6 +201,22 @@ class AleBartenderPerSeed:
                 new_data_points = new_data_points[:self.cfg.experiment.step_size]
 
         corpus.add_increment(new_data_points)
+
+    def determine_step_size(self, current_corpus_size: int, potential_ids: List[int]):
+        step_size = min(len(potential_ids), self.cfg.experiment.step_size)
+        sampling_budget = self.cfg.teacher.sampling_budget
+
+        if len(potential_ids) < sampling_budget:
+            sampling_budget = len(potential_ids)
+
+        if current_corpus_size + step_size > self.cfg.experiment.annotation_budget:
+            step_size = self.cfg.experiment.annotation_budget - current_corpus_size
+            logger.info(f"Adjust step_size to {step_size} due to "
+                        f"exceeding annotation_budget ({self.cfg.experiment.annotation_budget}). "
+                        f"Sampling budget stays the same ({sampling_budget})")
+
+        logger.info(f"Using step_size ({step_size}) and sampling_budget ({sampling_budget}).")
+        return sampling_budget, step_size
 
     def test_and_log(self, corpus) -> None:
         """

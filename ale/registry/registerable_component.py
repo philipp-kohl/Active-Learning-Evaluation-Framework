@@ -1,4 +1,4 @@
-from typing import Dict, Any, Callable, TypeVar
+from typing import Dict, Callable, TypeVar
 
 import logging
 

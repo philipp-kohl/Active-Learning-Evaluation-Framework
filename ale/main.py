@@ -1,14 +1,12 @@
+from ale.import_helper import import_registrable_components
+import_registrable_components()
+
 import getpass
-import importlib
 import logging
 import os
 import sys
 
-import torch
-
 from ale.mlflowutils.mlflow_utils import get_git_revision_hash
-
-importlib.import_module("ale.pipeline.pipeline_components")
 
 import hydra
 from omegaconf import OmegaConf
@@ -70,6 +68,9 @@ def run(cfg: AppConfig):
     pipeline.add(PipelineComponents.SEED_RUNS, ProposeDataComponent)
     pipeline.add(PipelineComponents.AGGREGATE_SEED_RUNS, AggregateSeedRuns)
     pipeline.start()
+
+
+
 
 
 if __name__ == "__main__":

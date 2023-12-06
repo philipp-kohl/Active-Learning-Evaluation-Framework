@@ -1,0 +1,5 @@
+trainer_name: "dummy-trainer"
+config_path: spacy_config/config_trf.cfg
+corpus_manager: spacy
+language: en
+recreate_pipeline_each_run: false
