@@ -4,5 +4,8 @@ tracking_metrics: [cats_macro_f]
 step_size: 100
 seeds: [42, 4711, 768, 4656, 32213]
 annotation_budget: 25000
+assess_data_bias: true
+assess_data_bias_eval_freq: 2
+
 
 

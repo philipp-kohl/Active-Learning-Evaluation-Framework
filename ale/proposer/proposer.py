@@ -20,13 +20,14 @@ logger = logging.getLogger(__name__)
 
 
 class AleBartender:
-    def __init__(self, converted_data: Path, cfg: AppConfig, labels: List[Any]):
+    def __init__(self, converted_data: Path, raw_data: Path, cfg: AppConfig, labels: List[Any]):
         self.cfg = cfg
         self.labels = labels
         target_format = cfg.converter.target_format
         self.train_file_converted = converted_data / f"train.{target_format}"
         self.dev_file_converted = converted_data / f"dev.{target_format}"
         self.test_file_converted = converted_data / f"test.{target_format}"
+        self.train_file_raw = raw_data / "train.jsonl"
 
         self.seeds = self.cfg.experiment.seeds
 
@@ -111,6 +112,7 @@ class AleBartender:
                                                  self.train_file_converted,
                                                  self.dev_file_converted,
                                                  self.test_file_converted,
+                                                 self.train_file_raw,
                                                  self.labels,
                                                  run.info.experiment_id,
                                                  run.info.run_id,
@@ -146,6 +148,7 @@ class AleBartender:
                                                  self.train_file_converted,
                                                  self.dev_file_converted,
                                                  self.test_file_converted,
+                                                 self.train_file_raw,
                                                  self.labels,
                                                  experiment_seed_id,
                                                  run.info.run_id,

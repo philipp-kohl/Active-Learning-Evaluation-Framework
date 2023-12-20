@@ -17,7 +17,10 @@ class Corpus(ABC):
 
     def __init__(self, train_path: Union[str, Path]):
         self.train_path = train_path
-        self.relevant_ids = []
+        self.relevant_ids: List[int] = []
+
+    def get_relevant_ids(self) -> List[int]:
+        return self.relevant_ids
 
     def add_increment(self, ids: List[int]):
         same_ids = set(ids).intersection(set(self.relevant_ids))

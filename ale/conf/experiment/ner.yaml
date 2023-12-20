@@ -4,5 +4,6 @@ tracking_metrics: "['spans_sc_f']"
 step_size: 8000
 seeds: [42, 4711]
 annotation_budget: 25000
-
+assess_data_bias: false
+assess_data_bias_eval_freq: 0
 

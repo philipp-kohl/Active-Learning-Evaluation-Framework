@@ -1,4 +1,4 @@
-experiment_name: conll2003
+experiment_name: bias_debug
 url: http://127.0.0.1:5000
 run_name:
 git_hash:

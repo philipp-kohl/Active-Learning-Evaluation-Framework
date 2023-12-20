@@ -2,18 +2,22 @@ import logging
 from pathlib import Path
 from typing import Any, List, Tuple, Optional
 
+import mlflow
+import pandas as pd
 from mlflow import MlflowClient
 from mlflow.entities import RunStatus, Run
 from mlflow.utils import mlflow_tags
 
 import ale.mlflowutils.mlflow_utils as utils
+from ale.bias.bias import BiasDetector
 from ale.config import AppConfig
 from ale.corpus.corpus import Corpus
+import plotly.express as px
 from ale.registry.registerable_corpus import CorpusRegistry
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.registry.registerable_trainer import TrainerRegistry
 from ale.teacher.base_teacher import BaseTeacher
-from ale.trainer.base_trainer import MetricsType
+from ale.trainer.base_trainer import MetricsType, PredictionTrainer
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +30,7 @@ class AleBartenderPerSeed:
                  train_file_converted: Path,
                  dev_file_converted: Path,
                  test_file_converted: Path,
+                 train_file_raw: Path,
                  labels: List[Any],
                  experiment_id: str,
                  parent_run_id: str,
@@ -43,7 +48,7 @@ class AleBartenderPerSeed:
         trainer_class = TrainerRegistry.get_instance(
             self.cfg.trainer.trainer_name
         )
-        self.trainer = trainer_class(
+        self.trainer: PredictionTrainer = trainer_class(
             dev_file_converted,
             test_file_converted,
             Path(self.cfg.trainer.config_path),
@@ -72,6 +77,7 @@ class AleBartenderPerSeed:
             seed=seed,
             labels=labels
         )
+        self.bias_detector = BiasDetector(self.cfg.data.nlp_task, self.cfg.data.label_column, train_file_raw)
 
     def run_single_seed(self) -> None:
         """
@@ -99,11 +105,12 @@ class AleBartenderPerSeed:
         else:
             initial_data_ids = self.initial_teacher.propose(all_ids, first_step_size, self.cfg.teacher.sampling_budget)
             self.corpus.add_increment(initial_data_ids)
-            initial_train_evaluation_metrics, run = self.initial_train(self.corpus, self.seed)
+            initial_train_evaluation_metrics, _, run = self.initial_train(self.corpus, self.seed)
             old_run = run
             self.teacher.after_initial_train(initial_train_evaluation_metrics)
 
         annotation_budget: int = self.cfg.experiment.annotation_budget
+        iteration = 1
         while self.corpus.do_i_have_to_annotate():
             if len(self.corpus) >= annotation_budget:
                 logger.info(f"Stop seed run due to exceeded annotation budget ({annotation_budget})")
@@ -111,16 +118,32 @@ class AleBartenderPerSeed:
 
             self.propose_new_data(self.corpus)
 
-            evaluation_metrics, new_run = self.train(
+            evaluation_metrics, test_metrics, new_run = self.train(
                 self.corpus, f"train {len(self.corpus)}", self.seed
             )
+
+            if self.cfg.experiment.assess_data_bias:
+                if iteration % self.cfg.experiment.assess_data_bias_eval_freq == 0:
+                    logger.info("Evaluate data bias")
+                    # self.trainer.predict(self.corpus.get)
+                    distribution = self.bias_detector.compute_and_log_distribution(
+                        self.corpus.get_relevant_ids(),
+                        new_run,
+                        "Train_Data_Distribution")
+                    MlflowClient().set_tag(new_run.info.run_id, "assess_data_bias", "True")
+                else:
+                    logger.info(
+                        f"Skip data bias evaluation in iteration, interval: ({iteration}, {self.cfg.experiment.assess_data_bias_eval_freq})")
+                    # mlflow_utils.log_artifact(new_run, )
+
             # Delete artifacts for old run. We do not need them for resume
             self.trainer.delete_artifacts(old_run)
             old_run = new_run
             self.teacher.after_train(evaluation_metrics)
+            iteration += 1
         logger.info("End seed: %s", self.seed)
 
-    def train(self, corpus: Corpus, run_name: str, seed: int) -> Tuple[MetricsType, Run]:
+    def train(self, corpus: Corpus, run_name: str, seed: int) -> Tuple[MetricsType, MetricsType, Run]:
         """
         Starts a new run with the given corpus and trains the model on it.
         Returns the evaluation metrics of the run.
@@ -150,17 +173,17 @@ class AleBartenderPerSeed:
                 self.cfg, lambda name, value: utils.log_param(train_run, name, value)
             )
             evaluation_metrics = self.trainer.train(corpus, train_run)
-            self.test_and_log(corpus)
+            test_metrics = self.test_and_log(corpus)
             self.trainer.store_to_artifacts(train_run)
             corpus.store_to_artifacts(train_run)
             utils.mark_run_as_finished(train_run, RunStatus.FINISHED)
 
-            return evaluation_metrics, train_run
+            return evaluation_metrics, test_metrics, train_run
         except Exception as e:
             utils.mark_run_as_finished(train_run, RunStatus.FAILED)
             raise e
 
-    def initial_train(self, corpus: Corpus, seed: int) -> Tuple[MetricsType, Run]:
+    def initial_train(self, corpus: Corpus, seed: int) -> Tuple[MetricsType, MetricsType, Run]:
         """
         Initial training call. Starts a new run with the given corpus and trains the model on it.
         If a run with the same seed and corpus already exists, the run is restored.
@@ -218,7 +241,7 @@ class AleBartenderPerSeed:
         logger.info(f"Using step_size ({step_size}) and sampling_budget ({sampling_budget}).")
         return sampling_budget, step_size
 
-    def test_and_log(self, corpus) -> None:
+    def test_and_log(self, corpus) -> MetricsType:
         """
         Evaluates the model on the test set and logs the tracked metrics on the propose run
         """
@@ -231,3 +254,5 @@ class AleBartenderPerSeed:
                 value=test_metrics[metric],
                 step=len(corpus)
             )
+
+        return test_metrics
