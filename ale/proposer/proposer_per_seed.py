@@ -4,6 +4,7 @@ from typing import Any, List, Tuple, Optional
 
 import mlflow
 import pandas as pd
+import srsly
 from mlflow import MlflowClient
 from mlflow.entities import RunStatus, Run
 from mlflow.utils import mlflow_tags
@@ -31,6 +32,7 @@ class AleBartenderPerSeed:
                  dev_file_converted: Path,
                  test_file_converted: Path,
                  train_file_raw: Path,
+                 dev_file_raw: Path,
                  labels: List[Any],
                  experiment_id: str,
                  parent_run_id: str,
@@ -78,6 +80,7 @@ class AleBartenderPerSeed:
             labels=labels
         )
         self.bias_detector = BiasDetector(self.cfg.data.nlp_task, self.cfg.data.label_column, train_file_raw)
+        self.dev_file_raw = dev_file_raw
 
     def run_single_seed(self) -> None:
         """
@@ -125,7 +128,12 @@ class AleBartenderPerSeed:
             if self.cfg.experiment.assess_data_bias:
                 if iteration % self.cfg.experiment.assess_data_bias_eval_freq == 0:
                     logger.info("Evaluate data bias")
-                    # self.trainer.predict(self.corpus.get)
+                    dev_corpus = []
+                    for idx, entry in enumerate(srsly.read_jsonl(self.dev_file_raw)):
+                        entry["id"] = idx
+                        dev_corpus.append(entry)
+
+                    preds = self.trainer.predict({e["id"]: e["text"] for e in dev_corpus})
                     distribution = self.bias_detector.compute_and_log_distribution(
                         self.corpus.get_relevant_ids(),
                         new_run,

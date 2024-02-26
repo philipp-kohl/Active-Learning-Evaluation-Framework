@@ -73,9 +73,6 @@ def run(cfg: AppConfig):
     pipeline.start()
 
 
-
-
-
 if __name__ == "__main__":
     # https://hydra.cc/docs/tutorials/basic/running_your_app/working_directory/#disable-changing-current-working-dir-to-jobs-output-dir
     #torch.use_deterministic_algorithms(True, warn_only=True)

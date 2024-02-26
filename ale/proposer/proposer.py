@@ -28,6 +28,7 @@ class AleBartender:
         self.dev_file_converted = converted_data / f"dev.{target_format}"
         self.test_file_converted = converted_data / f"test.{target_format}"
         self.train_file_raw = raw_data / "train.jsonl"
+        self.dev_file_raw = raw_data / "dev.jsonl"
 
         self.seeds = self.cfg.experiment.seeds
 
@@ -113,6 +114,7 @@ class AleBartender:
                                                  self.dev_file_converted,
                                                  self.test_file_converted,
                                                  self.train_file_raw,
+                                                 self.dev_file_raw,
                                                  self.labels,
                                                  run.info.experiment_id,
                                                  run.info.run_id,
@@ -149,6 +151,7 @@ class AleBartender:
                                                  self.dev_file_converted,
                                                  self.test_file_converted,
                                                  self.train_file_raw,
+                                                 self.dev_file_raw,
                                                  self.labels,
                                                  experiment_seed_id,
                                                  run.info.run_id,

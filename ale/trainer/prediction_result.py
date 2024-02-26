@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 from pydantic import BaseModel
 
@@ -24,3 +24,11 @@ class PredictionResult(BaseModel):
             raise ValueError(f"Span ({span}) already in result set!")
 
         self.ner_confidences[span] = score
+
+    def get_highest_confidence_label(self) -> Union[str, None]:
+        if self.classification_confidences:
+            return max(self.classification_confidences, key=self.classification_confidences.get)
+        elif self.ner_confidences:
+            return max(self.ner_confidences, key=self.ner_confidences.get).label
+        else:
+            return None
