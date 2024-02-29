@@ -13,8 +13,8 @@ class Span(BaseModel):
 
 
 class PredictionResult(BaseModel):
-    classification_confidences: Optional[Dict[str, float]] = None
-    ner_confidences: Optional[Dict[Span, float]] = None
+    classification_confidences: Optional[Dict[str, float]] = {}
+    ner_confidences: Optional[Dict[Span, float]] = {}
 
     def add_ner(self, span: Span, score: float):
         if self.ner_confidences is None:

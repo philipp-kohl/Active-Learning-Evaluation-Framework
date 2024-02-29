@@ -1,4 +1,4 @@
-experiment_name: bias_debug
+experiment_name: bias_ner_debug_v4
 url: http://127.0.0.1:5000
 run_name:
 git_hash:

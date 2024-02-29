@@ -1,3 +1,4 @@
+import tempfile
 from collections import defaultdict
 from pathlib import Path
 from typing import Tuple, Dict, List, Union
@@ -53,14 +54,4 @@ class DataDistribution:
             labels[label] += 1
 
     def store_distribution(self, distribution: Dict[str, int], mlflow_run: Run, artifact_name: str):
-        sorted_label_data = sorted(distribution.items(), key=lambda x: x[0])
-        df = pd.DataFrame(sorted_label_data, columns=['Label', 'Occurences'])
-        fig = px.bar(df, x='Label', y='Occurences', title=artifact_name)
-        html_path = 'bar_plot.html'
-        fig.write_html(html_path)
-        utils.log_artifact(mlflow_run, html_path, artifact_path=artifact_name)
-        csv_path = 'data.csv'
-        df.to_csv(csv_path, index=False)
-        utils.log_artifact(mlflow_run, csv_path, artifact_path=artifact_name)
-
-
+        utils.store_bar_plot(distribution, mlflow_run, artifact_name, ['Label', 'Occurences'])

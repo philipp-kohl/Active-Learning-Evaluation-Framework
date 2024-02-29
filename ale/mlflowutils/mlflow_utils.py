@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Dict, Callable, Optional, Any, Type, List
 
 import mlflow
+import pandas as pd
 import srsly
 from mlflow import MlflowClient
 from mlflow.artifacts import download_artifacts
@@ -206,3 +207,25 @@ def get_all_child_runs(experiment_id: str, run_id: str, run_status: RunStatus = 
         all_runs.extend(child_runs)
 
     return all_runs
+
+
+def store_bar_plot(distribution: Dict[str, float], mlflow_run: Run, artifact_name: str,
+                   columns: List[str]) -> None:
+    import plotly.express as px
+
+    sorted_label_data = sorted(distribution.items(), key=lambda x: x[0])
+    df = pd.DataFrame(sorted_label_data, columns=columns)
+    fig = px.bar(df, x=columns[0], y=columns[1], title=artifact_name)
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        # Define file paths within the temporary directory
+        html_path = f'{temp_dir}/bar_plot.html'
+        csv_path = f'{temp_dir}/data.csv'
+
+        # Generate and save the HTML plot
+        fig.write_html(html_path)
+        log_artifact(mlflow_run, html_path, artifact_path=artifact_name)
+
+        # Save the DataFrame to a CSV file
+        df.to_csv(csv_path, index=False)
+        log_artifact(mlflow_run, csv_path, artifact_path=artifact_name)
