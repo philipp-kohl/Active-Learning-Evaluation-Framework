@@ -16,9 +16,9 @@ class DataDistributionMeasure(PipelineComponent):
     def collect_labels(
             train_path: str, dev_path: str, test_path: str, label_column: str, nlp_task: NLPTask
     ):
-        DataDistributionMeasure.log_data_distribution(label_column, nlp_task, train_path, "train_data_distribution")
-        DataDistributionMeasure.log_data_distribution(label_column, nlp_task, dev_path, "dev_data_distribution")
-        DataDistributionMeasure.log_data_distribution(label_column, nlp_task, test_path, "test_data_distribution")
+        DataDistributionMeasure.log_data_distribution(label_column, nlp_task, train_path, "train/data_distribution")
+        DataDistributionMeasure.log_data_distribution(label_column, nlp_task, dev_path, "dev/data_distribution")
+        DataDistributionMeasure.log_data_distribution(label_column, nlp_task, test_path, "test/data_distribution")
 
     @staticmethod
     def log_data_distribution(label_column, nlp_task, train_path, artifact_name: str):
