@@ -26,15 +26,13 @@ Provides features:
 
 Prerequisite:
 - [git](https://git-scm.com/)
+- [poetry](https://python-poetry.org/docs/main/#installing-with-pipx)
 - [docker](https://www.docker.com/)
 
 Set up dependencies:
 
 ```
-conda env create -f ale-cuda.yaml
-conda activate ale-cuda
-poetry config virtualenvs.create false --local
-poetry install
+source ./dev-setup.sh ale-cuda.yaml
 ```
 
 If poetry complains about not finding any specific version, try `poetry update`.
@@ -45,7 +43,7 @@ If poetry complains about not finding any specific version, try `poetry update`.
 
 2. Test
 ```bash
-docker run --rm --gpus all nvidia/cuda:11.6.2-base-ubuntu20.04 nvidia-smi
+docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi
 ```
 
 ### Load Data

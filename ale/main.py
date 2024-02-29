@@ -1,4 +1,6 @@
 from ale.import_helper import import_registrable_components
+from ale.pipeline.pipeline_components.measure_data_distribution import DataDistributionMeasure
+
 import_registrable_components()
 
 import getpass
@@ -62,15 +64,13 @@ def run(cfg: AppConfig):
     pipeline = MLFlowPipeline(cfg)
     pipeline.add(PipelineComponents.ADD_IDS_TO_TRAIN_FILE, AddIdsComponent)
     pipeline.add(PipelineComponents.COLLECT_LABELS, CollectLabelsComponent)
+    pipeline.add(PipelineComponents.DATA_DISTRIBUTIONS, DataDistributionMeasure)
     pipeline.add(PipelineComponents.CONVERT_DATA, converter_class)
     pipeline.add(PipelineComponents.LOAD_DATA_RUN_RAW, LoadDataRawComponent)
     pipeline.add(PipelineComponents.LOAD_DATA_RUN_CONVERTED, LoadDataConvertedComponent)
     pipeline.add(PipelineComponents.SEED_RUNS, ProposeDataComponent)
     pipeline.add(PipelineComponents.AGGREGATE_SEED_RUNS, AggregateSeedRuns)
     pipeline.start()
-
-
-
 
 
 if __name__ == "__main__":

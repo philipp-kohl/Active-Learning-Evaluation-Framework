@@ -40,6 +40,8 @@ class Experiment:
     tracking_metrics: List[str]
     seeds: List[int]
     annotation_budget: int
+    assess_data_bias: bool
+    assess_data_bias_eval_freq: int
 
 
 @dataclass

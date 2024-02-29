@@ -1,3 +1,3 @@
-use_gpu: 0
-number_threads: -1 # -1 for using number of seeds
+use_gpu: -1
+number_threads: 1 # -1 for using number of seeds
 adjust_wrong_step_size: true
