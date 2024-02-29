@@ -146,7 +146,7 @@ class BiasDetector:
 
     def is_match(self, gold, pred_entities):
         for pred in pred_entities:
-            if self.is_full_match(gold, pred):  # or (include_partial and is_partial_match(gold, pred)):
+            if self.is_full_match(gold, pred):  # TODO partial match?
                 return True
 
         return False
