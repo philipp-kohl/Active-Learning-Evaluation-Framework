@@ -36,6 +36,9 @@ class BiasDetector:
         accuracy_per_label, error_per_label = self.compute_function(corpus_dict, label_column, predictions)
 
         norm_distribution = self.normalize_counts(distribution)
+        # TODO 0 epsilon
+        # TODO distance to optimum distr (equally distr.)
+        # TODO nur auf data distr bewerten
         bias = {label: error * -np.log(norm_distribution[label]) for label, error in error_per_label.items()}
         return accuracy_per_label, bias, error_per_label
 

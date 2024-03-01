@@ -6,4 +6,6 @@ seeds: [42, 4711]
 annotation_budget: 25000
 assess_data_bias: true
 assess_data_bias_eval_freq: 1
+assess_overconfidence: true
+assess_overconfidence_eval_freq: 1
 
