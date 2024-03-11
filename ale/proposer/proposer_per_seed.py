@@ -1,7 +1,8 @@
 import logging
 from pathlib import Path
-from typing import Any, List, Tuple, Optional
+from typing import Any, List, Tuple, Optional, Dict
 
+import srsly
 from mlflow import MlflowClient
 from mlflow.entities import RunStatus, Run
 from mlflow.utils import mlflow_tags
@@ -113,12 +114,16 @@ class AleBartenderPerSeed:
 
         annotation_budget: int = self.cfg.experiment.annotation_budget
 
-        hooks: List[ProposeHook] = [
-            AssessBiasHook(self.cfg, self.parent_run_id, self.corpus,
-                           train_file_raw=self.train_file_raw,
-                           dev_file_raw=self.dev_file_raw,
-                           trainer=self.trainer)
-        ]
+        hooks: List[ProposeHook] = []
+        if self.cfg.experiment.assess_data_bias:
+            hooks.append(AssessBiasHook(self.cfg, self.parent_run_id, self.corpus,
+                                        train_file_raw=self.train_file_raw,
+                                        dev_file_raw=self.dev_file_raw,
+                                        trainer=self.trainer))
+
+        do_predictions_on_dev = any([h.needs_dev_predictions for h in hooks])
+        do_predictions_on_train = any([h.needs_train_predictions for h in hooks])
+
         while self.corpus.do_i_have_to_annotate():
             if len(self.corpus) >= annotation_budget:
                 logger.info(f"Stop seed run due to exceeded annotation budget ({annotation_budget})")
@@ -133,6 +138,21 @@ class AleBartenderPerSeed:
             )
 
             [h.after_training(new_run) for h in hooks]
+
+            preds_train = None
+            preds_dev = None
+            if do_predictions_on_train:
+                logger.info(f"Perform predictions on training data")
+                def train_filter(entry: Dict) -> bool:
+                    return entry["id"] in self.corpus.get_relevant_ids()
+
+                corpus_train, preds_train = self.perform_predictions(self.train_file_raw,
+                                                                     filter_func=train_filter)
+            if do_predictions_on_dev:
+                logger.info(f"Perform predictions on dev data")
+                corpus_dev, preds_dev = self.perform_predictions(self.dev_file_raw)
+
+            [h.after_prediction(new_run, preds_train, preds_dev) for h in hooks]
 
             # Delete artifacts for old run. We do not need them for resume
             self.trainer.delete_artifacts(old_run)
@@ -256,3 +276,15 @@ class AleBartenderPerSeed:
             )
 
         return test_metrics
+
+    def perform_predictions(self, file_raw, filter_func=None):
+        corpus = []
+        for entry in srsly.read_jsonl(file_raw):
+            assert entry["id"] is not None
+            if filter_func:
+                if entry["id"] in self.corpus.get_relevant_ids():
+                    corpus.append(entry)
+            else:
+                corpus.append(entry)
+
+        return corpus, self.trainer.predict({e["id"]: e["text"] for e in corpus})

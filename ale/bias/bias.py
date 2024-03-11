@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import List, Dict, Any, Callable, Tuple
 
 import numpy as np
+import srsly
 from mlflow.entities import Run
 
 from ale.bias.data_distribution import DataDistribution
@@ -11,8 +12,16 @@ from ale.trainer.prediction_result import PredictionResult, Span
 
 
 class BiasDetector:
-    def __init__(self, nlp_task: NLPTask, label_column: str, file_raw: Path):
+    def __init__(self, nlp_task: NLPTask, label_column: str, file_raw: Path, ids=None):
         self.data_distribution = DataDistribution(nlp_task, label_column, file_raw)
+        def filter_func(entry):
+            if ids:
+                return entry["id"] in ids
+            else:
+                return True
+
+        self.corpus_by_id = {e["id"]: e for e in srsly.read_jsonl(file_raw) if filter_func(e)}
+        self.ids = ids
 
         self.compute_function: Callable[
             [Dict[int, Any], str, Dict[int, PredictionResult]], Tuple[Dict[str, float], Dict[str, float]]] = {
@@ -20,9 +29,9 @@ class BiasDetector:
             NLPTask.NER: self.compute_ner
         }[nlp_task]
 
-    def compute_and_log_distribution(self, mlflow_run: Run, artifact_name: str, ids: List[int] = None):
-        if ids:
-            distribution = self.data_distribution.get_data_distribution_by_label_for_ids(ids)
+    def compute_and_log_distribution(self, mlflow_run: Run, artifact_name: str):
+        if self.ids:
+            distribution = self.data_distribution.get_data_distribution_by_label_for_ids(self.ids)
         else:
             distribution = self.data_distribution.get_data_distribution_by_label()
 
@@ -30,17 +39,18 @@ class BiasDetector:
 
         return distribution
 
-    def compute_bias(self, corpus_dict: Dict[int, Any], distribution: Dict[str, float],
+    def compute_bias(self, distribution: Dict[str, float],
                      predictions: Dict[int, PredictionResult],
                      label_column: str):
-        accuracy_per_label, error_per_label = self.compute_function(corpus_dict, label_column, predictions)
+        accuracy_per_label, error_per_label = self.compute_function(self.corpus_by_id, label_column, predictions)
 
         norm_distribution = self.normalize_counts(distribution)
-        # TODO 0 epsilon
-        # TODO distance to optimum distr (equally distr.)
-        # TODO nur auf data distr bewerten
-        bias = {label: error * -np.log(norm_distribution[label]) for label, error in error_per_label.items()}
-        return accuracy_per_label, bias, error_per_label
+        eps = 0.000000001
+
+        bias = {label: error * -np.log(norm_distribution[label] + eps) for label, error in error_per_label.items()}
+        bias_by_optimum = {label: error * -np.log(abs(1/len(norm_distribution) - norm_distribution[label]) + eps) for label, error in error_per_label.items()}
+        bias_by_distribution_diff = {label: error * 1 + abs(1/len(norm_distribution) - norm_distribution[label]) for label, error in error_per_label.items()}
+        return accuracy_per_label, bias, error_per_label, bias_by_optimum, bias_by_distribution_diff
 
     @staticmethod
     def normalize_counts(counts_dict):

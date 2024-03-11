@@ -14,7 +14,7 @@ import hydra
 from omegaconf import OmegaConf
 
 from ale.pipeline.pipeline import MLFlowPipeline
-from ale.pipeline.pipeline_components.add_ids_component import AddIdsComponent
+from ale.pipeline.pipeline_components.add_ids_component import AddIdsTrainComponent, AddIdsDevComponent
 from ale.pipeline.pipeline_components.aggregate_seed_runs import AggregateSeedRuns
 from ale.pipeline.pipeline_components.collect_labels_component import (
     CollectLabelsComponent,
@@ -62,7 +62,8 @@ def run(cfg: AppConfig):
     )
 
     pipeline = MLFlowPipeline(cfg)
-    pipeline.add(PipelineComponents.ADD_IDS_TO_TRAIN_FILE, AddIdsComponent)
+    pipeline.add(PipelineComponents.ADD_IDS_TO_TRAIN_FILE, AddIdsTrainComponent)
+    pipeline.add(PipelineComponents.ADD_IDS_TO_DEV_FILE, AddIdsDevComponent)
     pipeline.add(PipelineComponents.COLLECT_LABELS, CollectLabelsComponent)
     pipeline.add(PipelineComponents.DATA_DISTRIBUTIONS, DataDistributionMeasure)
     pipeline.add(PipelineComponents.CONVERT_DATA, converter_class)
