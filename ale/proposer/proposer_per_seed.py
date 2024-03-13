@@ -12,6 +12,7 @@ from ale.config import AppConfig
 from ale.corpus.corpus import Corpus
 from ale.proposer.hooks.abstract_hook import ProposeHook
 from ale.proposer.hooks.assess_bias_hook import AssessBiasHook
+from ale.proposer.hooks.assess_confidence_hook import AssessConfidenceHook
 
 from ale.registry.registerable_corpus import CorpusRegistry
 from ale.registry.registerable_teacher import TeacherRegistry
@@ -120,6 +121,11 @@ class AleBartenderPerSeed:
                                         train_file_raw=self.train_file_raw,
                                         dev_file_raw=self.dev_file_raw,
                                         trainer=self.trainer))
+        if self.cfg.experiment.assess_overconfidence:
+            hooks.append(AssessConfidenceHook(self.cfg, self.parent_run_id, self.corpus,
+                                              train_file_raw=self.train_file_raw,
+                                              dev_file_raw=self.dev_file_raw,
+                                              trainer=self.trainer))
 
         do_predictions_on_dev = any([h.needs_dev_predictions for h in hooks])
         do_predictions_on_train = any([h.needs_train_predictions for h in hooks])
@@ -143,6 +149,7 @@ class AleBartenderPerSeed:
             preds_dev = None
             if do_predictions_on_train:
                 logger.info(f"Perform predictions on training data")
+
                 def train_filter(entry: Dict) -> bool:
                     return entry["id"] in self.corpus.get_relevant_ids()
 
