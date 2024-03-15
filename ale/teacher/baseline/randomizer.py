@@ -6,6 +6,7 @@ from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.trainer.base_trainer import Predictor
+from ale.config import NLPTask
 
 
 @TeacherRegistry.register("randomizer")
@@ -19,10 +20,11 @@ class RandomTeacher(BaseTeacher, ABC):
         corpus: Corpus,
         predictor: Predictor,
         seed: int,
-        labels: List[Any]
+        labels: List[Any],
+        nlp_task: NLPTask
     ):
         super().__init__(
-            corpus=corpus, predictor=predictor, seed=seed, labels=labels
+            corpus=corpus, predictor=predictor, seed=seed, labels=labels, nlp_task=nlp_task
         )
         random.seed(self.seed)
 
