@@ -58,13 +58,13 @@ def test_margin_for_ner_max(prediction_results: List[PredictionResult]):
     margin_teacher: MarginTeacher = MarginTeacher(None, None, 0, ["org", "per", "loc"], NLPTask.NER, AGGREGATION_METHOD.MAXIMUM)
 
     out_ids: List[int] = margin_teacher.compute_function(prediction_results,2)
-    assert out_ids==[0,1,2]
+    assert out_ids==[0,1]
 
 def test_margin_for_ner_std(prediction_results: List[PredictionResult]):
     margin_teacher: MarginTeacher = MarginTeacher(None, None, 0, ["org", "per", "loc"], NLPTask.NER, AGGREGATION_METHOD.STD)
 
     out_ids: List[int] = margin_teacher.compute_function(prediction_results,2)
-    assert out_ids==[0,1,2]
+    assert out_ids==[0,1]
 
 def test_margin_for_ner_sum(prediction_results: List[PredictionResult]):
     margin_teacher: MarginTeacher = MarginTeacher(None, None, 0, ["org", "per", "loc"], NLPTask.NER, AGGREGATION_METHOD.SUM)
