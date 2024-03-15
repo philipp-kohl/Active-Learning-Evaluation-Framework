@@ -7,6 +7,7 @@ from numpy.linalg import norm
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
@@ -54,12 +55,13 @@ def cluster_documents(corpus: Corpus, k: int):
 @TeacherRegistry.register("k-means")
 class KMeansTeacher(BaseTeacher):
 
-    def __init__(self, corpus: Corpus, predictor: Predictor, seed: int, labels: List[Any]):
+    def __init__(self, corpus: Corpus, predictor: Predictor, seed: int, labels: List[Any], nlp_task: NLPTask):
         super().__init__(
             corpus=corpus,
             predictor=predictor,
             seed=seed,
-            labels=labels
+            labels=labels,
+            nlp_task=nlp_task
         )
         self.k = len(self.labels)
         self.idx2distance = cluster_documents(corpus=corpus, k=self.k)

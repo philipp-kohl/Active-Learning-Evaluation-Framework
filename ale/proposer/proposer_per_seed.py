@@ -67,7 +67,8 @@ class AleBartenderPerSeed:
             corpus=self.corpus,
             predictor=self.trainer,
             seed=seed,
-            labels=labels
+            labels=labels,
+            nlp_task=self.cfg.data.nlp_task
         )
         logger.info(f"Use '{self.cfg.experiment.initial_data_strategy}' teacher for initial data ratio.")
         initial_teacher_strategy_class = TeacherRegistry.get_instance(
@@ -77,7 +78,8 @@ class AleBartenderPerSeed:
             corpus=self.corpus,
             predictor=self.trainer,
             seed=seed,
-            labels=labels
+            labels=labels,
+            nlp_task=self.cfg.data.nlp_task
         )
         self.bias_detector_train = BiasDetector(self.cfg.data.nlp_task, self.cfg.data.label_column, train_file_raw)
         self.bias_detector_dev = BiasDetector(self.cfg.data.nlp_task, self.cfg.data.label_column, dev_file_raw)
