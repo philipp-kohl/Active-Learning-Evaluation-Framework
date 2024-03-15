@@ -24,10 +24,10 @@ class BaseTeacher(ABC):
 
         if aggregation_method is not None: # For exploitation based approaches in Entity Recognition
             self.aggregation_method = aggregation_method
-            self.aggregate_function = Aggregation(self.aggregation_method)
+            self.aggregate_function = Aggregation(self.aggregation_method).get_aggregate_function()
 
         self.compute_function: Callable[
-            [List[PredictionResult], int], Tuple[Dict[str, float], Dict[str, float]]] = {
+            [Dict[int,PredictionResult], int], Tuple[Dict[str, float], Dict[str, float]]] = {
             NLPTask.CLS: self.compute_cls,
             NLPTask.NER: self.compute_ner
         }[nlp_task]
@@ -42,22 +42,22 @@ class BaseTeacher(ABC):
         pass
     
     @abstractmethod
-    def compute_cls(self, predictions: List[PredictionResult], step_size: int) -> List[int]:
+    def compute_cls(self, predictions: Dict[int, PredictionResult], step_size: int) -> List[int]:
         """
         Computes the order in which the samples are proposed according to the teacher used.
         Args:
-            - predictions (List[PredictionResult]): prediction results of the samples to be proposed
+            - predictions (Dict[int,PredictionResult]): key: id of doc, value: prediction result of doc
         Returns:
             - List[int]: ordered list of indices of the documents
         """
         pass
 
     @abstractmethod
-    def compute_ner(self, predictions: List[PredictionResult], step_size: int) -> List[int]:
+    def compute_ner(self, predictions: Dict[int,PredictionResult], step_size: int) -> List[int]:
         """
         Computes the order in which the samples are proposed according to the teacher used.
         Args:
-            - predictions (List[PredictionResult]): prediction results of the samples to be proposed
+            - predictions (Dict[int,PredictionResult]): key: id of doc, value: prediction result of doc
         Returns:
             - List[int]: ordered list of indices of the documents
         """
