@@ -40,6 +40,25 @@ class Accuracy:
         return accuracy_per_label, error_per_label
 
     @staticmethod
+    def get_highest_score_entry(scores_dict):
+        """
+        Returns the dictionary entry with the highest score.
+
+        Parameters:
+        - scores_dict (dict): A dictionary where the keys are labels and the values are scores.
+
+        Returns:
+        - tuple: The key-value pair with the highest score.
+        """
+        # Check if the dictionary is not empty
+        if scores_dict:
+            # Find the key with the highest value
+            highest_entry = max(scores_dict.items(), key=lambda x: x[1])
+            return highest_entry
+        else:
+            return None, None
+
+    @staticmethod
     def is_full_match(gold: Tuple[int, int, str], pred: Span) -> bool:
         return gold[0] == pred.start and gold[1] == pred.end and gold[2] == pred.label
 
@@ -81,12 +100,14 @@ class Accuracy:
 
         return accuracy_per_label, error_per_label
 
-    def is_match(self, gold, pred_entities):
+    @staticmethod
+    def is_match(gold, pred_entities):
         for pred in pred_entities:
-            if self.is_full_match(gold, pred):  # TODO partial match?
+            if Accuracy.is_full_match(gold, pred):  # TODO partial match?
                 return True
 
         return False
 
-    def __call__(self, examples: Dict[int, Any], label_column: str, predictions: Dict[int, PredictionResult]):
+    def __call__(self, examples: Dict[int, Any], label_column: str, predictions: Dict[int, PredictionResult]) -> Tuple[
+        Dict[str, float], Dict[str, float]]:
         return self.compute_function(examples, label_column, predictions)
