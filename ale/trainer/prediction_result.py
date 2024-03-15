@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, Union, List
 
 from pydantic import BaseModel
 
@@ -14,9 +14,10 @@ class Span(BaseModel):
 
 class PredictionResult(BaseModel):
     classification_confidences: Optional[Dict[str, float]] = {}
-    ner_confidences: Optional[Dict[Span, float]] = {}
+    ner_confidences_span: Optional[Dict[Span, float]] = {}
+    ner_confidences_token: Optional[Dict[int,List[float]]] = {} # key: index of token
 
-    def add_ner(self, span: Span, score: float):
+    def add_ner_span(self, span: Span, score: float):
         if self.ner_confidences is None:
             self.ner_confidences = {}
 

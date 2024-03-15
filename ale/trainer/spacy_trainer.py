@@ -246,7 +246,7 @@ class SpacyOnlineTrainer(PredictionTrainer):
         result = PredictionResult()
 
         for span, score in zip(spans, scores):
-            result.add_ner(
+            result.add_ner_span(
                 Span(start=span.start_char, end=span.end_char, label=span.label_), score
             )
 
