@@ -66,7 +66,7 @@ class KMeansTeacher(BaseTeacher):
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
         potential_distances = {idx: self.idx2distance[idx] for idx in potential_ids}
-        sorted_distances = sorted(list(potential_distances.values()), reverse=True)[:step_size]
-        out_ids = [idx for idx, dist in potential_distances.items()
-                   if dist in sorted_distances]
+        sorted_dict_by_score = sorted(potential_distances.items(), key=lambda x:x[1], reverse=True)
+        out_ids = [item[0] for item in sorted_dict_by_score[:step_size]]
+        
         return out_ids
