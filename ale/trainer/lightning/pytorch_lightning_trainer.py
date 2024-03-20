@@ -1,29 +1,26 @@
 import logging
 import os
-import shutil
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 import torch
-from datasets import Dataset
-from lightning import seed_everything
+from lightning import seed_everything, Callback
 from lightning.pytorch import Trainer
-from lightning.pytorch.loggers import TensorBoardLogger
 from mlflow import ActiveRun
 from mlflow.entities import Run
 from mlflow.store.artifact.artifact_repository_registry import get_artifact_repository
-from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.loggers import MLFlowLogger
-from torch.utils.data import DataLoader
+from lightning.pytorch.callbacks.early_stopping import EarlyStopping
+from lightning.pytorch.callbacks.model_checkpoint import ModelCheckpoint
+from lightning.pytorch.loggers.mlflow import MLFlowLogger
 
 from ale.config import AppConfig
 from ale.corpus.corpus import Corpus
 from ale.mlflowutils import mlflow_utils
 from ale.registry import TrainerRegistry
 from ale.trainer.base_trainer import BaseTrainer, MetricsType
-from ale.trainer.lightning.ner_dataset import AleNerDataModule, PredictionDataModule
+from ale.trainer.lightning.ner_dataset import PredictionDataModule
 from ale.trainer.lightning.trf_model import TransformerLightning
-from ale.trainer.prediction_result import PredictionResult
+from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence
 
 logger = logging.getLogger(__name__)
 
@@ -36,16 +33,23 @@ class PyTorchLightningTrainer(BaseTrainer):
         labels = ["PER", "ORG", "LOC", "MISC"]
         seed_everything(seed, workers=True)
         self.dataset = corpus.data_module
-        self.model = self.model_class(huggingface_model, labels, 2e-5, ignore_labels=["O"])
+        self.model = self.model_class(huggingface_model, labels, 2e-5, 0.01, ignore_labels=["O"])
         self.cfg = cfg
 
     def train(self, train_corpus: Corpus, active_run: ActiveRun) -> MetricsType:
         mlf_logger = MLFlowLogger(experiment_name=self.cfg.mlflow.experiment_name,
                                   tracking_uri=self.cfg.mlflow.url,
                                   run_id=active_run.info.run_id)
-        self.trainer = Trainer(max_epochs=2, devices=1, accelerator="gpu", logger=mlf_logger,
-                               deterministic=True,
-                               default_root_dir="pt_lightning/checkpoints/")
+        early_stop_callback = EarlyStopping(monitor="val_f1_macro", min_delta=0.00, patience=3,
+                                            verbose=True, mode="max")
+        checkpoint_callback = ModelCheckpoint(dirpath='pt_lightning/checkpoints/', save_top_k=2, save_weights_only=True,
+                                              save_on_train_epoch_end=True, monitor="val_f1_macro", mode="max")
+        callbacks = [early_stop_callback, checkpoint_callback]
+        self.trainer = Trainer(max_epochs=20, devices=1, accelerator="gpu",
+                               logger=mlf_logger, deterministic=True,
+                               #profiler="simple"
+                               callbacks=callbacks
+                               )
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
         torch.set_float32_matmul_precision('high')
         self.trainer.fit(self.model, self.dataset)
@@ -76,9 +80,25 @@ class PyTorchLightningTrainer(BaseTrainer):
 
         texts = list(docs.values())
         data = PredictionDataModule(texts, "FacebookAI/roberta-base")
-        predictions = self.trainer.predict(self.model, data.predict_dataloader())
 
-        i = 10
+        predictions_per_doc = []
+        prediction_batches = self.trainer.predict(self.model, data.predict_dataloader())
+
+        for single_batch in prediction_batches:
+            first_key = list(single_batch.keys())[0]
+            for i in range(len(single_batch[first_key])):
+                infos_per_doc = {}
+                for key in single_batch:
+                    infos_per_doc[key] = single_batch[key][i]
+                predictions_per_doc.append(infos_per_doc)
+
+        for idx, pred in zip(docs.keys(), predictions_per_doc):
+            prediction_result = PredictionResult()
+            for single_token, single_conf_array in zip(pred['tokens'], pred['confidences']):
+                label_confidences = [LabelConfidence(label=l, confidence=c) for l, c in single_conf_array.items()]
+                prediction_result.ner_confidences_token.append(TokenConfidence(text=single_token, label_confidence=label_confidences))
+
+            results[idx] = prediction_result
 
         return results
 

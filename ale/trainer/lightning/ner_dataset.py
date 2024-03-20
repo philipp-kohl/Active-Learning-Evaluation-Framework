@@ -5,7 +5,7 @@ import srsly
 import torch
 from lightning import LightningDataModule
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, BatchEncoding
 
 from ale.trainer.lightning.utils import derive_labels
 
@@ -35,8 +35,8 @@ class AleNerDataModule(LightningDataModule):
             text = entry["text"]
             labels = entry["labels"]
 
-            tokenized = self.tokenizer(text, add_special_tokens=False, return_offsets_mapping=True)
-            token_labels, tokens_text = self.create_token_labels(labels, text)
+            tokenized = self.tokenizer(text, add_special_tokens=True, return_offsets_mapping=True)
+            token_labels, tokens_text = self.create_token_labels(labels, tokenized)
             token_labels = [self.label2id[label] for label in token_labels]
 
             if "id" in entry:
@@ -48,24 +48,13 @@ class AleNerDataModule(LightningDataModule):
 
         return result
 
-    def create_token_labels(self, labels, text):
-        tokens_text = self.tokenizer.tokenize(text)
+    def create_token_labels(self, labels, tokenized):
+        tokens_text = self.tokenizer.convert_ids_to_tokens(tokenized['input_ids'])
         cleaned_tokens = [token.lstrip("Ġ") for token in tokens_text]
-        token_labels = self.char_to_token_labels(cleaned_tokens, labels)
+        token_labels = self.char_to_token_labels(tokenized, labels)
         return token_labels, cleaned_tokens
 
     def collate(self, batch, pad_label_value: int = -100):
-        """
-        Collates a batch of data samples for training or evaluation, performing padding.
-
-        Args:
-            batch (list): A list of dictionaries containing tokenized data and labels.
-
-        Returns:
-            dict: A dictionary with batched tensors for 'input_ids', 'attention_mask',
-                  and 'labels'.
-        """
-
         # Get individual elements from the batch
         max_length = max(len(example['tokens']['input_ids']) for example in batch)  # Determine the max length
 
@@ -107,8 +96,9 @@ class AleNerDataModule(LightningDataModule):
         return batch_data
 
     def train_dataloader(self):
-        filtered = self.train_filter_func(self.train)
-        return DataLoader(filtered, batch_size=self.batch_size, collate_fn=self.collate, num_workers=self.num_workers)
+        #filtered = self.train_filter_func(self.train)
+        #return DataLoader(filtered, batch_size=self.batch_size, collate_fn=self.collate, num_workers=self.num_workers)
+        return DataLoader(self.train, batch_size=self.batch_size, collate_fn=self.collate, num_workers=self.num_workers)
 
     def val_dataloader(self):
         return DataLoader(self.dev, batch_size=self.batch_size, collate_fn=self.collate, num_workers=self.num_workers)
@@ -122,26 +112,24 @@ class AleNerDataModule(LightningDataModule):
     def teardown(self, stage: str):
         pass  # Used to clean-up when the run is finished
 
-    def char_to_token_labels(self, tokens: List[str], char_labels: List[Tuple[int, int, str]]):
-        # Find the start position of each token
-        token_starts = [0]
-        for token in tokens[:-1]:  # We don't need the start of the last token separately
-            token_starts.append(token_starts[-1] + len(token) + 1)  # +1 for the space
+    def char_to_token_labels(self, batch_encoding: BatchEncoding, char_labels: List[Tuple[int, int, str]]):
+        token_labels = ["O"] * len(batch_encoding["offset_mapping"])
 
-        # Initialize an empty list for token-based labels
-        token_labels = ['O'] * len(tokens)  # 'O' for tokens not associated with any label
-
-        # Iterate through each character-based label
         for start_char, end_char, label in char_labels:
-            first_label = True  # Indicator for the first token of the entity
-            # Find which tokens are covered by the character range
-            for i, token_start in enumerate(token_starts):
-                if start_char <= token_start < end_char:
-                    if first_label:
-                        token_labels[i] = 'B-' + label  # Begin label
-                        first_label = False
+            # Flag to denote the first token in the span
+            first_token = True
+            for i, (start, end) in enumerate(batch_encoding["offset_mapping"]):
+                # Skip tokens that are not part of the original text (special tokens)
+                if start == end == 0:
+                    continue
+
+                # Check if the current token overlaps with the current annotation span
+                if start < end_char and end > start_char:
+                    if first_token:
+                        token_labels[i] = "B-" + label
+                        first_token = False
                     else:
-                        token_labels[i] = 'I-' + label  # Inside label
+                        token_labels[i] = "I-" + label
 
         return token_labels
 
@@ -170,7 +158,7 @@ class PredictionDataModule(LightningDataModule):
         cleaned_tokens = [token.lstrip("Ġ") for token in tokens_text]
         return cleaned_tokens
 
-    def collate(self, batch, pad_label_value: int = -100):
+    def collate(self, batch):
         """
         Collates a batch of data samples for training or evaluation, performing padding.
 
@@ -206,8 +194,6 @@ class PredictionDataModule(LightningDataModule):
             batch_attention_mask.append(attention_mask)
             batch_offset_mapping.append(offsets)
 
-
-        # Convert lists to PyTorch tensors
         batch_data = {
             'input_ids': torch.tensor(batch_input_ids, dtype=torch.long),
             'attention_mask': torch.tensor(batch_attention_mask, dtype=torch.long),
@@ -222,4 +208,4 @@ class PredictionDataModule(LightningDataModule):
         return DataLoader(self.prediction_set,
                           batch_size=self.batch_size,
                           collate_fn=self.collate,
-                          num_workers=self.num_workers)  # not used
+                          num_workers=self.num_workers)

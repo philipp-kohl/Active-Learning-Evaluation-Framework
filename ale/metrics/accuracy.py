@@ -75,13 +75,13 @@ class Accuracy:
         # Iterate through each example
         for idx in corpus_dict.keys():
             gold_entities = corpus_dict[idx][label_column]
-            ner_preds = preds[idx].ner_confidences
+            ner_preds = preds[idx].ner_confidences_span
             if ner_preds is None:
                 if len(gold_entities) > 0:
                     raise Exception("Let's punish the missing preds!")
                 else:
                     continue
-            pred_entities = list(preds[idx].ner_confidences.keys())
+            pred_entities = list(preds[idx].ner_confidences_span.keys())
 
             for gold in gold_entities:
                 label_counts[gold[2]] += 1

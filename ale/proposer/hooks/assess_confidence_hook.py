@@ -61,7 +61,7 @@ class AssessConfidenceHook(ProposeHook):
 
         confidences: Dict[str, float] = defaultdict(float)
         for _, pred in preds.items():
-            for span, score in pred.ner_confidences.items():
+            for span, score in pred.ner_confidences_span.items():
                 confidences[span.label] = score
 
         ece_per_label = {}
@@ -86,13 +86,13 @@ class AssessConfidenceHook(ProposeHook):
         confidences = []
         for idx in corpus_dict.keys():
             gold_entities = corpus_dict[idx][label_column]
-            ner_preds = preds[idx].ner_confidences
+            ner_preds = preds[idx].ner_confidences_span
             if ner_preds is None:
                 if len(gold_entities) > 0:
                     raise Exception("Let's punish the missing preds!")
                 else:
                     continue
-            pred_entities = preds[idx].ner_confidences
+            pred_entities = preds[idx].ner_confidences_span
 
             for gold in gold_entities:
                 matched = False
@@ -112,7 +112,7 @@ class AssessConfidenceHook(ProposeHook):
         ece_score = self.calculate_ece(confidences, labels, num_bins=10)
         self.plot_reliability_diagram_plotly(confidences, labels, new_run)
         all_confidences = [confidences for idx in corpus_dict.keys() for span, confidences in
-                           preds[idx].ner_confidences.items()]
+                           preds[idx].ner_confidences_span.items()]
         utils.store_histogram(all_confidences, new_run, prefix + "/confidences", ["Confidence", "Frequency"])
 
         MlflowClient().log_metric(
