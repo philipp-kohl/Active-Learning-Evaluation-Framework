@@ -1,2 +1,3 @@
-from ale.trainer.dummy_trainer import SpacyOnlineTrainer
-from ale.trainer.spacy_trainer import SpacyOnlineTrainer
+from ale.trainer.dummy_trainer import DummyTrainer
+from ale.trainer.spacy_trainer.spacy_trainer import SpacyOnlineTrainer
+from ale.trainer.lightning.pytorch_lightning_trainer import PyTorchLightningTrainer

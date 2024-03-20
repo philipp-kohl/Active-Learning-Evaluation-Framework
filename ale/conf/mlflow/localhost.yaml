@@ -1,4 +1,4 @@
-experiment_name: hooks_v29
+experiment_name: pt_lightning_v24
 url: http://127.0.0.1:5000
 run_name:
 git_hash:
