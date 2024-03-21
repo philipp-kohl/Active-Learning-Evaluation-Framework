@@ -17,7 +17,7 @@ class AleNerDataModule(LightningDataModule):
         self.data_dir: Path = Path(data_dir)
         self.batch_size = batch_size
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.id2label, self.label2id = derive_labels(labels)
+        self.id2label, self.label2id, _ = derive_labels(labels)
         self.num_workers = num_workers
         self.train = None
         self.dev = None

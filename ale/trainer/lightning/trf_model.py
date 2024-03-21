@@ -14,6 +14,19 @@ def is_valid_for_prog_bar(metric_name: str):
     return "f1_macro" in metric_name.lower() or "f1_micro" in metric_name.lower()
 
 
+class LabelGeneralizer:
+    def __init__(self, bio_id_to_coarse_label_id, device: str = "cpu"):
+        # Convert the mapping to a PyTorch tensor for efficient indexing
+        max_id = max(bio_id_to_coarse_label_id.keys())
+        self.mapping_tensor = torch.empty(max_id + 1, dtype=torch.long, device=device)
+
+        for bio_id, coarse_id in bio_id_to_coarse_label_id.items():
+            self.mapping_tensor[bio_id] = coarse_id
+
+    def generalize_labels(self, labels):
+        return self.mapping_tensor[labels]
+
+
 class TransformerLightning(LightningModule):
     def __init__(self, model_name: str, labels: List[str], learn_rate: float, weight_decay: float,
                  ignore_labels: List[str] = None):
@@ -22,78 +35,44 @@ class TransformerLightning(LightningModule):
         if ignore_labels is None:
             ignore_labels = []
 
-        self.id2label, self.label2id = derive_labels(labels)
+        self.id2label, self.label2id, self.bio_id_to_coarse_label_id = derive_labels(labels)
         self.model = AutoModelForTokenClassification.from_pretrained(model_name, num_labels=len(self.id2label),
                                                                      id2label=self.id2label, label2id=self.label2id)
         self.learn_rate = learn_rate
         self.num_labels = len(self.id2label)
 
-        self.f1_macro_per_label = torchmetrics.F1Score(task="multiclass", num_classes=self.num_labels,
-                                                       average=None,
-                                                       ignore_index=-1)
-        self.val_metrics = {
-            "val_precision_micro": torchmetrics.Precision(task="multiclass", num_classes=self.num_labels,
-                                                          average='micro', ignore_index=-1),
-            "val_recall_micro": torchmetrics.Recall(task="multiclass", num_classes=self.num_labels,
-                                                    average='micro',
-                                                    ignore_index=-1),
-            "val_f1_micro": torchmetrics.F1Score(task="multiclass", num_classes=self.num_labels,
-                                                 average='micro',
-                                                 ignore_index=-1),
-            "val_precision_macro": torchmetrics.Precision(task="multiclass", num_classes=self.num_labels,
-                                                          average='macro', ignore_index=-1),
-            "val_recall_macro": torchmetrics.Recall(task="multiclass", num_classes=self.num_labels,
-                                                    average='macro',
-                                                    ignore_index=-1),
-            "val_f1_macro": torchmetrics.F1Score(task="multiclass", num_classes=self.num_labels,
-                                                 average='macro',
-                                                 ignore_index=-1)
+        self.raw_labels = ['O'] + labels
+        self.f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1,
+                                                        average=None)
+        self.metrics = {
+            "precision_micro": torchmetrics.Precision(task="multiclass", num_classes=self.num_labels,
+                                                      average='micro', ignore_index=-1),
+            "recall_micro": torchmetrics.Recall(task="multiclass", num_classes=self.num_labels,
+                                                average='micro',
+                                                ignore_index=-1),
+            "f1_micro": torchmetrics.F1Score(task="multiclass", num_classes=self.num_labels,
+                                             average='micro',
+                                             ignore_index=-1),
+            "precision_macro": torchmetrics.Precision(task="multiclass", num_classes=self.num_labels,
+                                                      average='macro', ignore_index=-1),
+            "recall_macro": torchmetrics.Recall(task="multiclass", num_classes=self.num_labels,
+                                                average='macro',
+                                                ignore_index=-1),
+            "f1_macro": torchmetrics.F1Score(task="multiclass", num_classes=self.num_labels,
+                                             average='macro',
+                                             ignore_index=-1)
         }
-        self.train_metrics = {
-            "train_precision_micro": torchmetrics.Precision(task="multiclass", num_classes=self.num_labels,
-                                                            average='micro', ignore_index=-1),
-            "train_recall_micro": torchmetrics.Recall(task="multiclass", num_classes=self.num_labels,
-                                                      average='micro',
-                                                      ignore_index=-1),
-            "train_f1_micro": torchmetrics.F1Score(task="multiclass", num_classes=self.num_labels,
-                                                   average='micro',
-                                                   ignore_index=-1),
-            "train_precision_macro": torchmetrics.Precision(task="multiclass", num_classes=self.num_labels,
-                                                            average='macro', ignore_index=-1),
-            "train_recall_macro": torchmetrics.Recall(task="multiclass", num_classes=self.num_labels,
-                                                      average='macro',
-                                                      ignore_index=-1),
-            "train_f1_macro": torchmetrics.F1Score(task="multiclass", num_classes=self.num_labels,
-                                                   average='macro',
-                                                   ignore_index=-1)}
-        self.test_metrics = {
-            "test_precision_micro": torchmetrics.Precision(task="multiclass", num_classes=self.num_labels,
-                                                           average='micro', ignore_index=-1),
-            "test_recall_micro": torchmetrics.Recall(task="multiclass", num_classes=self.num_labels,
-                                                     average='micro',
-                                                     ignore_index=-1),
-            "test_f1_micro": torchmetrics.F1Score(task="multiclass", num_classes=self.num_labels,
-                                                  average='micro',
-                                                  ignore_index=-1),
-            "test_precision_macro": torchmetrics.Precision(task="multiclass", num_classes=self.num_labels,
-                                                           average='macro', ignore_index=-1),
-            "test_recall_macro": torchmetrics.Recall(task="multiclass", num_classes=self.num_labels,
-                                                     average='macro',
-                                                     ignore_index=-1),
-            "test_f1_macro": torchmetrics.F1Score(task="multiclass", num_classes=self.num_labels,
-                                                  average='macro',
-                                                  ignore_index=-1)}
         self.ignore_labels = ignore_labels
         self.weight_decay = weight_decay
 
+    def generalize_labels(self, labels):
+        label_generalizer = LabelGeneralizer(self.bio_id_to_coarse_label_id, self.device)
+        return label_generalizer.generalize_labels(labels)
+
     def on_fit_start(self):
         self.model = self.model.to(self.device)
-        for metric_name, metric in self.val_metrics.items():
-            self.val_metrics[metric_name] = metric.to(self.device)
-        for metric_name, metric in self.train_metrics.items():
-            self.train_metrics[metric_name] = metric.to(self.device)
-        for metric_name, metric in self.test_metrics.items():
-            self.test_metrics[metric_name] = metric.to(self.device)
+        for metric_name, metric in self.metrics.items():
+            self.metrics[metric_name] = metric.to(self.device)
 
     def forward(self, input_ids, attention_mask, labels=None, **kwargs):
         return self.model(input_ids, attention_mask=attention_mask, labels=labels)
@@ -101,20 +80,20 @@ class TransformerLightning(LightningModule):
     def training_step(self, batch, batch_idx):
         outputs = self(**batch)
         loss = outputs.loss
-        self.evaluate(batch, outputs, self.train_metrics)
+        self.evaluate(batch, outputs)
         self.log("train_loss", loss)
         return loss
 
     def validation_step(self, batch, batch_idx):
         outputs = self(**batch)
         loss = outputs.loss
-        self.evaluate(batch, outputs, self.val_metrics)
+        self.evaluate(batch, outputs)
         self.log_dict({'val_loss': loss})
 
     def test_step(self, batch, batch_idx):
         outputs = self(**batch)
         loss = outputs.loss
-        self.evaluate(batch, outputs, self.test_metrics)
+        self.evaluate(batch, outputs)
         self.log_dict({'test_loss': loss})
 
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
@@ -158,25 +137,26 @@ class TransformerLightning(LightningModule):
 
         return result
 
+    def compute_and_log_metrics(self, prefix: str):
+        for metric_name, metric in self.metrics.items():
+            self.log(f"{prefix}_{metric_name}", metric.compute(), prog_bar=is_valid_for_prog_bar(metric_name))
+        for idx, score in enumerate(self.f1_per_label_wo_bio.compute()):
+            self.log(f"{prefix}_f1_{self.raw_labels[idx]}", score, prog_bar=False)
+
     def on_validation_epoch_end(self):
-        for metric_name, metric in self.val_metrics.items():
-            self.log(metric_name, metric.compute(), prog_bar=is_valid_for_prog_bar(metric_name))
-        for idx, score in enumerate(self.f1_macro_per_label.compute()):
-            self.log(f"val_f1_macro_${self.id2label[idx]}", score, prog_bar=False)
+        self.compute_and_log_metrics('val')
 
     def on_train_epoch_end(self):
-        for metric_name, metric in self.train_metrics.items():
-            self.log(metric_name, metric.compute(), prog_bar=is_valid_for_prog_bar(metric_name))
+        self.compute_and_log_metrics('train')
 
     def on_test_epoch_end(self):
-        for metric_name, metric in self.test_metrics.items():
-            self.log(metric_name, metric.compute(), prog_bar=is_valid_for_prog_bar(metric_name))
+        self.compute_and_log_metrics('test')
 
     def configure_optimizers(self):
         optimizer = optim.AdamW(self.parameters(), lr=self.learn_rate, weight_decay=self.weight_decay)
         return optimizer
 
-    def evaluate(self, batch, outputs, metrics: Dict[str, Metric]):
+    def evaluate(self, batch, outputs):
         mask = batch["attention_mask"]
         gold_labels = batch["labels"]
         prediction_labels = torch.argmax(outputs.logits, dim=-1)
@@ -187,18 +167,23 @@ class TransformerLightning(LightningModule):
         prediction_labels_flat = torch.where(mask_flat == 1, prediction_labels_flat,
                                              torch.tensor(-1, device=self.device))
         gold_labels_flat = torch.where(mask_flat == 1, gold_labels_flat, torch.tensor(-1, device=self.device))
+        prediction_labels_flat_with_ignore = prediction_labels_flat
+        gold_labels_flat_with_ignore = gold_labels_flat
         for l in self.ignore_labels:
             label_idx = self.label2id[l]
-            prediction_labels_flat = torch.where(prediction_labels_flat != label_idx,
+            prediction_labels_flat_with_ignore = torch.where(prediction_labels_flat != label_idx,
                                                  prediction_labels_flat,
                                                  torch.tensor(-1, device=self.device))
-            gold_labels_flat = torch.where(gold_labels_flat != label_idx, gold_labels_flat,
+            gold_labels_flat_with_ignore = torch.where(gold_labels_flat != label_idx, gold_labels_flat,
                                            torch.tensor(-1, device=self.device))
         # Filter out the ignored indices (-1) before passing them to the metrics
-        valid_indices = gold_labels_flat != -1  # Assuming -1 is used to mark padded or ignored labels
-        valid_gold_labels = gold_labels_flat[valid_indices]
-        valid_prediction_labels = prediction_labels_flat[valid_indices]
+        valid_indices = gold_labels_flat_with_ignore != -1  # Assuming -1 is used to mark padded or ignored labels
+        valid_gold_labels = gold_labels_flat_with_ignore[valid_indices]
+        valid_prediction_labels = prediction_labels_flat_with_ignore[valid_indices]
         # Update metrics with filtered valid labels and predictions
-        for metric_name, metric in metrics.items():
+
+        t1 = self.generalize_labels(prediction_labels_flat)
+        t2 = self.generalize_labels(gold_labels_flat)
+        for metric_name, metric in self.metrics.items():
             metric(valid_prediction_labels, valid_gold_labels)
-        self.f1_macro_per_label(valid_prediction_labels, valid_gold_labels)
+        self.f1_per_label_wo_bio(t1, t2)
