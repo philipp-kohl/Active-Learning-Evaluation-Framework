@@ -14,6 +14,35 @@ def is_valid_for_prog_bar(metric_name: str):
     return "f1_macro" in metric_name.lower() or "f1_micro" in metric_name.lower()
 
 
+def create_metrics(num_labels: int):
+    return {
+        "precision_micro": torchmetrics.Precision(task="multiclass",
+                                                  num_classes=num_labels,
+                                                  average='micro',
+                                                  ignore_index=-1),
+        "recall_micro": torchmetrics.Recall(task="multiclass",
+                                            num_classes=num_labels,
+                                            average='micro',
+                                            ignore_index=-1),
+        "f1_micro": torchmetrics.F1Score(task="multiclass",
+                                         num_classes=num_labels,
+                                         average='micro',
+                                         ignore_index=-1),
+        "precision_macro": torchmetrics.Precision(task="multiclass",
+                                                  num_classes=num_labels,
+                                                  average='macro',
+                                                  ignore_index=-1),
+        "recall_macro": torchmetrics.Recall(task="multiclass",
+                                            num_classes=num_labels,
+                                            average='macro',
+                                            ignore_index=-1),
+        "f1_macro": torchmetrics.F1Score(task="multiclass",
+                                         num_classes=num_labels,
+                                         average='macro',
+                                         ignore_index=-1)
+    }
+
+
 class LabelGeneralizer:
     def __init__(self, bio_id_to_coarse_label_id, device: str = "cpu"):
         # Convert the mapping to a PyTorch tensor for efficient indexing
@@ -39,40 +68,31 @@ class TransformerLightning(LightningModule):
         self.model = AutoModelForTokenClassification.from_pretrained(model_name, num_labels=len(self.id2label),
                                                                      id2label=self.id2label, label2id=self.label2id)
         self.learn_rate = learn_rate
-        self.num_labels = len(self.id2label)
-
-        self.raw_labels = ['O'] + labels
-        self.f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1,
-                                                        average=None)
-        self.metrics = {
-            "precision_micro": torchmetrics.Precision(task="multiclass", num_classes=self.num_labels,
-                                                      average='micro', ignore_index=-1),
-            "recall_micro": torchmetrics.Recall(task="multiclass", num_classes=self.num_labels,
-                                                average='micro',
-                                                ignore_index=-1),
-            "f1_micro": torchmetrics.F1Score(task="multiclass", num_classes=self.num_labels,
-                                             average='micro',
-                                             ignore_index=-1),
-            "precision_macro": torchmetrics.Precision(task="multiclass", num_classes=self.num_labels,
-                                                      average='macro', ignore_index=-1),
-            "recall_macro": torchmetrics.Recall(task="multiclass", num_classes=self.num_labels,
-                                                average='macro',
-                                                ignore_index=-1),
-            "f1_macro": torchmetrics.F1Score(task="multiclass", num_classes=self.num_labels,
-                                             average='macro',
-                                             ignore_index=-1)
-        }
         self.ignore_labels = ignore_labels
         self.weight_decay = weight_decay
+        self.num_labels = len(self.id2label)
+        self.raw_labels = ['O'] + labels
+
+        self.train_f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1, average=None)
+        self.val_f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1, average=None)
+        self.test_f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1, average=None)
+        self.train_metrics = create_metrics(self.num_labels)
+        self.val_metrics = create_metrics(self.num_labels)
+        self.test_metrics = create_metrics(self.num_labels)
 
     def generalize_labels(self, labels):
         label_generalizer = LabelGeneralizer(self.bio_id_to_coarse_label_id, self.device)
         return label_generalizer.generalize_labels(labels)
 
+    def move_metrics_to_device(self, metrics_dict):
+        for metric_name, metric in metrics_dict.items():
+            metrics_dict[metric_name] = metric.to(self.device)
+
     def on_fit_start(self):
         self.model = self.model.to(self.device)
-        for metric_name, metric in self.metrics.items():
-            self.metrics[metric_name] = metric.to(self.device)
+        self.move_metrics_to_device(self.train_metrics)
+        self.move_metrics_to_device(self.val_metrics)
+        self.move_metrics_to_device(self.test_metrics)
 
     def forward(self, input_ids, attention_mask, labels=None, **kwargs):
         return self.model(input_ids, attention_mask=attention_mask, labels=labels)
@@ -80,20 +100,20 @@ class TransformerLightning(LightningModule):
     def training_step(self, batch, batch_idx):
         outputs = self(**batch)
         loss = outputs.loss
-        self.evaluate(batch, outputs)
+        self.evaluate(batch, outputs, self.train_metrics, self.train_f1_per_label_wo_bio)
         self.log("train_loss", loss)
         return loss
 
     def validation_step(self, batch, batch_idx):
         outputs = self(**batch)
         loss = outputs.loss
-        self.evaluate(batch, outputs)
+        self.evaluate(batch, outputs, self.val_metrics, self.val_f1_per_label_wo_bio)
         self.log_dict({'val_loss': loss})
 
     def test_step(self, batch, batch_idx):
         outputs = self(**batch)
         loss = outputs.loss
-        self.evaluate(batch, outputs)
+        self.evaluate(batch, outputs, self.test_metrics, self.test_f1_per_label_wo_bio)
         self.log_dict({'test_loss': loss})
 
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
@@ -137,26 +157,26 @@ class TransformerLightning(LightningModule):
 
         return result
 
-    def compute_and_log_metrics(self, prefix: str):
-        for metric_name, metric in self.metrics.items():
+    def compute_and_log_metrics(self, prefix: str, metrics: Dict[str, Metric], f1_per_label: Metric):
+        for metric_name, metric in metrics.items():
             self.log(f"{prefix}_{metric_name}", metric.compute(), prog_bar=is_valid_for_prog_bar(metric_name))
-        for idx, score in enumerate(self.f1_per_label_wo_bio.compute()):
-            self.log(f"{prefix}_f1_{self.raw_labels[idx]}", score, prog_bar=False)
+        for idx, score in enumerate(f1_per_label.compute()):
+            self.log(f"{prefix}_f1_{self.raw_labels[idx]}", score)
 
     def on_validation_epoch_end(self):
-        self.compute_and_log_metrics('val')
+        self.compute_and_log_metrics('val', self.val_metrics, self.train_f1_per_label_wo_bio)
 
     def on_train_epoch_end(self):
-        self.compute_and_log_metrics('train')
+        self.compute_and_log_metrics('train', self.train_metrics, self.val_f1_per_label_wo_bio)
 
     def on_test_epoch_end(self):
-        self.compute_and_log_metrics('test')
+        self.compute_and_log_metrics('test', self.test_metrics, self.test_f1_per_label_wo_bio)
 
     def configure_optimizers(self):
         optimizer = optim.AdamW(self.parameters(), lr=self.learn_rate, weight_decay=self.weight_decay)
         return optimizer
 
-    def evaluate(self, batch, outputs):
+    def evaluate(self, batch, outputs, metrics: Dict[str, Metric], f1_per_label: Metric):
         mask = batch["attention_mask"]
         gold_labels = batch["labels"]
         prediction_labels = torch.argmax(outputs.logits, dim=-1)
@@ -172,10 +192,10 @@ class TransformerLightning(LightningModule):
         for l in self.ignore_labels:
             label_idx = self.label2id[l]
             prediction_labels_flat_with_ignore = torch.where(prediction_labels_flat != label_idx,
-                                                 prediction_labels_flat,
-                                                 torch.tensor(-1, device=self.device))
+                                                             prediction_labels_flat,
+                                                             torch.tensor(-1, device=self.device))
             gold_labels_flat_with_ignore = torch.where(gold_labels_flat != label_idx, gold_labels_flat,
-                                           torch.tensor(-1, device=self.device))
+                                                       torch.tensor(-1, device=self.device))
         # Filter out the ignored indices (-1) before passing them to the metrics
         valid_indices = gold_labels_flat_with_ignore != -1  # Assuming -1 is used to mark padded or ignored labels
         valid_gold_labels = gold_labels_flat_with_ignore[valid_indices]
@@ -184,6 +204,6 @@ class TransformerLightning(LightningModule):
 
         t1 = self.generalize_labels(prediction_labels_flat)
         t2 = self.generalize_labels(gold_labels_flat)
-        for metric_name, metric in self.metrics.items():
-            metric(valid_prediction_labels, valid_gold_labels)
-        self.f1_per_label_wo_bio(t1, t2)
+        for metric_name, metric in metrics.items():
+            metric.update(valid_prediction_labels, valid_gold_labels)
+        f1_per_label.update(t1, t2)

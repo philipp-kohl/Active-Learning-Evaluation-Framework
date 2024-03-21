@@ -40,7 +40,7 @@ class PyTorchLightningTrainer(BaseTrainer):
         mlf_logger = MLFlowLogger(experiment_name=self.cfg.mlflow.experiment_name,
                                   tracking_uri=self.cfg.mlflow.url,
                                   run_id=active_run.info.run_id)
-        early_stop_callback = EarlyStopping(monitor="val_f1_macro", min_delta=0.00, patience=3,
+        early_stop_callback = EarlyStopping(monitor="val_f1_macro", min_delta=0.001, patience=3,
                                             verbose=True, mode="max")
         checkpoint_callback = ModelCheckpoint(dirpath='pt_lightning/checkpoints/', save_top_k=2, save_weights_only=True,
                                               save_on_train_epoch_end=True, monitor="val_f1_macro", mode="max")
@@ -51,7 +51,7 @@ class PyTorchLightningTrainer(BaseTrainer):
                                callbacks=callbacks
                                )
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
-        torch.set_float32_matmul_precision('high')
+        torch.set_float32_matmul_precision('medium')
         self.trainer.fit(self.model, self.dataset)
         return self.trainer.validate(ckpt_path='best', dataloaders=self.dataset.val_dataloader())[0]
 
