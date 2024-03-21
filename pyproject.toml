@@ -24,8 +24,6 @@ pydantic = "^1.10.4"
 plotly = "^5.13.0"
 mlflow-export-import = "^1.2.0"
 lightning = "^2.2.1"
-torchvision = "^0.17.1"
-tensorboard = "^2.16.2"
 
 [build-system]
 requires = ["poetry-core"]
