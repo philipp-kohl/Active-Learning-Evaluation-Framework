@@ -3,6 +3,7 @@ from typing import Dict, Mapping, List
 
 from mlflow import ActiveRun
 from mlflow.entities import Run
+from torch.utils.data import DataLoader
 
 from ale.corpus.corpus import Corpus
 from ale.trainer.prediction_result import PredictionResult
@@ -34,6 +35,10 @@ class BaseTrainer(ABC):
 
     @abstractmethod
     def delete_artifacts(self, run: Run):
+        pass
+
+    @abstractmethod
+    def predict_with_known_gold_labels(self, data_loader: DataLoader) -> Dict[int, PredictionResult]:
         pass
 
 

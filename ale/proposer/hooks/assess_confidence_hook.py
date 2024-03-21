@@ -78,7 +78,7 @@ class AssessConfidenceHook(ProposeHook):
 
     def assess_confidence_v2(self, new_run, file_raw: Path,
                              prefix: str, preds: Optional[Dict[int, PredictionResult]], ids=None) -> None:
-
+        dataset = self.corpus.data_module
         label_column = self.cfg.data.label_column
         corpus_dict: Dict[int, Any] = {e["id"]: e for e in srsly.read_jsonl(file_raw)}
 

@@ -12,6 +12,7 @@ from mlflow.store.artifact.artifact_repository_registry import get_artifact_repo
 from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 from lightning.pytorch.callbacks.model_checkpoint import ModelCheckpoint
 from lightning.pytorch.loggers.mlflow import MLFlowLogger
+from torch.utils.data import DataLoader
 
 from ale.config import AppConfig
 from ale.corpus.corpus import Corpus
@@ -45,7 +46,7 @@ class PyTorchLightningTrainer(BaseTrainer):
         checkpoint_callback = ModelCheckpoint(dirpath='pt_lightning/checkpoints/', save_top_k=2, save_weights_only=True,
                                               save_on_train_epoch_end=True, monitor="val_f1_macro", mode="max")
         callbacks = [early_stop_callback, checkpoint_callback]
-        self.trainer = Trainer(max_epochs=20, devices=1, accelerator="gpu",
+        self.trainer = Trainer(max_epochs=1, devices=1, accelerator="gpu",
                                logger=mlf_logger, deterministic=True,
                                #profiler="simple"
                                callbacks=callbacks
@@ -102,4 +103,29 @@ class PyTorchLightningTrainer(BaseTrainer):
 
         return results
 
+    def predict_with_known_gold_labels(self, data_loader: DataLoader) -> Dict[int, PredictionResult]:
+        keys = [entry["id"] for entry in data_loader.dataset]
+        prediction_batches = self.trainer.predict(self.model, data_loader)
+
+        results: Dict[int, PredictionResult] = dict()
+        predictions_per_doc = []
+
+        for single_batch in prediction_batches:
+            first_key = list(single_batch.keys())[0]
+            for i in range(len(single_batch[first_key])):
+                infos_per_doc = {}
+                for key in single_batch:
+                    infos_per_doc[key] = single_batch[key][i]
+                predictions_per_doc.append(infos_per_doc)
+
+        for idx, pred in zip(keys, predictions_per_doc):
+            prediction_result = PredictionResult()
+            for single_token, single_conf_array, gold_label in zip(pred['tokens'], pred['confidences'], pred['gold_labels']):
+                label_confidences = [LabelConfidence(label=l, confidence=c) for l, c in single_conf_array.items()]
+                prediction_result.ner_confidences_token.append(TokenConfidence(text=single_token, label_confidence=label_confidences,
+                                                                               gold_label=gold_label))
+
+            results[idx] = prediction_result
+
+        return results
 

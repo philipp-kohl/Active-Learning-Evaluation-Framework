@@ -6,6 +6,7 @@ import srsly
 from mlflow import MlflowClient
 from mlflow.entities import RunStatus, Run
 from mlflow.utils import mlflow_tags
+from torch.utils.data import DataLoader
 
 import ale.mlflowutils.mlflow_utils as utils
 from ale.config import AppConfig
@@ -151,11 +152,10 @@ class AleBartenderPerSeed:
                 def train_filter(entry: Dict) -> bool:
                     return entry["id"] in self.corpus.get_relevant_ids()
 
-                corpus_train, preds_train = self.perform_predictions(self.train_file_raw,
-                                                                     filter_func=train_filter)
+                preds_train = self.perform_predictions(self.corpus.data_module.train_dataloader())
             if do_predictions_on_dev:
                 logger.info(f"Perform predictions on dev data")
-                corpus_dev, preds_dev = self.perform_predictions(self.dev_file_raw)
+                preds_dev = self.perform_predictions(self.corpus.data_module.val_dataloader())
 
             [h.after_prediction(new_run, preds_train, preds_dev) for h in hooks]
 
@@ -282,14 +282,5 @@ class AleBartenderPerSeed:
 
         return test_metrics
 
-    def perform_predictions(self, file_raw, filter_func=None):
-        corpus = []
-        for entry in srsly.read_jsonl(file_raw):
-            assert entry["id"] is not None
-            if filter_func:
-                if entry["id"] in self.corpus.get_relevant_ids():
-                    corpus.append(entry)
-            else:
-                corpus.append(entry)
-
-        return corpus, self.trainer.predict({e["id"]: e["text"] for e in corpus})
+    def perform_predictions(self, data_loader: DataLoader):
+        return self.trainer.predict_with_known_gold_labels(data_loader)
