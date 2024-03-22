@@ -73,9 +73,12 @@ class TransformerLightning(LightningModule):
         self.num_labels = len(self.id2label)
         self.raw_labels = ['O'] + labels
 
-        self.train_f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1, average=None)
-        self.val_f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1, average=None)
-        self.test_f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1, average=None)
+        self.train_f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1,
+                                                              average=None)
+        self.val_f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1,
+                                                            average=None)
+        self.test_f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1,
+                                                             average=None)
         self.train_metrics = create_metrics(self.num_labels)
         self.val_metrics = create_metrics(self.num_labels)
         self.test_metrics = create_metrics(self.num_labels)
@@ -142,9 +145,19 @@ class TransformerLightning(LightningModule):
             confidences.append(single_sequence)
         confidences = self.apply_mask(mask, confidences)
 
-        return {'tokens': batch['token_text'], 'token_labels': token_labels,
-                'text': batch['text'], 'offset_mapping': batch['offset_mapping'],
-                'confidences': confidences}
+        result = {'tokens': batch['token_text'], 'token_labels': token_labels,
+                  'text': batch['text'], 'offset_mapping': batch['offset_mapping'],
+                  'confidences': confidences}
+
+        if "labels" in batch:
+            gold_labels = []
+            for sequence in batch["labels"].cpu().numpy():
+                sequence_labels = [self.id2label[index] if index != -100 else "<PAD>" for index in sequence]
+                gold_labels.append(sequence_labels)
+            gold_labels = self.apply_mask(mask, gold_labels)
+            result["gold_labels"] = gold_labels
+
+        return result
 
     def apply_mask(self, mask, value):
         result = []

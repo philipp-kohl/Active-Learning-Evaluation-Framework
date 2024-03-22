@@ -24,8 +24,8 @@ class PytorchLightningCorpus(Corpus):
             return filtered
 
         self.data_module = AleNerDataModule(data_dir,
-                                            model_name="FacebookAI/roberta-base",
-                                            labels=["PER", "ORG", "LOC", "MISC"],
+                                            model_name="FacebookAI/roberta-base", # TODO
+                                            labels=["PER", "ORG", "LOC", "MISC"], # TODO
                                             batch_size=32,
                                             num_workers=1,
                                             train_filter_func=filter_relevant_ids)

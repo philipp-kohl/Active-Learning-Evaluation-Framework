@@ -96,9 +96,8 @@ class AleNerDataModule(LightningDataModule):
         return batch_data
 
     def train_dataloader(self):
-        #filtered = self.train_filter_func(self.train)
-        #return DataLoader(filtered, batch_size=self.batch_size, collate_fn=self.collate, num_workers=self.num_workers)
-        return DataLoader(self.train, batch_size=self.batch_size, collate_fn=self.collate, num_workers=self.num_workers)
+        filtered = self.train_filter_func(self.train)
+        return DataLoader(filtered, batch_size=self.batch_size, collate_fn=self.collate, num_workers=self.num_workers)
 
     def val_dataloader(self):
         return DataLoader(self.dev, batch_size=self.batch_size, collate_fn=self.collate, num_workers=self.num_workers)
