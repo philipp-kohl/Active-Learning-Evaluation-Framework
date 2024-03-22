@@ -7,7 +7,7 @@ import tempfile
 import threading
 import time
 from pathlib import Path
-from typing import Dict, Callable, Optional, Any, Type, List
+from typing import Dict, Callable, Optional, Any, Type, List, Union
 
 import mlflow
 import pandas as pd
@@ -132,7 +132,7 @@ def walk_params_from_omegaconf_dict(
     if function is not None:
         for param_name, param_value in global_dict.items():
             to_log = param_value
-            if len(str(to_log)) > 500: # TODO log each list entry?
+            if len(str(to_log)) > 500:  # TODO log each list entry?
                 if error_on_long_param:
                     raise ValueError(f"Param value '{to_log}' for '{param_name}' too long!")
 
@@ -159,15 +159,17 @@ def log_param(run: Run, key: str, value: Any):
 def log_artifact(run: Run, local_path: str, artifact_path: str = None):
     MlflowClient().log_artifact(run.info.run_id, local_path=local_path, artifact_path=artifact_path)
 
+
 def load_artifact(run: Run, path: str, dst_path: str = None) -> str:
     return download_artifacts(run_id=run.info.run_id, artifact_path=path, dst_path=dst_path)
 
 
-
 lock = threading.Lock()
+
 
 def mark_run_as_finished(run: Run, run_status: RunStatus):
     MlflowClient().set_terminated(run.info.run_id, RunStatus.to_string(run_status))
+
 
 def mark_run_as_running(run: Run):
     MlflowClient().set_terminated(run.info.run_id, RunStatus.to_string(RunStatus.RUNNING))
@@ -179,6 +181,7 @@ def log_dict_as_artifact(run: Run, value: Dict, artifact_file: str):
         srsly.write_json(path, value)
         log_artifact(run, str(path.resolve()))
 
+
 def get_or_create_experiment(experiment_seed_name: str) -> str:
     with lock:
         client = MlflowClient()
@@ -187,6 +190,7 @@ def get_or_create_experiment(experiment_seed_name: str) -> str:
             return client.create_experiment(name=experiment_seed_name)
         else:
             return experiment.experiment_id
+
 
 def get_all_child_runs(experiment_id: str, run_id: str, run_status: RunStatus = RunStatus.RUNNING) -> List[Run]:
     filter_string = f"attributes.status = '{RunStatus.to_string(run_status)}' " \
@@ -229,3 +233,20 @@ def store_bar_plot(distribution: Dict[str, float], mlflow_run: Run, artifact_nam
         # Save the DataFrame to a CSV file
         df.to_csv(csv_path, index=False)
         log_artifact(mlflow_run, csv_path, artifact_path=artifact_name)
+
+
+def store_histogram(data: List[Union[int, float]], mlflow_run: Run, artifact_name: str,
+                    columns: List[str], bins=10) -> None:
+    import plotly.express as px
+    data = pd.DataFrame({
+        columns[0]: pd.Series(data)
+    })
+    import plotly.express as px
+    # Create a histogram using Plotly
+    fig = px.histogram(data, x=columns[0], nbins=bins, title='Histogram')
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        histogram_html_path = f'{temp_dir}/histogram.html'
+        fig.write_html(histogram_html_path)
+
+        log_artifact(mlflow_run, histogram_html_path, artifact_path=artifact_name)

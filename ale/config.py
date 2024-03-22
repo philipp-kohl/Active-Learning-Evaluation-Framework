@@ -42,6 +42,8 @@ class Experiment:
     annotation_budget: int
     assess_data_bias: bool
     assess_data_bias_eval_freq: int
+    assess_overconfidence: bool
+    assess_overconfidence_eval_freq: int
 
 
 @dataclass

@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 @TrainerRegistry.register("dummy-trainer")
-class SpacyOnlineTrainer(PredictionTrainer):
+class DummyTrainer(PredictionTrainer):
     """ """
 
     def __init__(

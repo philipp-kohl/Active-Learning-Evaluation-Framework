@@ -1,0 +1,5 @@
+trainer_name: pytorch-lightning-trainer
+config_path: spacy_config/config_spancat.cfg
+corpus_manager: pytorch-lightning-corpus
+language: en
+recreate_pipeline_each_run: false

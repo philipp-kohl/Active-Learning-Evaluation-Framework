@@ -12,7 +12,7 @@ from tqdm import tqdm
 import logging
 
 from ale.config import NLPTask
-from ale.trainer.spacy_trainer import SpacyOnlineTrainer
+from ale.trainer import SpacyOnlineTrainer
 
 logger = logging.getLogger(__name__)
 

@@ -15,8 +15,8 @@ class Corpus(ABC):
 
     ARTIFACT_FILE = "relevant_ids.json"
 
-    def __init__(self, train_path: Union[str, Path]):
-        self.train_path = train_path
+    def __init__(self, data_dir: Union[str, Path]):
+        self.data_dir = data_dir
         self.relevant_ids: List[int] = []
 
     def get_relevant_ids(self) -> List[int]:

@@ -24,9 +24,7 @@ class AleBartender:
         self.cfg = cfg
         self.labels = labels
         target_format = cfg.converter.target_format
-        self.train_file_converted = converted_data / f"train.{target_format}"
-        self.dev_file_converted = converted_data / f"dev.{target_format}"
-        self.test_file_converted = converted_data / f"test.{target_format}"
+        self.converted_data_dir = converted_data
         self.train_file_raw = raw_data / "train.jsonl"
         self.dev_file_raw = raw_data / "dev.jsonl"
 
@@ -110,9 +108,7 @@ class AleBartender:
             utils.mark_run_as_running(run)
             seed_simulator = AleBartenderPerSeed(self.cfg,
                                                  seed,
-                                                 self.train_file_converted,
-                                                 self.dev_file_converted,
-                                                 self.test_file_converted,
+                                                 self.converted_data_dir,
                                                  self.train_file_raw,
                                                  self.dev_file_raw,
                                                  self.labels,
@@ -147,9 +143,7 @@ class AleBartender:
             )
             seed_simulator = AleBartenderPerSeed(self.cfg,
                                                  seed,
-                                                 self.train_file_converted,
-                                                 self.dev_file_converted,
-                                                 self.test_file_converted,
+                                                 self.converted_data_dir,
                                                  self.train_file_raw,
                                                  self.dev_file_raw,
                                                  self.labels,

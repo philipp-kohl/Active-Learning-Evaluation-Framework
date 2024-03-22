@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Union
+from typing import Dict, Mapping, List
 
 from mlflow import ActiveRun
 from mlflow.entities import Run
@@ -7,7 +7,8 @@ from mlflow.entities import Run
 from ale.corpus.corpus import Corpus
 from ale.trainer.prediction_result import PredictionResult
 
-MetricsType = Dict[str, Union[str, float, "MetricsType"]]
+# MetricsType = Dict[str, Union[str, float, "MetricsType"]]
+MetricsType = Mapping[str, float]
 
 
 class BaseTrainer(ABC):
@@ -34,6 +35,7 @@ class BaseTrainer(ABC):
     @abstractmethod
     def delete_artifacts(self, run: Run):
         pass
+
 
 class Predictor(ABC):
     """
