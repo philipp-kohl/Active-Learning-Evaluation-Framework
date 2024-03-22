@@ -16,14 +16,17 @@ class MlFlowConfig:
     source_name: Optional[str] = None
 
 
-
 @dataclass
 class TrainerConfig:
     trainer_name: str
-    config_path: str
-    language: str
+    huggingface_model: str
     corpus_manager: str
-    recreate_pipeline_each_run: bool
+    batch_size: int
+    learning_rate: float
+    weight_decay: float
+    max_epochs: int
+    num_workers: int
+    device: str
 
 
 @dataclass

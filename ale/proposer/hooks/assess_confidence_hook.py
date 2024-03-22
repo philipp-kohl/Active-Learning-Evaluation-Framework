@@ -24,9 +24,8 @@ logger = logging.getLogger(__name__)
 
 class AssessConfidenceHook(ProposeHook):
     def __init__(self, cfg: AppConfig, parent_run_id: str, corpus: Corpus, **kwargs):
-        super().__init__(cfg, parent_run_id, corpus, **kwargs)
+        super().__init__(cfg, parent_run_id, corpus, "confidence_assessment", **kwargs)
         self.iteration_counter_for_assessment = 1
-        self.artifact_base_path = "confidence_assessment"
 
     @override
     def on_iter_end(self) -> None:
@@ -52,9 +51,6 @@ class AssessConfidenceHook(ProposeHook):
         else:
             logger.info(
                 f"Skip confidence evaluation in iteration, interval: ({self.iteration_counter_for_assessment}, {self.cfg.experiment.assess_overconfidence_eval_freq})")
-
-    def build_artifact_path(self, data_split: str, folder_name: str):
-        return f"{data_split}/{self.artifact_base_path}/{folder_name}"
 
     def assess_confidence(self, new_run,
                           prefix: str,

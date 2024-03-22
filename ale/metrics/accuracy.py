@@ -72,25 +72,16 @@ class Accuracy:
         label_counts = defaultdict(int)
         correct_predictions = defaultdict(int)
         error_predictions = defaultdict(int)
-        # Iterate through each example
-        for idx in corpus_dict.keys():
-            gold_entities = corpus_dict[idx][label_column]
-            ner_preds = preds[idx].ner_confidences_span
-            if ner_preds is None:
-                if len(gold_entities) > 0:
-                    raise Exception("Let's punish the missing preds!")
-                else:
-                    continue
-            pred_entities = list(preds[idx].ner_confidences_span.keys())
 
-            for gold in gold_entities:
-                label_counts[gold[2]] += 1
-                matched = self.is_match(gold, pred_entities)
+        for _, doc_pred in preds.items():
+            for token_pred in doc_pred.ner_confidences_token:
+                gold_label = token_pred.gold_label.lstrip("B-").lstrip("I-")
+                label_counts[gold_label] += 1
 
-                if matched:
-                    correct_predictions[gold[2]] += 1
+                if token_pred.gold_label == token_pred.predicted_label:
+                    correct_predictions[gold_label] += 1
                 else:
-                    error_predictions[gold[2]] += 1
+                    error_predictions[gold_label] += 1
 
         # Calculate accuracy per label
         accuracy_per_label: Dict[str, float] = {label: correct_predictions[label] / label_counts[label]

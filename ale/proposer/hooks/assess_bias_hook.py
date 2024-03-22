@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 class AssessBiasHook(ProposeHook):
     def __init__(self, cfg: AppConfig, parent_run_id: str, corpus: Corpus, **kwargs):
-        super().__init__(cfg, parent_run_id, corpus, **kwargs)
+        super().__init__(cfg, parent_run_id, corpus, "bias_assessment", **kwargs)
         self.iteration_counter_for_bias_assessment = 1
 
     @override
@@ -64,11 +64,15 @@ class AssessBiasHook(ProposeHook):
         accuracy_per_label, bias, error_per_label, bias_by_optimum, bias_by_distribution_diff = bias_detector.compute_bias(
             distribution, preds,
             self.cfg.data.label_column)
-        utils.store_bar_plot(accuracy_per_label, new_run, prefix + "/accuracy_per_label", ["Label", "Accuracy"])
-        utils.store_bar_plot(error_per_label, new_run, prefix + "/error_per_label", ["Label", "Error"])
-        utils.store_bar_plot(bias, new_run, prefix + "/bias", ["Label", "Bias"])
-        utils.store_bar_plot(bias_by_optimum, new_run, prefix + "/bias_log_distr_diff", ["Label", "Bias"])
-        utils.store_bar_plot(bias_by_distribution_diff, new_run, prefix + "/bias_distr_diff", ["Label", "Bias"])
+        utils.store_bar_plot(accuracy_per_label, new_run, self.build_artifact_path(prefix, "accuracy_per_label"),
+                             ["Label", "Accuracy"])
+        utils.store_bar_plot(error_per_label, new_run, self.build_artifact_path(prefix, "error_per_label"),
+                             ["Label", "Error"])
+        utils.store_bar_plot(bias, new_run, self.build_artifact_path(prefix, "bias"), ["Label", "Bias"])
+        utils.store_bar_plot(bias_by_optimum, new_run, self.build_artifact_path(prefix, "bias_log_distr_diff"),
+                             ["Label", "Bias"])
+        utils.store_bar_plot(bias_by_distribution_diff, new_run, self.build_artifact_path(prefix, "bias_distr_diff"),
+                             ["Label", "Bias"])
 
         self.log_bias_metrics({
             "distribution": distribution,

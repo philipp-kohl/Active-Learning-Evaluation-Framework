@@ -4,6 +4,7 @@ from typing import List, Union, Dict, Any
 
 import srsly
 
+from ale.config import AppConfig
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_corpus import CorpusRegistry
 from ale.trainer.lightning.ner_dataset import AleNerDataModule
@@ -13,8 +14,8 @@ logger = logging.getLogger(__name__)
 
 @CorpusRegistry.register("pytorch-lightning-corpus")
 class PytorchLightningCorpus(Corpus):
-    def __init__(self, data_dir: Union[str, Path]):
-        super().__init__(data_dir)
+    def __init__(self, cfg: AppConfig, data_dir: Union[str, Path], labels: List[str]):
+        super().__init__(cfg, data_dir)
 
         def filter_relevant_ids(loaded_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             filtered = []
@@ -24,10 +25,10 @@ class PytorchLightningCorpus(Corpus):
             return filtered
 
         self.data_module = AleNerDataModule(data_dir,
-                                            model_name="FacebookAI/roberta-base", # TODO
-                                            labels=["PER", "ORG", "LOC", "MISC"], # TODO
-                                            batch_size=32,
-                                            num_workers=1,
+                                            model_name=self.cfg.trainer.huggingface_model,
+                                            labels=labels,
+                                            batch_size=self.cfg.trainer.batch_size,
+                                            num_workers=self.cfg.trainer.num_workers,
                                             train_filter_func=filter_relevant_ids)
 
         logger.info("Start indexing corpus")

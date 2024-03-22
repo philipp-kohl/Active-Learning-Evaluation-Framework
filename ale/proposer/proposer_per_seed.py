@@ -44,7 +44,7 @@ class AleBartenderPerSeed:
 
         logger.info(f"Use corpus manager: {self.cfg.trainer.corpus_manager}")
         corpus_class = CorpusRegistry.get_instance(self.cfg.trainer.corpus_manager)
-        self.corpus = corpus_class(converted_data_dir)
+        self.corpus = corpus_class(cfg, converted_data_dir, labels)
         logger.info(f"Use trainer: {self.cfg.trainer.trainer_name}")
         trainer_class = TrainerRegistry.get_instance(
             self.cfg.trainer.trainer_name
@@ -55,6 +55,7 @@ class AleBartenderPerSeed:
             # Path(self.cfg.trainer.config_path),
             # self.cfg.technical.use_gpu,
             seed,
+            labels,
             # self.cfg.data.nlp_task,
             # self.cfg.trainer.recreate_pipeline_each_run
         )
