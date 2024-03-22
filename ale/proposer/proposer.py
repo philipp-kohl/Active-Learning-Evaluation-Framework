@@ -23,7 +23,6 @@ class AleBartender:
     def __init__(self, converted_data: Path, raw_data: Path, cfg: AppConfig, labels: List[Any]):
         self.cfg = cfg
         self.labels = labels
-        target_format = cfg.converter.target_format
         self.converted_data_dir = converted_data
         self.train_file_raw = raw_data / "train.jsonl"
         self.dev_file_raw = raw_data / "dev.jsonl"

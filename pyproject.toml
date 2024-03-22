@@ -24,6 +24,7 @@ pydantic = "^1.10.4"
 plotly = "^5.13.0"
 mlflow-export-import = "^1.2.0"
 lightning = "^2.2.1"
+rich = "^13.7.1"
 
 [build-system]
 requires = ["poetry-core"]

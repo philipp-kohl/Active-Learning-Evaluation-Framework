@@ -8,14 +8,15 @@ import srsly
 from mlflow.entities import Run
 import ale.mlflowutils.mlflow_utils as mlflow_utils
 
-from ale.config import TrainerConfig
+from ale.config import TrainerConfig, AppConfig
 
 
 class Corpus(ABC):
 
     ARTIFACT_FILE = "relevant_ids.json"
 
-    def __init__(self, data_dir: Union[str, Path]):
+    def __init__(self, cfg: AppConfig, data_dir: Union[str, Path]):
+        self.cfg = cfg
         self.data_dir = data_dir
         self.relevant_ids: List[int] = []
 

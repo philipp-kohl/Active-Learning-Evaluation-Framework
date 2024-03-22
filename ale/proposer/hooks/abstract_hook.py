@@ -9,10 +9,11 @@ from ale.trainer.prediction_result import PredictionResult
 
 
 class ProposeHook:
-    def __init__(self, cfg: AppConfig, parent_run_id: str, corpus: Corpus, **kwargs):
+    def __init__(self, cfg: AppConfig, parent_run_id: str, corpus: Corpus, artifact_base_path: str, **kwargs):
         self.cfg = cfg
         self.parent_run_id = parent_run_id
         self.corpus = corpus
+        self.artifact_base_path = artifact_base_path
         self.kwargs = kwargs
 
     def before_proposing(self) -> None:
@@ -41,3 +42,6 @@ class ProposeHook:
 
     def needs_train_predictions(self) -> bool:
         return False
+
+    def build_artifact_path(self, data_split: str, folder_name: str):
+        return f"{data_split}/{self.artifact_base_path}/{folder_name}"

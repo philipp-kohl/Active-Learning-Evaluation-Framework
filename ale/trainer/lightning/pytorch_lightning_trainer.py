@@ -6,6 +6,7 @@ from typing import Dict, List
 import torch
 from lightning import seed_everything, Callback
 from lightning.pytorch import Trainer
+from lightning.pytorch.callbacks import RichProgressBar
 from mlflow import ActiveRun
 from mlflow.entities import Run
 from mlflow.store.artifact.artifact_repository_registry import get_artifact_repository
@@ -24,17 +25,19 @@ from ale.trainer.lightning.trf_model import TransformerLightning
 from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence
 
 logger = logging.getLogger(__name__)
+logging.getLogger("lightning.pytorch").setLevel(logging.ERROR)
 
 
 @TrainerRegistry.register("pytorch-lightning-trainer")
 class PyTorchLightningTrainer(BaseTrainer):
-    def __init__(self, cfg: AppConfig, corpus: Corpus, seed: int):
-        self.model_class = TransformerLightning
-        huggingface_model = "FacebookAI/roberta-base"
-        labels = ["PER", "ORG", "LOC", "MISC"]
+    def __init__(self, cfg: AppConfig, corpus: Corpus, seed: int, labels: List[str]):
         seed_everything(seed, workers=True)
         self.dataset = corpus.data_module
-        self.model = self.model_class(huggingface_model, labels, 2e-5, 0.01, ignore_labels=["O"])
+        self.model = TransformerLightning(cfg.trainer.huggingface_model,
+                                          labels,
+                                          cfg.trainer.learning_rate,
+                                          cfg.trainer.weight_decay,
+                                          ignore_labels=["O"])
         self.cfg = cfg
 
     def train(self, train_corpus: Corpus, active_run: ActiveRun) -> MetricsType:
@@ -46,7 +49,7 @@ class PyTorchLightningTrainer(BaseTrainer):
         checkpoint_callback = ModelCheckpoint(dirpath='pt_lightning/checkpoints/', save_top_k=2, save_weights_only=True,
                                               save_on_train_epoch_end=True, monitor="val_f1_macro", mode="max")
         callbacks = [early_stop_callback, checkpoint_callback]
-        self.trainer = Trainer(max_epochs=1, devices=1, accelerator="gpu",
+        self.trainer = Trainer(max_epochs=self.cfg.trainer.max_epochs, devices=1, accelerator=self.cfg.trainer.device,
                                logger=mlf_logger, deterministic=True,
                                #profiler="simple"
                                callbacks=callbacks
@@ -70,7 +73,7 @@ class PyTorchLightningTrainer(BaseTrainer):
         artifact_path = "best/model.ckpt"
         logger.info(f"Restore model from: {matching_run.info.run_id}/{artifact_path}")
         model_path = mlflow_utils.load_artifact(matching_run, artifact_path)
-        self.model = self.model_class.load_from_checkpoint(model_path)
+        self.model = self.model.load_from_checkpoint(model_path)
 
     def delete_artifacts(self, run: Run):
         repository = get_artifact_repository(run.info.artifact_uri)
@@ -80,7 +83,9 @@ class PyTorchLightningTrainer(BaseTrainer):
         results: Dict[int, PredictionResult] = dict()
 
         texts = list(docs.values())
-        data = PredictionDataModule(texts, "FacebookAI/roberta-base")
+        data = PredictionDataModule(texts,
+                                    self.cfg.trainer.huggingface_model,
+                                    num_workers=self.cfg.trainer.num_workers)
 
         predictions_per_doc = []
         prediction_batches = self.trainer.predict(self.model, data.predict_dataloader())

@@ -44,8 +44,8 @@ class BiasDetector:
         norm_distribution = normalize_counts(distribution)
         eps = 0.000000001
 
-        bias = {label: error * -np.log(norm_distribution[label] + eps) for label, error in error_per_label.items()}
-        bias_by_optimum = {label: error * -np.log(abs(1/len(norm_distribution) - norm_distribution[label]) + eps) for label, error in error_per_label.items()}
-        bias_by_distribution_diff = {label: error * (1 + abs(1/len(norm_distribution) - norm_distribution[label])) for label, error in error_per_label.items()}
+        bias = {label: error * -np.log(norm_distribution[label] + eps) for label, error in error_per_label.items() if label != 'O'}
+        bias_by_optimum = {label: error * -np.log(abs(1/len(norm_distribution) - norm_distribution[label]) + eps) for label, error in error_per_label.items() if label != 'O'}
+        bias_by_distribution_diff = {label: error * (1 + abs(1/len(norm_distribution) - norm_distribution[label])) for label, error in error_per_label.items() if label != 'O'}
         return accuracy_per_label, bias, error_per_label, bias_by_optimum, bias_by_distribution_diff
 
