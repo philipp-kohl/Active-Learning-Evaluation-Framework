@@ -154,7 +154,7 @@ class TransformerLightning(LightningModule):
             for sequence in batch["labels"].cpu().numpy():
                 sequence_labels = [self.id2label[index] if index != -100 else "<PAD>" for index in sequence]
                 gold_labels.append(sequence_labels)
-            gold_labels = self.apply_mask(mask, token_labels)
+            gold_labels = self.apply_mask(mask, gold_labels)
             result["gold_labels"] = gold_labels
 
         return result

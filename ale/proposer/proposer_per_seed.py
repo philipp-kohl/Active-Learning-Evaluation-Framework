@@ -121,10 +121,7 @@ class AleBartenderPerSeed:
                                         dev_file_raw=self.dev_file_raw,
                                         trainer=self.trainer))
         if self.cfg.experiment.assess_overconfidence:
-            hooks.append(AssessConfidenceHook(self.cfg, self.parent_run_id, self.corpus,
-                                              train_file_raw=self.train_file_raw,
-                                              dev_file_raw=self.dev_file_raw,
-                                              trainer=self.trainer))
+            hooks.append(AssessConfidenceHook(self.cfg, self.parent_run_id, self.corpus, trainer=self.trainer))
 
         do_predictions_on_dev = any([h.needs_dev_predictions for h in hooks])
         do_predictions_on_train = any([h.needs_train_predictions for h in hooks])
@@ -148,10 +145,6 @@ class AleBartenderPerSeed:
             preds_dev = None
             if do_predictions_on_train:
                 logger.info(f"Perform predictions on training data")
-
-                def train_filter(entry: Dict) -> bool:
-                    return entry["id"] in self.corpus.get_relevant_ids()
-
                 preds_train = self.perform_predictions(self.corpus.data_module.train_dataloader())
             if do_predictions_on_dev:
                 logger.info(f"Perform predictions on dev data")
