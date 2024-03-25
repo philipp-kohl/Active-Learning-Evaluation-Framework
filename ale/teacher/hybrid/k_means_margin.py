@@ -3,6 +3,7 @@ from typing import List, Dict, Optional
 import numpy as np
 import random
 
+from ale.config import NLPTask
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.corpus.corpus import Corpus
@@ -16,18 +17,23 @@ class KMeansMarginTeacher(BaseTeacher, ABC):
     """
     KMeans margin teacher: chooses nearest neighbors and then selects instances with lowest margin
     """
-
-
-
     def __init__(
         self,
         corpus: Corpus,
         predictor: Predictor,
         seed: int,
         labels: List[any],
-        nlp_task: str,
+        nlp_task: NLPTask,
         aggregation_method: Optional[AGGREGATION_METHOD]
     ):
+        super().__init__(
+            corpus=corpus,
+            predictor=predictor,
+            seed=seed,
+            labels=labels,
+            nlp_task=nlp_task,
+            aggregation_method=aggregation_method
+        )
         self.margin_teacher = MarginTeacher(
             corpus=corpus,
             predictor=predictor,
