@@ -38,6 +38,12 @@ class TokenConfidence(BaseModel):
     def get_lowest_confidence(self) -> LabelConfidence:
         return min(self.label_confidence, key=lambda x: x.confidence)
 
+    def get_highest_k(self, k: int) -> List[LabelConfidence]:
+        if len(self.label_confidence) < k:
+            raise Exception(f"Get top k ({k}) labels by confidence exceeds number of labels!")
+
+        return sorted(self.label_confidence, key=lambda x: x.confidence, reverse=True)[:k]
+
 
 class PredictionResult(BaseModel):
     classification_confidences: Optional[Dict[str, float]] = {}

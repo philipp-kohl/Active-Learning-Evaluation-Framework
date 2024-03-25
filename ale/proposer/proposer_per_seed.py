@@ -67,7 +67,9 @@ class AleBartenderPerSeed:
             corpus=self.corpus,
             predictor=self.trainer,
             seed=seed,
-            labels=labels
+            labels=labels,
+            nlp_task=self.cfg.data.nlp_task,
+            aggregation_method=self.cfg.teacher.aggregation_method
         )
         logger.info(f"Use '{self.cfg.experiment.initial_data_strategy}' teacher for initial data ratio.")
         initial_teacher_strategy_class = TeacherRegistry.get_instance(
@@ -77,7 +79,8 @@ class AleBartenderPerSeed:
             corpus=self.corpus,
             predictor=self.trainer,
             seed=seed,
-            labels=labels
+            labels=labels,
+            nlp_task=self.cfg.data.nlp_task
         )
         self.dev_file_raw = dev_file_raw
         self.train_file_raw = train_file_raw
