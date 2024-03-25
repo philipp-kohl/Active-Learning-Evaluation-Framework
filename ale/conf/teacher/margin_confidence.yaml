@@ -1,2 +1,3 @@
 strategy: margin-confidence
 sampling_budget: 5000
+aggregation_method: SUM

@@ -2,7 +2,7 @@ from typing import List, Dict
 
 from ale.config import NLPTask
 from ale.import_helper import import_registrable_components
-from ale.teacher.exploitation.aggregation_methods import AGGREGATION_METHOD
+from ale.teacher.exploitation.aggregation_methods import AggregationMethod
 from ale.teacher.exploitation.margin_confidence import MarginTeacher
 from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence
 
@@ -53,7 +53,7 @@ def prediction_results() -> Dict[int, PredictionResult]:
 
 def test_margin_for_ner_min(prediction_results: Dict[int, PredictionResult]):
     margin_teacher: MarginTeacher = MarginTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                  AGGREGATION_METHOD.MINIMUM)
+                                                  AggregationMethod.MINIMUM)
 
     out_ids: List[int] = margin_teacher.compute_function(prediction_results, 2)
     assert out_ids == [1, 2]
@@ -61,7 +61,7 @@ def test_margin_for_ner_min(prediction_results: Dict[int, PredictionResult]):
 
 def test_margin_for_ner_avg(prediction_results: Dict[int, PredictionResult]):
     margin_teacher: MarginTeacher = MarginTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                  AGGREGATION_METHOD.AVERAGE)
+                                                  AggregationMethod.AVERAGE)
 
     out_ids: List[int] = margin_teacher.compute_function(prediction_results, 2)
     assert out_ids == [1, 2]
@@ -69,7 +69,7 @@ def test_margin_for_ner_avg(prediction_results: Dict[int, PredictionResult]):
 
 def test_margin_for_ner_max(prediction_results: Dict[int, PredictionResult]):
     margin_teacher: MarginTeacher = MarginTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                  AGGREGATION_METHOD.MAXIMUM)
+                                                  AggregationMethod.MAXIMUM)
 
     out_ids: List[int] = margin_teacher.compute_function(prediction_results, 2)
     assert out_ids == [0, 1]
@@ -77,7 +77,7 @@ def test_margin_for_ner_max(prediction_results: Dict[int, PredictionResult]):
 
 def test_margin_for_ner_std(prediction_results: Dict[int, PredictionResult]):
     margin_teacher: MarginTeacher = MarginTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                  AGGREGATION_METHOD.STD)
+                                                  AggregationMethod.STD)
 
     out_ids: List[int] = margin_teacher.compute_function(prediction_results, 2)
     assert out_ids == [0, 1]
@@ -85,7 +85,7 @@ def test_margin_for_ner_std(prediction_results: Dict[int, PredictionResult]):
 
 def test_margin_for_ner_sum(prediction_results: Dict[int, PredictionResult]):
     margin_teacher: MarginTeacher = MarginTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                  AGGREGATION_METHOD.SUM)
+                                                  AggregationMethod.SUM)
 
     out_ids: List[int] = margin_teacher.compute_function(prediction_results, 2)
     assert out_ids == [1, 2]

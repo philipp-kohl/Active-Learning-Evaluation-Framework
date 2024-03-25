@@ -7,7 +7,7 @@ from ale.config import NLPTask
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.corpus.corpus import Corpus
-from ale.teacher.exploitation.aggregation_methods import AGGREGATION_METHOD
+from ale.teacher.exploitation.aggregation_methods import AggregationMethod
 from ale.trainer.base_trainer import Predictor
 from ale.teacher.exploitation.margin_confidence import MarginTeacher
 from ale.teacher.exploration.k_means import KMeansTeacher
@@ -24,7 +24,7 @@ class KMeansMarginTeacher(BaseTeacher, ABC):
         seed: int,
         labels: List[any],
         nlp_task: NLPTask,
-        aggregation_method: Optional[AGGREGATION_METHOD]
+        aggregation_method: Optional[AggregationMethod]
     ):
         super().__init__(
             corpus=corpus,

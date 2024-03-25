@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Callable, Tuple, Optional
 
 from ale.corpus.corpus import Corpus
-from ale.teacher.exploitation.aggregation_methods import AGGREGATION_METHOD, Aggregation
+from ale.teacher.exploitation.aggregation_methods import AggregationMethod, Aggregation
 from ale.trainer.base_trainer import Predictor
 from ale.config import NLPTask
 from ale.trainer.prediction_result import PredictionResult
@@ -15,7 +15,7 @@ class BaseTeacher(ABC):
 
     def __init__(
             self, corpus: Corpus, predictor: Predictor, labels: List[Any], seed: int, nlp_task: NLPTask,
-            aggregation_method: Optional[AGGREGATION_METHOD]
+            aggregation_method: Optional[AggregationMethod]
     ):
         self.labels = labels
         self.corpus = corpus

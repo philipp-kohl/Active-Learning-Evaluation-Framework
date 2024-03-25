@@ -5,6 +5,8 @@ from hydra.core.config_store import ConfigStore
 from pydantic import root_validator
 from pydantic.dataclasses import dataclass
 
+from ale.teacher.exploitation.aggregation_methods import AggregationMethod
+
 
 @dataclass
 class MlFlowConfig:
@@ -33,6 +35,7 @@ class TrainerConfig:
 class TeacherConfig:
     strategy: str
     sampling_budget: int
+    aggregation_method: Optional[AggregationMethod] = None
 
 
 @dataclass
