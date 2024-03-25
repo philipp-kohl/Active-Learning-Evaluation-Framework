@@ -14,7 +14,8 @@ class BaseTeacher(ABC):
     """
 
     def __init__(
-        self, corpus: Corpus, predictor: Predictor, labels: List[Any], seed: int, nlp_task: NLPTask, aggregation_method: Optional[AGGREGATION_METHOD]
+            self, corpus: Corpus, predictor: Predictor, labels: List[Any], seed: int, nlp_task: NLPTask,
+            aggregation_method: Optional[AGGREGATION_METHOD]
     ):
         self.labels = labels
         self.corpus = corpus
@@ -22,12 +23,12 @@ class BaseTeacher(ABC):
         self.seed = seed
         self.nlp_task = nlp_task
 
-        if aggregation_method is not None: # For exploitation based approaches in Entity Recognition
+        if aggregation_method is not None:  # For exploitation based approaches in Entity Recognition
             self.aggregation_method = aggregation_method
             self.aggregate_function = Aggregation(self.aggregation_method).get_aggregate_function()
 
         self.compute_function: Callable[
-            [Dict[int,PredictionResult], int], Tuple[Dict[str, float], Dict[str, float]]] = {
+            [Dict[int, PredictionResult], int], List[int]] = {
             NLPTask.CLS: self.compute_cls,
             NLPTask.NER: self.compute_ner
         }[nlp_task]
@@ -40,7 +41,7 @@ class BaseTeacher(ABC):
         :return: data_uri and List of data indices
         """
         pass
-    
+
     @abstractmethod
     def compute_cls(self, predictions: Dict[int, PredictionResult], step_size: int) -> List[int]:
         """
@@ -53,7 +54,7 @@ class BaseTeacher(ABC):
         pass
 
     @abstractmethod
-    def compute_ner(self, predictions: Dict[int,PredictionResult], step_size: int) -> List[int]:
+    def compute_ner(self, predictions: Dict[int, PredictionResult], step_size: int) -> List[int]:
         """
         Computes the order in which the samples are proposed according to the teacher used.
         Args:

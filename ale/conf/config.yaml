@@ -1,10 +1,10 @@
 defaults:
   - data: conll2003
   - teacher: k_means
-  - trainer: spacy_ner
+  - trainer: pytorch_lightning
   - mlflow: localhost
   - experiment: ner
-  - converter: spacy
+  - converter: pass_through
   - technical: default
   - override hydra/job_logging: custom
   - override hydra/hydra_logging: custom

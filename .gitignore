@@ -275,3 +275,6 @@ outputs/
 /mlruns.db
 /mlartifacts/
 /data/conll2003/
+/tb_logs/
+/ml-runs/
+/pt_lightning/

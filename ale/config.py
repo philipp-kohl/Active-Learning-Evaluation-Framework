@@ -16,14 +16,17 @@ class MlFlowConfig:
     source_name: Optional[str] = None
 
 
-
 @dataclass
 class TrainerConfig:
     trainer_name: str
-    config_path: str
-    language: str
+    huggingface_model: str
     corpus_manager: str
-    recreate_pipeline_each_run: bool
+    batch_size: int
+    learning_rate: float
+    weight_decay: float
+    max_epochs: int
+    num_workers: int
+    device: str
 
 
 @dataclass
@@ -42,6 +45,8 @@ class Experiment:
     annotation_budget: int
     assess_data_bias: bool
     assess_data_bias_eval_freq: int
+    assess_overconfidence: bool
+    assess_overconfidence_eval_freq: int
 
 
 @dataclass

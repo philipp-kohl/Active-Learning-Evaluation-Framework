@@ -49,7 +49,7 @@ class KMeansMarginTeacher(BaseTeacher, ABC):
         """
         Use KMeans with step_size*5 and then select with margin
         """
-        kmeans_results: List[int] = self.kmeans_teacher.propose(potential_ids,step_size*5, budget)
+        kmeans_results: List[int] = self.kmeans_teacher.propose(potential_ids,step_size*5, budget) # TODO magic number as config parameter?
         out_ids: List[int] = self.margin_teacher.propose(kmeans_results, step_size, budget)
 
         return out_ids
