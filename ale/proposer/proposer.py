@@ -1,20 +1,16 @@
-from concurrent.futures.thread import ThreadPoolExecutor
-
-from mlflow import MlflowClient
-from mlflow.utils import mlflow_tags
-
-
-from ale.proposer.proposer_per_seed import AleBartenderPerSeed
 import logging
+from concurrent.futures.thread import ThreadPoolExecutor
 from pathlib import Path
 from typing import List, Any, Dict
 
 import mlflow
+from mlflow import MlflowClient
 from mlflow.entities import RunStatus, Run
-
-from ale.config import AppConfig
+from mlflow.utils import mlflow_tags
 
 import ale.mlflowutils.mlflow_utils as utils
+from ale.config import AppConfig
+from ale.proposer.proposer_per_seed import AleBartenderPerSeed
 
 logger = logging.getLogger(__name__)
 

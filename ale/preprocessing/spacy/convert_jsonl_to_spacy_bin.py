@@ -1,3 +1,4 @@
+import logging
 import tempfile
 from pathlib import Path
 from typing import List
@@ -6,10 +7,9 @@ import click
 import mlflow as mlflow
 import spacy
 import srsly
-from spacy.tokens import DocBin, Span
 from spacy.tokens import Doc
+from spacy.tokens import DocBin
 from tqdm import tqdm
-import logging
 
 from ale.config import NLPTask
 from ale.trainer import SpacyOnlineTrainer

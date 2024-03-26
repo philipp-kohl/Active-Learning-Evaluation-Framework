@@ -1,5 +1,5 @@
 from ale.registry.registerable_component import ComponentRegistry
+from ale.registry.registerable_corpus import CorpusRegistry
 from ale.registry.registerable_pipeline_component import PipelineComponentRegistry
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.registry.registerable_trainer import TrainerRegistry
-from ale.registry.registerable_corpus import CorpusRegistry

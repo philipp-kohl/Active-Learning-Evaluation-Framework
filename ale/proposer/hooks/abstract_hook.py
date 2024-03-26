@@ -1,6 +1,5 @@
-from typing import List, Optional, Dict
+from typing import Optional, Dict
 
-from mlflow import ActiveRun
 from mlflow.entities import Run
 
 from ale.config import AppConfig

@@ -1,7 +1,6 @@
 import logging
-
-from typing import List, Dict, Any
 from threading import Lock
+from typing import List, Dict, Any
 
 from numpy.linalg import norm
 from sklearn.cluster import KMeans

@@ -4,15 +4,14 @@ from pathlib import Path
 from typing import Dict, List
 
 import torch
-from lightning import seed_everything, Callback
+from lightning import seed_everything
 from lightning.pytorch import Trainer
-from lightning.pytorch.callbacks import RichProgressBar
-from mlflow import ActiveRun
-from mlflow.entities import Run
-from mlflow.store.artifact.artifact_repository_registry import get_artifact_repository
 from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 from lightning.pytorch.callbacks.model_checkpoint import ModelCheckpoint
 from lightning.pytorch.loggers.mlflow import MLFlowLogger
+from mlflow import ActiveRun
+from mlflow.entities import Run
+from mlflow.store.artifact.artifact_repository_registry import get_artifact_repository
 from torch.utils.data import DataLoader
 
 from ale.config import AppConfig

@@ -7,7 +7,7 @@ import tempfile
 import threading
 import time
 from pathlib import Path
-from typing import Dict, Callable, Optional, Any, Type, List, Union
+from typing import Dict, Callable, Optional, Any, List, Union
 
 import mlflow
 import pandas as pd
@@ -237,7 +237,6 @@ def store_bar_plot(distribution: Dict[str, float], mlflow_run: Run, artifact_nam
 
 def store_histogram(data: List[Union[int, float]], mlflow_run: Run, artifact_name: str,
                     columns: List[str], bins=10) -> None:
-    import plotly.express as px
     data = pd.DataFrame({
         columns[0]: pd.Series(data)
     })

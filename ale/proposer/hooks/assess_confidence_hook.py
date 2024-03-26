@@ -1,21 +1,15 @@
 import logging
 import tempfile
-from collections import defaultdict
-from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Dict
 
 import numpy as np
-import pandas as pd
-import srsly
 from mlflow import MlflowClient
 from mlflow.entities import Run
 from typing_extensions import override
 
 import ale.mlflowutils.mlflow_utils as utils
-from ale.bias.bias import BiasDetector
 from ale.config import AppConfig
 from ale.corpus.corpus import Corpus
-from ale.metrics.accuracy import Accuracy
 from ale.proposer.hooks.abstract_hook import ProposeHook
 from ale.trainer.prediction_result import PredictionResult
 

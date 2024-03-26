@@ -1,16 +1,15 @@
 from abc import ABC
-from typing import List, Dict, Optional
-import numpy as np
-import random
+from typing import List, Optional
 
 from ale.config import NLPTask
+from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
-from ale.corpus.corpus import Corpus
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod
-from ale.trainer.base_trainer import Predictor
 from ale.teacher.exploitation.margin_confidence import MarginTeacher
 from ale.teacher.exploration.k_means import KMeansTeacher
+from ale.trainer.base_trainer import Predictor
+
 
 @TeacherRegistry.register("k-means-margin-confidence")
 class KMeansMarginTeacher(BaseTeacher, ABC):

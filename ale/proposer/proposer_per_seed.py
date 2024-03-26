@@ -1,8 +1,7 @@
 import logging
 from pathlib import Path
-from typing import Any, List, Tuple, Optional, Dict
+from typing import Any, List, Tuple, Optional
 
-import srsly
 from mlflow import MlflowClient
 from mlflow.entities import RunStatus, Run
 from mlflow.utils import mlflow_tags
@@ -14,7 +13,6 @@ from ale.corpus.corpus import Corpus
 from ale.proposer.hooks.abstract_hook import ProposeHook
 from ale.proposer.hooks.assess_bias_hook import AssessBiasHook
 from ale.proposer.hooks.assess_confidence_hook import AssessConfidenceHook
-
 from ale.registry.registerable_corpus import CorpusRegistry
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.registry.registerable_trainer import TrainerRegistry

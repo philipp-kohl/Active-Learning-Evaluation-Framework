@@ -1,7 +1,7 @@
 import mlflow
 import srsly
-import ale.mlflowutils.mlflow_utils as mlflow_utils
 
+import ale.mlflowutils.mlflow_utils as mlflow_utils
 from ale.config import NLPTask
 from ale.mlflowutils.ale_mlflow_artifact_files import AleArtifactFiles
 from ale.pipeline.pipeline_component import PipelineComponent

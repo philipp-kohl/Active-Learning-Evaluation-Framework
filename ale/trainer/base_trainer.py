@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Mapping, List
+from typing import Dict, Mapping
 
 from mlflow import ActiveRun
 from mlflow.entities import Run

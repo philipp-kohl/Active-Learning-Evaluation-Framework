@@ -1,8 +1,8 @@
 import spacy
 import srsly
 from datasets import load_dataset
-from spacy.training import biluo_tags_to_spans, iob_to_biluo
 from spacy.tokens import Doc
+from spacy.training import biluo_tags_to_spans, iob_to_biluo
 
 conll2003 = load_dataset("conll2003")
 train = conll2003["train"]

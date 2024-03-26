@@ -1,6 +1,6 @@
 defaults:
   - data: conll2003
-  - teacher: k_means
+  - teacher: margin_confidence
   - trainer: pytorch_lightning
   - mlflow: localhost
   - experiment: ner

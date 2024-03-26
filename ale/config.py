@@ -5,8 +5,6 @@ from hydra.core.config_store import ConfigStore
 from pydantic import root_validator
 from pydantic.dataclasses import dataclass
 
-from ale.teacher.exploitation.aggregation_methods import AggregationMethod
-
 
 @dataclass
 class MlFlowConfig:
@@ -29,6 +27,14 @@ class TrainerConfig:
     max_epochs: int
     num_workers: int
     device: str
+
+
+class AggregationMethod(str, Enum):
+    AVERAGE = "AVG"
+    STD = "STD"
+    MAXIMUM = "MAX"
+    MINIMUM = "MIN"
+    SUM = "SUM"
 
 
 @dataclass
@@ -57,6 +63,7 @@ class TechnicalConfig:
     use_gpu: int
     number_threads: int
     adjust_wrong_step_size: bool
+
 
 class NLPTask(str, Enum):
     CLS = "CLS"
