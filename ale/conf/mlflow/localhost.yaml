@@ -1,4 +1,4 @@
-experiment_name: changeme
+experiment_name: single-process
 url: http://127.0.0.1:5000
 run_name:
 git_hash:

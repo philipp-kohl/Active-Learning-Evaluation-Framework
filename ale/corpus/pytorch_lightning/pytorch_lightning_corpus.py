@@ -16,26 +16,25 @@ logger = logging.getLogger(__name__)
 class PytorchLightningCorpus(Corpus):
     def __init__(self, cfg: AppConfig, data_dir: Union[str, Path], labels: List[str]):
         super().__init__(cfg, data_dir)
-
-        def filter_relevant_ids(loaded_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-            filtered = []
-            for entry in loaded_data:
-                if entry["id"] in self.get_relevant_ids():
-                    filtered.append(entry)
-            return filtered
-
         self.data_module = AleNerDataModule(data_dir,
                                             model_name=self.cfg.trainer.huggingface_model,
                                             labels=labels,
                                             batch_size=self.cfg.trainer.batch_size,
                                             num_workers=self.cfg.trainer.num_workers,
-                                            train_filter_func=filter_relevant_ids)
+                                            train_filter_func=self.filter_relevant_ids)
 
         logger.info("Start indexing corpus")
         self.index = {}
         for entry in srsly.read_jsonl(data_dir / "train.jsonl"):
             self.index[entry["id"]] = entry["text"]
         logger.info("End indexing corpus")
+
+    def filter_relevant_ids(self, loaded_data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        filtered = []
+        for entry in loaded_data:
+            if entry["id"] in self.get_relevant_ids():
+                filtered.append(entry)
+        return filtered
 
     def get_trainable_corpus(self):
         return self.data_module.train_dataloader()

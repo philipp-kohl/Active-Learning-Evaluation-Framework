@@ -1,3 +1,5 @@
+import multiprocessing
+
 from ale.import_helper import import_registrable_components
 from ale.pipeline.pipeline_components.measure_data_distribution import DataDistributionMeasure
 

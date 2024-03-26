@@ -1,4 +1,6 @@
 import logging
+import multiprocessing
+from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures.thread import ThreadPoolExecutor
 from pathlib import Path
 from typing import List, Any, Dict
@@ -41,15 +43,15 @@ class AleBartender:
         if number_threads == -1:
             number_threads = len(self.seeds)
 
-        logger.info(f"Starting thread pool with {number_threads} threads to run {len(self.seeds)} seeds.")
-        executor = ThreadPoolExecutor(max_workers=number_threads)
+        logger.info(f"Starting process pool with {number_threads} workers to run {len(self.seeds)} seeds.")
+        multiprocessing.set_start_method("spawn", force=True)
+        executor = ProcessPoolExecutor(max_workers=number_threads)
         run_ids = [run_id for run_id in executor.map(self.resume_or_start_seed_run, self.seeds)]
         executor.shutdown(wait=True)
 
         logger.info(f"All seed runs finished. Run ids to aggregate: {run_ids}")
 
-
-    def resume_or_start_seed_run(self, seed) -> str:
+    def resume_or_start_seed_run(self, seed: int) -> str:
         experiment_seed_id = utils.get_or_create_experiment(self.cfg.mlflow.experiment_name)
         run_name = f"{self.cfg.teacher.strategy}-with-seed-{seed}"
         seed_tag = {"seed": str(seed)}
