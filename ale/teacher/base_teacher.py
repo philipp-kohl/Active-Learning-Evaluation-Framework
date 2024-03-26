@@ -15,7 +15,7 @@ class BaseTeacher(ABC):
 
     def __init__(
             self, corpus: Corpus, predictor: Predictor, labels: List[Any], seed: int, nlp_task: NLPTask,
-            aggregation_method: Optional[AggregationMethod]
+            aggregation_method: Optional[AggregationMethod] = None
     ):
         self.labels = labels
         self.corpus = corpus
