@@ -8,7 +8,7 @@ import plotly.express as px
 import srsly
 from mlflow.entities import Run
 
-from ale.config import NLPTask
+from ale.utils import NLPTask
 import ale.mlflowutils.mlflow_utils as utils
 
 

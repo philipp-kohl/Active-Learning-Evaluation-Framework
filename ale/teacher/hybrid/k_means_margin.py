@@ -1,9 +1,7 @@
 from abc import ABC
-from typing import List, Dict, Optional
-import numpy as np
-import random
+from typing import List, Optional
 
-from ale.config import NLPTask
+from ale.utils import NLPTask
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.corpus.corpus import Corpus

@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Optional, List
 
 from hydra.core.config_store import ConfigStore
@@ -6,7 +5,7 @@ from pydantic import root_validator
 from pydantic.dataclasses import dataclass
 
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod
-
+from ale.utils import NLPTask
 
 @dataclass
 class MlFlowConfig:
@@ -57,10 +56,6 @@ class TechnicalConfig:
     use_gpu: int
     number_threads: int
     adjust_wrong_step_size: bool
-
-class NLPTask(str, Enum):
-    CLS = "CLS"
-    NER = "NER"
 
 
 @dataclass

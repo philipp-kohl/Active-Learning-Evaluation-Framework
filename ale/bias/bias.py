@@ -7,7 +7,7 @@ from mlflow.entities import Run
 
 from ale.bias.data_distribution import DataDistribution
 from ale.bias.utils import normalize_counts
-from ale.config import NLPTask
+from ale.utils import NLPTask
 from ale.metrics.accuracy import Accuracy
 from ale.trainer.prediction_result import PredictionResult
 

@@ -8,7 +8,7 @@ import srsly
 from mlflow.entities import Run
 import ale.mlflowutils.mlflow_utils as mlflow_utils
 
-from ale.config import TrainerConfig, AppConfig
+from ale.config import AppConfig
 
 
 class Corpus(ABC):

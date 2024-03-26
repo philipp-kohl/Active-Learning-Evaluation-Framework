@@ -3,7 +3,7 @@ import re
 import sys
 import tempfile
 from pathlib import Path
-from typing import Callable, Dict, Union, Optional, Any, List
+from typing import Callable, Dict, Union, Optional, Any
 
 
 import spacy
@@ -21,7 +21,7 @@ from spacy.training.initialize import init_nlp
 from spacy.training.loop import train as train_nlp
 from wasabi import msg
 
-from ale.config import NLPTask
+from ale.utils import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_trainer import TrainerRegistry
 from ale.trainer.base_trainer import MetricsType, PredictionTrainer

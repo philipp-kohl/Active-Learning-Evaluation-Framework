@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import Callable, Dict, Tuple, Any
 
-from ale.config import NLPTask
+from ale.utils import NLPTask
 from ale.trainer.prediction_result import PredictionResult, Span
 
 

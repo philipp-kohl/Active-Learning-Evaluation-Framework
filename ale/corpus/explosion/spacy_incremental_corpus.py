@@ -7,7 +7,6 @@ from spacy.tokens import Doc
 from spacy.tokens import DocBin
 from tqdm import tqdm
 
-from ale.config import TrainerConfig
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_corpus import CorpusRegistry
 

@@ -11,7 +11,7 @@ from spacy.tokens import Doc
 from tqdm import tqdm
 import logging
 
-from ale.config import NLPTask
+from ale.utils import NLPTask
 from ale.trainer import SpacyOnlineTrainer
 
 logger = logging.getLogger(__name__)
