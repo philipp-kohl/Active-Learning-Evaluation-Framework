@@ -64,7 +64,7 @@ def test_entropy_for_ner_avg(prediction_results: Dict[int, PredictionResult]):
                                                   AggregationMethod.AVERAGE)
 
     out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
-    assert out_ids == [0, 1]
+    assert out_ids == [1, 2]
 
 
 def test_entropy_for_ner_max(prediction_results: Dict[int, PredictionResult]):
@@ -80,7 +80,7 @@ def test_entropy_for_ner_std(prediction_results: Dict[int, PredictionResult]):
                                                   AggregationMethod.STD)
 
     out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
-    assert out_ids == [0, 1]
+    assert out_ids == [1, 2]
 
 
 def test_entropy_for_ner_sum(prediction_results: Dict[int, PredictionResult]):
