@@ -8,7 +8,7 @@ from ale.trainer.base_trainer import Predictor
 from ale.trainer.prediction_result import PredictionResult
 
 
-class BaseTeacher(ABC):
+class BaseTeacher:
     """
     abstract teacher class
     """
@@ -33,7 +33,6 @@ class BaseTeacher(ABC):
             NLPTask.NER: self.compute_ner
         }[nlp_task]
 
-    @abstractmethod
     def propose(self, potential_ids: List[int], actual_step_size: int, actual_budget: int) -> List[int]:
         """
         :type potential_ids: object
@@ -42,7 +41,6 @@ class BaseTeacher(ABC):
         """
         pass
 
-    @abstractmethod
     def compute_cls(self, predictions: Dict[int, PredictionResult], step_size: int) -> List[int]:
         """
         Computes the order in which the samples are proposed according to the teacher used.
@@ -53,7 +51,6 @@ class BaseTeacher(ABC):
         """
         pass
 
-    @abstractmethod
     def compute_ner(self, predictions: Dict[int, PredictionResult], step_size: int) -> List[int]:
         """
         Computes the order in which the samples are proposed according to the teacher used.

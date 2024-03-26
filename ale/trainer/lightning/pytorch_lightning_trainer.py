@@ -72,7 +72,7 @@ class PyTorchLightningTrainer(BaseTrainer):
         artifact_path = "best/model.ckpt"
         logger.info(f"Restore model from: {matching_run.info.run_id}/{artifact_path}")
         model_path = mlflow_utils.load_artifact(matching_run, artifact_path)
-        self.model = self.model.load_from_checkpoint(model_path)
+        self.model = self.model.__class__.load_from_checkpoint(model_path)
 
     def delete_artifacts(self, run: Run):
         repository = get_artifact_repository(run.info.artifact_uri)

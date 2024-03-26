@@ -61,14 +61,23 @@ class AleBartenderPerSeed:
         teacher_strategy_class = TeacherRegistry.get_instance(
             self.cfg.teacher.strategy
         )
-        self.teacher: BaseTeacher = teacher_strategy_class(
-            corpus=self.corpus,
-            predictor=self.trainer,
-            seed=seed,
-            labels=labels,
-            nlp_task=self.cfg.data.nlp_task,
-            aggregation_method=self.cfg.teacher.aggregation_method
-        )
+
+        if self.cfg.teacher.aggregation_method:
+            self.teacher: BaseTeacher = teacher_strategy_class(
+                corpus=self.corpus,
+                predictor=self.trainer,
+                seed=seed,
+                labels=labels,
+                nlp_task=self.cfg.data.nlp_task,
+                aggregation_method=self.cfg.teacher.aggregation_method)
+        else:
+            self.teacher: BaseTeacher = teacher_strategy_class(
+                corpus=self.corpus,
+                predictor=self.trainer,
+                seed=seed,
+                labels=labels,
+                nlp_task=self.cfg.data.nlp_task)
+
         logger.info(f"Use '{self.cfg.experiment.initial_data_strategy}' teacher for initial data ratio.")
         initial_teacher_strategy_class = TeacherRegistry.get_instance(
             self.cfg.experiment.initial_data_strategy
@@ -249,7 +258,7 @@ class AleBartenderPerSeed:
         step_size = min(len(potential_ids), self.cfg.experiment.step_size)
         sampling_budget = self.cfg.teacher.sampling_budget
 
-        if len(potential_ids) < sampling_budget:
+        if len(potential_ids) <= sampling_budget:
             sampling_budget = len(potential_ids)
 
         if current_corpus_size + step_size > self.cfg.experiment.annotation_budget:

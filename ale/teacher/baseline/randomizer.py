@@ -32,23 +32,3 @@ class RandomTeacher(BaseTeacher, ABC):
     def propose(self, potential_ids: List[int], step_size: int, budget: int) -> List[int]:
         next_batch = random.sample(potential_ids, step_size)
         return next_batch
-
-    def compute_cls(self, predictions: Dict[int, PredictionResult], step_size: int) -> List[int]:
-        """
-        Computes the order in which the samples are proposed according to the teacher used.
-        Args:
-            - predictions (Dict[int,PredictionResult]): key: id of doc, value: prediction result of doc
-        Returns:
-            - List[int]: ordered list of indices of the documents
-        """
-        pass
-
-    def compute_ner(self, predictions: Dict[int, PredictionResult], step_size: int) -> List[int]:
-        """
-        Computes the order in which the samples are proposed according to the teacher used.
-        Args:
-            - predictions (Dict[int,PredictionResult]): key: id of doc, value: prediction result of doc
-        Returns:
-            - List[int]: ordered list of indices of the documents
-        """
-        pass
