@@ -5,4 +5,3 @@ def import_registrable_components():
     importlib.import_module("ale.teacher")
     importlib.import_module("ale.trainer")
     importlib.import_module("ale.corpus")
-    importlib.import_module("ale.spacy_logger")

@@ -1,4 +1,5 @@
 import logging
+from abc import ABC
 from pathlib import Path
 from typing import Dict
 
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 @TrainerRegistry.register("dummy-trainer")
-class DummyTrainer(PredictionTrainer):
+class DummyTrainer(PredictionTrainer, ABC):
     """ """
 
     def __init__(
