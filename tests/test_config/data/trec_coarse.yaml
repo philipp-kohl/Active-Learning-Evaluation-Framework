@@ -1,9 +1,0 @@
-data_dir: data/trec
-train_file: trec_train
-test_file: trec_test
-dev_file: trec_dev
-file_format: jsonl
-text_column: text
-label_column: coarse_label
-nlp_task: CLS
-
