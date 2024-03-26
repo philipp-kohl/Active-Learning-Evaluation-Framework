@@ -1,21 +1,21 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Callable, Tuple, Optional
+from typing import List, Dict, Any, Callable, Optional
 
+from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod, Aggregation
 from ale.trainer.base_trainer import Predictor
-from ale.utils import NLPTask
 from ale.trainer.prediction_result import PredictionResult
 
 
-class BaseTeacher(ABC):
+class BaseTeacher:
     """
     abstract teacher class
     """
 
     def __init__(
             self, corpus: Corpus, predictor: Predictor, labels: List[Any], seed: int, nlp_task: NLPTask,
-            aggregation_method: Optional[AggregationMethod]
+            aggregation_method: Optional[AggregationMethod] = None
     ):
         self.labels = labels
         self.corpus = corpus
@@ -33,7 +33,6 @@ class BaseTeacher(ABC):
             NLPTask.NER: self.compute_ner
         }[nlp_task]
 
-    @abstractmethod
     def propose(self, potential_ids: List[int], actual_step_size: int, actual_budget: int) -> List[int]:
         """
         :type potential_ids: object
@@ -42,7 +41,6 @@ class BaseTeacher(ABC):
         """
         pass
 
-    @abstractmethod
     def compute_cls(self, predictions: Dict[int, PredictionResult], step_size: int) -> List[int]:
         """
         Computes the order in which the samples are proposed according to the teacher used.
@@ -53,7 +51,6 @@ class BaseTeacher(ABC):
         """
         pass
 
-    @abstractmethod
     def compute_ner(self, predictions: Dict[int, PredictionResult], step_size: int) -> List[int]:
         """
         Computes the order in which the samples are proposed according to the teacher used.

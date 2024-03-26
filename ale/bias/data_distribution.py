@@ -1,15 +1,12 @@
-import tempfile
 from collections import defaultdict
 from pathlib import Path
 from typing import Tuple, Dict, List, Union
 
-import pandas as pd
-import plotly.express as px
 import srsly
 from mlflow.entities import Run
 
-from ale.utils import NLPTask
 import ale.mlflowutils.mlflow_utils as utils
+from ale.config import NLPTask
 
 
 class DataDistribution:

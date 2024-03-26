@@ -16,8 +16,8 @@ from ale.mlflowutils.mlflow_utils import (
     _already_ran,
     walk_params_from_omegaconf_dict,
 )
-from ale.pipeline.pipeline_component import PipelineComponent
 from ale.pipeline.components import PipelineComponents
+from ale.pipeline.pipeline_component import PipelineComponent
 from ale.pipeline.pipeline_storage import PipelineStorage
 
 logger = logging.getLogger(__name__)

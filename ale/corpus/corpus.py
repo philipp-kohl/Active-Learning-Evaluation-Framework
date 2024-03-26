@@ -1,13 +1,12 @@
-from mlflow.artifacts import download_artifacts
-
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import List, Union, Any, Dict
 
 import srsly
+from mlflow.artifacts import download_artifacts
 from mlflow.entities import Run
-import ale.mlflowutils.mlflow_utils as mlflow_utils
 
+import ale.mlflowutils.mlflow_utils as mlflow_utils
 from ale.config import AppConfig
 
 

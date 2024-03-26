@@ -1,7 +1,7 @@
 from typing import List, Dict
 
 from ale.import_helper import import_registrable_components
-from ale.utils import NLPTask
+from ale.config import NLPTask
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod
 from ale.teacher.exploitation.margin_confidence import MarginTeacher
 from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence

@@ -7,8 +7,8 @@ from mlflow.artifacts import download_artifacts
 
 from ale.config import AppConfig
 from ale.mlflowutils.ale_mlflow_artifact_files import AleArtifactFiles
-from ale.pipeline.pipeline_component import PipelineComponent
 from ale.pipeline.components import PipelineComponents
+from ale.pipeline.pipeline_component import PipelineComponent
 from ale.proposer.proposer import AleBartender
 
 

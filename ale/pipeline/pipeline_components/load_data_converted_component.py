@@ -3,8 +3,8 @@ import os
 from mlflow.artifacts import download_artifacts
 
 from ale.data.data import load_local_data
-from ale.pipeline.pipeline_component import PipelineComponent
 from ale.pipeline.components import PipelineComponents
+from ale.pipeline.pipeline_component import PipelineComponent
 
 
 class LoadDataConvertedComponent(PipelineComponent):

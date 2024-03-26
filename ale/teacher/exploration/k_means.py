@@ -1,13 +1,12 @@
 import logging
-
-from typing import List, Dict, Any
 from threading import Lock
+from typing import List, Dict, Any
 
 from numpy.linalg import norm
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from ale.utils import NLPTask
+from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher

@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from ale.utils import NLPTask
+from ale.config import NLPTask
 from ale.import_helper import import_registrable_components
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod
 from ale.teacher.exploitation.entropy_confidence import EntropyTeacher

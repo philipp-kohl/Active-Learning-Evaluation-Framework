@@ -6,7 +6,7 @@ from mlflow import ActiveRun
 from mlflow.entities import Run
 from mlflow.store.artifact.artifact_repository_registry import get_artifact_repository
 
-from ale.utils import NLPTask
+from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.mlflowutils.mlflow_utils import log_dict_as_artifact
 from ale.registry.registerable_trainer import TrainerRegistry

@@ -53,13 +53,13 @@ def create_potential_ids(number: int):
                              ("Exceed annotation budget", 200, create_potential_ids(500), 5, 50),
                              ("Remaining corpus < sampling budget", 100, create_potential_ids(48), 10, 48),
                          ])
-def test_determine_step_size(create_seed_runner,
-                             config,
+def test_determine_step_size(create_seed_runner: "AleBartenderPerSeed",
+                             config: "AppConfig",
                              name: str,
                              current_corpus_size: int,
                              potential_ids: List[int],
                              expected_step_size: int,
                              expected_sampling_budget: int):
-    sampling_budget, step_size = create_seed_runner.determine_step_size(current_corpus_size, potential_ids)
+    sampling_budget, step_size = create_seed_runner(config).determine_step_size(current_corpus_size, potential_ids)
     assert step_size == expected_step_size
     assert sampling_budget == expected_sampling_budget

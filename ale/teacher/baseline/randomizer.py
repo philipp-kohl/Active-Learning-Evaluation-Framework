@@ -1,12 +1,13 @@
 import random
 from abc import ABC
-from typing import List, Any
+from typing import List, Any, Dict
 
+from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.trainer.base_trainer import Predictor
-from ale.utils import NLPTask
+from ale.trainer.prediction_result import PredictionResult
 
 
 @TeacherRegistry.register("randomizer")

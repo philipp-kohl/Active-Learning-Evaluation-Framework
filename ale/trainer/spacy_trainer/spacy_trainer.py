@@ -5,14 +5,11 @@ import tempfile
 from pathlib import Path
 from typing import Callable, Dict, Union, Optional, Any
 
-
 import spacy
-from mlflow.store.artifact.artifact_repository_registry import get_artifact_repository
-
-import ale.mlflowutils.mlflow_utils as mlflow_utils
 from confection import Config
 from mlflow import ActiveRun
 from mlflow.entities import Run
+from mlflow.store.artifact.artifact_repository_registry import get_artifact_repository
 from spacy import util, Language
 from spacy.cli._util import setup_gpu, show_validation_error
 from spacy.cli.evaluate import handle_scores_per_type
@@ -21,7 +18,8 @@ from spacy.training.initialize import init_nlp
 from spacy.training.loop import train as train_nlp
 from wasabi import msg
 
-from ale.utils import NLPTask
+import ale.mlflowutils.mlflow_utils as mlflow_utils
+from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_trainer import TrainerRegistry
 from ale.trainer.base_trainer import MetricsType, PredictionTrainer

@@ -4,15 +4,14 @@ from pathlib import Path
 from typing import Dict, List
 
 import torch
-from lightning import seed_everything, Callback
+from lightning import seed_everything
 from lightning.pytorch import Trainer
-from lightning.pytorch.callbacks import RichProgressBar
-from mlflow import ActiveRun
-from mlflow.entities import Run
-from mlflow.store.artifact.artifact_repository_registry import get_artifact_repository
 from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 from lightning.pytorch.callbacks.model_checkpoint import ModelCheckpoint
 from lightning.pytorch.loggers.mlflow import MLFlowLogger
+from mlflow import ActiveRun
+from mlflow.entities import Run
+from mlflow.store.artifact.artifact_repository_registry import get_artifact_repository
 from torch.utils.data import DataLoader
 
 from ale.config import AppConfig
@@ -73,7 +72,7 @@ class PyTorchLightningTrainer(BaseTrainer):
         artifact_path = "best/model.ckpt"
         logger.info(f"Restore model from: {matching_run.info.run_id}/{artifact_path}")
         model_path = mlflow_utils.load_artifact(matching_run, artifact_path)
-        self.model = self.model.load_from_checkpoint(model_path)
+        self.model = self.model.__class__.load_from_checkpoint(model_path)
 
     def delete_artifacts(self, run: Run):
         repository = get_artifact_repository(run.info.artifact_uri)
