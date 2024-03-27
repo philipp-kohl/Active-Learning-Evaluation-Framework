@@ -1,7 +1,7 @@
 from typing import List, Dict
 
-from ale.config import NLPTask
 from ale.import_helper import import_registrable_components
+from ale.config import NLPTask
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod
 from ale.teacher.exploitation.margin_confidence import MarginTeacher
 from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence
@@ -27,21 +27,21 @@ def create_prediction_result(data: Dict[str, List[float]]) -> PredictionResult:
 @pytest.fixture
 def prediction_results() -> Dict[int, PredictionResult]:
     predictions_1 = create_prediction_result({
-        "Token 1": [0.3, 0.2, 0.5],
-        "Token 2": [0.1, 0.1, 0.5],
-        "Token 3": [0.4, 0.3, 0.8],
+        "Token 1": [0.3, 0.2, 0.5],  # Margin: 0.2
+        "Token 2": [0.1, 0.1, 0.5],  # Margin: 0.4
+        "Token 3": [0.4, 0.3, 0.8],  # Margin: 0.4
     })
 
     predictions_2 = create_prediction_result({
-        "Token 1": [0.3, 0.2, 0.4],
-        "Token 2": [0.1, 0.1, 0.5],
-        "Token 3": [0.4, 0.3, 0.8],
+        "Token 1": [0.3, 0.2, 0.4],  # Margin: 0.1
+        "Token 2": [0.1, 0.1, 0.5],  # Margin: 0.4
+        "Token 3": [0.4, 0.3, 0.8],  # Margin: 0.4
     })
 
     predictions_3 = create_prediction_result({
-        "Token 1": [0.3, 0.2, 0.4],
-        "Token 2": [0.1, 0.1, 0.5],
-        "Token 3": [0.4, 0.3, 0.8],
+        "Token 1": [0.3, 0.2, 0.4],  # Margin: 0.1
+        "Token 2": [0.1, 0.1, 0.5],  # Margin: 0.4
+        "Token 3": [0.4, 0.3, 0.8],  # Margin: 0.4
     })
 
     return {

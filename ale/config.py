@@ -1,5 +1,5 @@
-from enum import Enum
 from typing import Optional, List
+from enum import Enum
 
 from hydra.core.config_store import ConfigStore
 from pydantic import root_validator

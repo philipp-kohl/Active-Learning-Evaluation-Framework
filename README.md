@@ -130,6 +130,9 @@ The configuration will be instantiated into python objects (see ale/conf/).
 |              | config_path           | Path to the config path relative to the project root. The config will be packaged into the docker image.                                                                                                                                                                               |
 |              | corpus_manager        | Corpus class registered via CorpusRegistry.register(''name'')`.                                                                                                                                                                                                                        |
 |              | language              | Language abbreviation (en, de, etc. )                                                                                                                                                                                                                                                  |
+## Run tests with pytest
+To run all tests in the repository, run `pytest .` in the root directory. 
+If you want to run just one test, use `python -m pytest tests/<test_name>.py`
 
 ## Citation
 If you find this code useful in your research, please cite:
