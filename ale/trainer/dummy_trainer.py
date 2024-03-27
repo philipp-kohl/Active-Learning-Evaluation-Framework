@@ -1,13 +1,13 @@
 import logging
 from abc import ABC
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 from mlflow import ActiveRun
 from mlflow.entities import Run
 from mlflow.store.artifact.artifact_repository_registry import get_artifact_repository
 
-from ale.config import NLPTask
+from ale.config import NLPTask, AppConfig
 from ale.corpus.corpus import Corpus
 from ale.mlflowutils.mlflow_utils import log_dict_as_artifact
 from ale.registry.registerable_trainer import TrainerRegistry
@@ -23,13 +23,10 @@ class DummyTrainer(PredictionTrainer, ABC):
 
     def __init__(
             self,
-            dev_path: Path,
-            test_path: Path,
-            spacy_config: Path,
-            use_gpu: int,
+            cfg: AppConfig,
+            corpus: Corpus,
             seed: int,
-            nlp_task: NLPTask,
-            recreate_pipeline_each_run: bool
+            labels: List[str]
     ):
         logger.info("Dummy Trainer initialized!")
 
