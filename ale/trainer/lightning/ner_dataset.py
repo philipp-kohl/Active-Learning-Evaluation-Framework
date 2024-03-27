@@ -35,7 +35,7 @@ class AleNerDataModule(LightningDataModule):
             text = entry["text"]
             labels = entry["labels"]
 
-            tokenized = self.tokenizer(text, add_special_tokens=True, return_offsets_mapping=True)
+            tokenized = self.tokenizer(text, add_special_tokens=True, return_offsets_mapping=True, truncation=True)
             token_labels, tokens_text = self.create_token_labels(labels, tokenized)
             token_labels = [self.label2id[label] for label in token_labels]
 
