@@ -1,7 +1,7 @@
 from typing import List
 
 from ale.config import AppConfig
-from ale.corpus import SpacyIncrementalCorpus
+from ale.corpus import PytorchLightningCorpus
 from ale.corpus.corpus import Corpus
 from ale.import_helper import import_registrable_components
 
@@ -17,7 +17,7 @@ from ale.proposer.proposer_per_seed import AleBartenderPerSeed
 
 @pytest.fixture
 def config() -> AppConfig:
-    with initialize(config_path="../test_config/"):
+    with initialize(config_path="../../ale/conf"):
         cfg = compose(config_name="config", overrides=["experiment.step_size=10",
                                                        "teacher.sampling_budget=50",
                                                        "experiment.annotation_budget=205"])
@@ -25,12 +25,12 @@ def config() -> AppConfig:
 
 
 @pytest.fixture
-def create_seed_runner(config) -> AleBartenderPerSeed:
+def create_seed_runner(config: AppConfig) -> AleBartenderPerSeed:
     return AleBartenderPerSeed(config,
                                4711,
-                               Path("../artifacts/train.spacy"),
-                               Path("../artifacts/dev.spacy"),
-                               Path("../artifacts/test.spacy"),
+                               Path("tests/artifacts/"),
+                               Path("tests/artifacts/train.jsonl"),
+                               Path("tests/artifacts/dev.jsonl"),
                                ["Label-A", "Label-B"],
                                "4711",
                                "no",
@@ -38,8 +38,8 @@ def create_seed_runner(config) -> AleBartenderPerSeed:
 
 
 @pytest.fixture
-def corpus() -> Corpus:
-    return SpacyIncrementalCorpus(Path("../artifacts/train.spacy"))
+def corpus(config: AppConfig) -> Corpus:
+    return PytorchLightningCorpus(config, "tests/artifacts/", labels=["ORG", "PERS", "MISC", "LOC"])
 
 
 def create_potential_ids(number: int):
@@ -53,13 +53,13 @@ def create_potential_ids(number: int):
                              ("Exceed annotation budget", 200, create_potential_ids(500), 5, 50),
                              ("Remaining corpus < sampling budget", 100, create_potential_ids(48), 10, 48),
                          ])
-def test_determine_step_size(create_seed_runner: "AleBartenderPerSeed",
-                             config: "AppConfig",
+def test_determine_step_size(create_seed_runner: AleBartenderPerSeed,
+                             config: AppConfig,
                              name: str,
                              current_corpus_size: int,
                              potential_ids: List[int],
                              expected_step_size: int,
                              expected_sampling_budget: int):
-    sampling_budget, step_size = create_seed_runner(config).determine_step_size(current_corpus_size, potential_ids)
+    sampling_budget, step_size = create_seed_runner.determine_step_size(current_corpus_size, potential_ids)
     assert step_size == expected_step_size
     assert sampling_budget == expected_sampling_budget

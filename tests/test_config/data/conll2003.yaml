@@ -1,8 +1,0 @@
-data_dir: data/conll2003
-train_file: conll2003_train
-test_file: conll2003_test
-dev_file: conll2003_dev
-file_format: jsonl
-text_column: text
-label_column: labels
-nlp_task: NER

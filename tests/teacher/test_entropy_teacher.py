@@ -27,21 +27,21 @@ def create_prediction_result(data: Dict[str, List[float]]) -> PredictionResult:
 @pytest.fixture
 def prediction_results() -> Dict[int, PredictionResult]:
     predictions_1 = create_prediction_result({
-        "Token 1": [0.3, 0.2, 0.5], # Entropy ~1,03
-        "Token 2": [0.1, 0.1, 0.5], # Entropy ~0.81
-        "Token 3": [0.4, 0.3, 0.8], # Entropy ~0.91
+        "Token 1": [0.3, 0.2, 0.5],  # Entropy ~1,03
+        "Token 2": [0.1, 0.1, 0.5],  # Entropy ~0.81
+        "Token 3": [0.4, 0.3, 0.8],  # Entropy ~0.91
     })
 
     predictions_2 = create_prediction_result({
-        "Token 1": [0.3, 0.2, 0.4], # Entropy ~1.05 
-        "Token 2": [0.1, 0.1, 0.5], # Entropy ~0.81
-        "Token 3": [0.4, 0.3, 0.8], # Entropy ~0.91
+        "Token 1": [0.3, 0.2, 0.4],  # Entropy ~1.05
+        "Token 2": [0.1, 0.1, 0.5],  # Entropy ~0.81
+        "Token 3": [0.4, 0.3, 0.8],  # Entropy ~0.91
     })
 
     predictions_3 = create_prediction_result({
-        "Token 1": [0.3, 0.2, 0.4], # Entropy ~1.05
-        "Token 2": [0.1, 0.1, 0.5], # Entropy ~0.81
-        "Token 3": [0.4, 0.3, 0.8], # Entropy ~0.91
+        "Token 1": [0.3, 0.2, 0.4],  # Entropy ~1.05
+        "Token 2": [0.1, 0.1, 0.5],  # Entropy ~0.81
+        "Token 3": [0.4, 0.3, 0.8],  # Entropy ~0.91
     })
 
     return {
@@ -51,9 +51,9 @@ def prediction_results() -> Dict[int, PredictionResult]:
     }
 
 
-def test_netropy_for_ner_min(prediction_results: Dict[int, PredictionResult]):
+def test_entropy_for_ner_min(prediction_results: Dict[int, PredictionResult]):
     entropy_teacher: EntropyTeacher = EntropyTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                  AggregationMethod.MINIMUM)
+                                                     AggregationMethod.MINIMUM)
 
     out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
     assert out_ids == [0, 1]
@@ -61,7 +61,7 @@ def test_netropy_for_ner_min(prediction_results: Dict[int, PredictionResult]):
 
 def test_entropy_for_ner_avg(prediction_results: Dict[int, PredictionResult]):
     entropy_teacher: EntropyTeacher = EntropyTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                  AggregationMethod.AVERAGE)
+                                                     AggregationMethod.AVERAGE)
 
     out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
     assert out_ids == [1, 2]
@@ -69,7 +69,7 @@ def test_entropy_for_ner_avg(prediction_results: Dict[int, PredictionResult]):
 
 def test_entropy_for_ner_max(prediction_results: Dict[int, PredictionResult]):
     entropy_teacher: EntropyTeacher = EntropyTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                  AggregationMethod.MAXIMUM)
+                                                     AggregationMethod.MAXIMUM)
 
     out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
     assert out_ids == [1, 2]
@@ -77,7 +77,7 @@ def test_entropy_for_ner_max(prediction_results: Dict[int, PredictionResult]):
 
 def test_entropy_for_ner_std(prediction_results: Dict[int, PredictionResult]):
     entropy_teacher: EntropyTeacher = EntropyTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                  AggregationMethod.STD)
+                                                     AggregationMethod.STD)
 
     out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
     assert out_ids == [1, 2]
@@ -85,7 +85,7 @@ def test_entropy_for_ner_std(prediction_results: Dict[int, PredictionResult]):
 
 def test_entropy_for_ner_sum(prediction_results: Dict[int, PredictionResult]):
     entropy_teacher: EntropyTeacher = EntropyTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                  AggregationMethod.SUM)
+                                                     AggregationMethod.SUM)
 
     out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
     assert out_ids == [1, 2]
