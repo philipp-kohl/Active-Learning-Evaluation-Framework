@@ -1,4 +1,4 @@
-data_dir: processed_data/ontonotes_v5
+data_dir: data/processed_data/ontonotes_v5
 train_file: train
 test_file: test
 dev_file: dev
