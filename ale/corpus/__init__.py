@@ -1,2 +1,1 @@
-from ale.corpus.explosion.spacy_incremental_corpus import SpacyIncrementalCorpus
 from ale.corpus.pytorch_lightning.pytorch_lightning_corpus import PytorchLightningCorpus
