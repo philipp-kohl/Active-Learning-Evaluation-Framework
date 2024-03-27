@@ -258,7 +258,7 @@ class AleBartenderPerSeed:
         step_size = min(len(potential_ids), self.cfg.experiment.step_size)
         sampling_budget = self.cfg.teacher.sampling_budget
 
-        if len(potential_ids) <= sampling_budget:
+        if len(potential_ids) <= sampling_budget or sampling_budget == -1:
             sampling_budget = len(potential_ids)
 
         if current_corpus_size + step_size > self.cfg.experiment.annotation_budget:

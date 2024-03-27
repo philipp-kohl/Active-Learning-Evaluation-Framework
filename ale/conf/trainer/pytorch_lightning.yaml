@@ -1,9 +1,9 @@
 trainer_name: pytorch-lightning-trainer
 corpus_manager: pytorch-lightning-corpus
-huggingface_model: "FacebookAI/roberta-base"
+huggingface_model: "FacebookAI/roberta-large"
 batch_size: 32
 learning_rate: 2e-5
 weight_decay: 0.01
-max_epochs: 20
+max_epochs: 50
 num_workers: 4
 device: gpu
