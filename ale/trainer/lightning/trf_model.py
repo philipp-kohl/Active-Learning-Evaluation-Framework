@@ -218,5 +218,6 @@ class TransformerLightning(LightningModule):
         t1 = self.generalize_labels(prediction_labels_flat)
         t2 = self.generalize_labels(gold_labels_flat)
         for metric_name, metric in metrics.items():
-            metric.update(valid_prediction_labels, valid_gold_labels)
+            if len(valid_prediction_labels) > 0:  # TODO why are labels all -1?
+                metric.update(valid_prediction_labels, valid_gold_labels)
         f1_per_label.update(t1, t2)
