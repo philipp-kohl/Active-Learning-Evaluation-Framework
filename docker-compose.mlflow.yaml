@@ -35,7 +35,9 @@ services:
         exit 0;"
 
     mlflow-tracking-server:
-      image: ghcr.io/mlflow/mlflow:v2.11.3
+      build:
+        context: mlflow-server
+        dockerfile: Dockerfile
       command:
         - --backend-store-uri=postgresql://postgres:postgres@mlflow-db:5432/mlflowdb
         - --artifacts-destination=s3://mlflow/mlflow-artifacts
