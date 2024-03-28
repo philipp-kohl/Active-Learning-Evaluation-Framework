@@ -2,10 +2,13 @@
 Utils for usage with mlflow.
 """
 import logging
+import os
+import shutil
 import subprocess
 import tempfile
 import threading
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, Callable, Optional, Any, List, Union
 
@@ -249,3 +252,34 @@ def store_histogram(data: List[Union[int, float]], mlflow_run: Run, artifact_nam
         fig.write_html(histogram_html_path)
 
         log_artifact(mlflow_run, histogram_html_path, artifact_path=artifact_name)
+
+
+def store_log_file_to_mlflow(file: str, run_id: str):
+    root_run = _find_root_run_id(run_id)
+
+    new_file_name = f"{datetime.now().isoformat()}.log"
+
+    with tempfile.TemporaryDirectory() as temp_directory:
+        # Construct the full path for the new file in the temporary directory
+        new_file_path = os.path.join(temp_directory, new_file_name)
+        # Copy the source file to the new location with the new name
+        shutil.copy(file, new_file_path)
+
+        log_artifact(root_run, new_file_path, artifact_path="logs")
+
+
+def _find_root_run_id(current_run_id: str) -> Run:
+    """
+    Recursively finds the root parent run ID of a given MLflow run.
+
+    :param current_run_id: The run ID of the current MLflow run.
+    :return: The run ID of the root parent run.
+    """
+    parent_run = mlflow.get_parent_run(current_run_id)
+
+    # Base case: If there's no parent, this run is the root
+    if not parent_run:
+        return mlflow.get_run(current_run_id)
+    else:
+        # Recursive case: Keep looking for the parent
+        return _find_root_run_id(parent_run.info.run_id)
