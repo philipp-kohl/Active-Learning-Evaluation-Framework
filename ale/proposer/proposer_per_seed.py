@@ -122,6 +122,7 @@ class AleBartenderPerSeed:
             initial_train_evaluation_metrics, _, run = self.initial_train(self.corpus, self.seed)
             old_run = run
             self.teacher.after_initial_train(initial_train_evaluation_metrics)
+            utils.store_log_file_to_mlflow("main.log", run.info.run_id)
 
         annotation_budget: int = self.cfg.experiment.annotation_budget
 
@@ -168,6 +169,8 @@ class AleBartenderPerSeed:
             old_run = new_run
             self.teacher.after_train(evaluation_metrics)
             [h.on_iter_end() for h in hooks]
+            logger.info("Iteration end. Store log file!")
+            utils.store_log_file_to_mlflow("main.log", new_run.info.run_id)
 
         [h.on_seed_end() for h in hooks]
         logger.info("End seed: %s", self.seed)

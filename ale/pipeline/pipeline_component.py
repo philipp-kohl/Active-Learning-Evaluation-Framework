@@ -5,7 +5,7 @@ import mlflow
 from mlflow import ActiveRun
 from mlflow.entities import RunStatus
 
-from ale.mlflowutils.mlflow_utils import _already_ran, walk_params_from_omegaconf_dict
+from ale.mlflowutils.mlflow_utils import _already_ran, walk_params_from_omegaconf_dict, store_log_file_to_mlflow
 from ale.pipeline.components import PipelineComponents
 from ale.pipeline.pipeline_storage import PipelineStorage
 
@@ -89,6 +89,7 @@ class PipelineComponent(ABC):
         """
         Method called after run has finished. Can be used to store values in the pipeline_storage.
         """
+        store_log_file_to_mlflow("main.log", active_mlflow_run.info.run_id)
         pass
 
     @abstractmethod

@@ -115,6 +115,9 @@ class AleBartender:
         except Exception as e:
             utils.mark_run_as_finished(run, RunStatus.FAILED)
             raise e
+        finally:
+            utils.store_log_file_to_mlflow("main.log", run.info.run_id)
+
         return run
 
 
@@ -150,4 +153,6 @@ class AleBartender:
         except Exception as e:
             utils.mark_run_as_finished(run, RunStatus.FAILED)
             raise e
+        finally:
+            utils.store_log_file_to_mlflow("main.log", run.info.run_id)
         return run
