@@ -145,7 +145,7 @@ class PredictionDataModule(LightningDataModule):
     def process_texts(self, texts: List[str]):
         result = []
         for text in texts:
-            tokenized = self.tokenizer(text, add_special_tokens=False, return_offsets_mapping=True)
+            tokenized = self.tokenizer(text, add_special_tokens=False, return_offsets_mapping=True, truncation=True)
             tokens_text = self.create_token_labels(text)
 
             result.append({"tokens": tokenized, "text": text, "token_text": tokens_text})
