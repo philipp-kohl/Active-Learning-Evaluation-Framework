@@ -25,16 +25,23 @@ class AssessConfidenceHook(ProposeHook):
     def on_iter_end(self) -> None:
         self.iteration_counter_for_assessment += 1
 
+    def is_iteration_for_processing(self):
+        return self.iteration_counter_for_assessment % self.cfg.experiment.assess_overconfidence_eval_freq == 0
+
     @override
     def needs_dev_predictions(self) -> bool:
-        return True
+        return self.is_iteration_for_processing()
+
+    @override
+    def needs_train_predictions(self) -> bool:
+        return self.is_iteration_for_processing()
 
     @override
     def after_prediction(self,
                          mlflow_run: Run,
                          preds_train: Optional[Dict[int, PredictionResult]],
                          preds_dev: Optional[Dict[int, PredictionResult]]) -> None:
-        if self.iteration_counter_for_assessment % self.cfg.experiment.assess_overconfidence_eval_freq == 0:
+        if self.is_iteration_for_processing():
             logger.info("Evaluate train confidences")
             self.assess_confidence(mlflow_run, "train", preds_train)
 
