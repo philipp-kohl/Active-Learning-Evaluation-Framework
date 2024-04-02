@@ -24,7 +24,7 @@ from ale.trainer.lightning.trf_model import TransformerLightning
 from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence
 
 logger = logging.getLogger(__name__)
-logging.getLogger("lightning.pytorch").setLevel(logging.ERROR)
+logging.getLogger("lightning.pytorch").setLevel(logging.INFO)
 
 
 @TrainerRegistry.register("pytorch-lightning-trainer")
