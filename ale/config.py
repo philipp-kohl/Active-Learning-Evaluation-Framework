@@ -27,6 +27,8 @@ class TrainerConfig:
     max_epochs: int
     num_workers: int
     device: str
+    early_stopping_delta: float
+    early_stopping_patience: int
 
 
 class AggregationMethod(str, Enum):

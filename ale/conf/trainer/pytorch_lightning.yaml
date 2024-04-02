@@ -7,3 +7,5 @@ weight_decay: 0.01
 max_epochs: 50
 num_workers: 4
 device: gpu
+early_stopping_delta: 0.0005
+early_stopping_patience: 5
