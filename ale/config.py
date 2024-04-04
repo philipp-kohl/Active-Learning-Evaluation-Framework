@@ -29,6 +29,8 @@ class TrainerConfig:
     device: str
     early_stopping_delta: float
     early_stopping_patience: int
+    label_smoothing: float
+    model: str
 
 
 class AggregationMethod(str, Enum):

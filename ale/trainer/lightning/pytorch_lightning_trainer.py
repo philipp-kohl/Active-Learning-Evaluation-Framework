@@ -18,9 +18,11 @@ from ale.config import AppConfig
 from ale.corpus.corpus import Corpus
 from ale.mlflowutils import mlflow_utils
 from ale.registry import TrainerRegistry
+from ale.registry.registerable_model import ModelRegistry
 from ale.trainer.base_trainer import BaseTrainer, MetricsType
 from ale.trainer.lightning.ner_dataset import PredictionDataModule
-from ale.trainer.lightning.trf_model import TransformerLightning
+from ale.trainer.lightning.nn_models.trf_crf_model import TransformerCrfLightning
+from ale.trainer.lightning.nn_models.trf_ffn_model import TransformerFfnLightning
 from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence
 
 logger = logging.getLogger(__name__)
@@ -32,11 +34,13 @@ class PyTorchLightningTrainer(BaseTrainer):
     def __init__(self, cfg: AppConfig, corpus: Corpus, seed: int, labels: List[str]):
         seed_everything(seed, workers=True)
         self.dataset = corpus.data_module
-        self.model = TransformerLightning(cfg.trainer.huggingface_model,
-                                          labels,
-                                          cfg.trainer.learning_rate,
-                                          cfg.trainer.weight_decay,
-                                          ignore_labels=["O"])
+        self.model_class = ModelRegistry.get_instance(cfg.trainer.model)
+        self.model = self.model_class(cfg.trainer.huggingface_model,
+                                      labels,
+                                      cfg.trainer.learning_rate,
+                                      cfg.trainer.weight_decay,
+                                      ignore_labels=["O"],
+                                      label_smoothing=cfg.trainer.label_smoothing)
         self.cfg = cfg
 
     def train(self, train_corpus: Corpus, active_run: ActiveRun) -> MetricsType:
@@ -52,7 +56,7 @@ class PyTorchLightningTrainer(BaseTrainer):
         callbacks = [early_stop_callback, checkpoint_callback]
         self.trainer = Trainer(max_epochs=self.cfg.trainer.max_epochs, devices=1, accelerator=self.cfg.trainer.device,
                                logger=mlf_logger, deterministic=True,
-                               #profiler="simple"
+                               # profiler="simple"
                                callbacks=callbacks
                                )
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -103,7 +107,8 @@ class PyTorchLightningTrainer(BaseTrainer):
             prediction_result = PredictionResult()
             for single_token, single_conf_array in zip(pred['tokens'], pred['confidences']):
                 label_confidences = [LabelConfidence(label=l, confidence=c) for l, c in single_conf_array.items()]
-                prediction_result.ner_confidences_token.append(TokenConfidence(text=single_token, label_confidence=label_confidences))
+                prediction_result.ner_confidences_token.append(
+                    TokenConfidence(text=single_token, label_confidence=label_confidences))
 
             results[idx] = prediction_result
 
@@ -126,12 +131,13 @@ class PyTorchLightningTrainer(BaseTrainer):
 
         for idx, pred in zip(keys, predictions_per_doc):
             prediction_result = PredictionResult()
-            for single_token, single_conf_array, gold_label in zip(pred['tokens'], pred['confidences'], pred['gold_labels']):
+            for single_token, single_conf_array, gold_label in zip(pred['tokens'], pred['confidences'],
+                                                                   pred['gold_labels']):
                 label_confidences = [LabelConfidence(label=l, confidence=c) for l, c in single_conf_array.items()]
-                prediction_result.ner_confidences_token.append(TokenConfidence(text=single_token, label_confidence=label_confidences,
-                                                                               gold_label=gold_label))
+                prediction_result.ner_confidences_token.append(
+                    TokenConfidence(text=single_token, label_confidence=label_confidences,
+                                    gold_label=gold_label))
 
             results[idx] = prediction_result
 
         return results
-
