@@ -74,7 +74,7 @@ docker compose -f docker-compose.mlflow.yaml up --build
 2. Build your docker image:
 
 ```bash 
-docker build -f DockerfileCUDA -t ale-cuda .
+docker build -f DockerfileCUDA -t ale-cuda:1.0 .
 ```
 
 3. Start your experiment:
@@ -84,7 +84,7 @@ Please replace `</absolute/path/to/your/data/folder>` with your data folder path
 docker run -it --network host \
 --gpus '"device=0"' \
 -v </absolute/path/to/your/data/folder>:/app/data/ \
-ale-cuda \
+ale-cuda:1.0 \
 conda run --no-capture-output -n ale-cuda python ale/main.py teacher=randomizer mlflow.experiment_name=randomizer mlflow.url=http://localhost:5000
 ```
 
