@@ -30,7 +30,7 @@ class TransformerFfnLightning(LightningModule):
         self.raw_labels = ['O'] + labels
 
         self.linear = torch.nn.Linear(self.model.config.hidden_size, self.num_labels, device=self.device)
-        self.loss_function = torch.nn.CrossEntropyLoss(ignore_index=-1, label_smoothing=label_smoothing)
+        self.loss_function = torch.nn.CrossEntropyLoss(ignore_index=-100, label_smoothing=label_smoothing)
 
         self.train_f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1,
                                                               average=None)

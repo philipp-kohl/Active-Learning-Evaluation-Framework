@@ -21,8 +21,6 @@ from ale.registry import TrainerRegistry
 from ale.registry.registerable_model import ModelRegistry
 from ale.trainer.base_trainer import BaseTrainer, MetricsType
 from ale.trainer.lightning.ner_dataset import PredictionDataModule
-from ale.trainer.lightning.nn_models.trf_crf_model import TransformerCrfLightning
-from ale.trainer.lightning.nn_models.trf_ffn_model import TransformerFfnLightning
 from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence
 
 logger = logging.getLogger(__name__)
