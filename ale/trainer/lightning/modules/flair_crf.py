@@ -90,7 +90,8 @@ class ViterbiLoss(LightningModule):
         # scores_at_targets[range(features.shape[0]), lengths.values -1]
         # Squeeze crf scores matrices in 1-dim shape and gather scores at targets by matrix indices
         scores_at_targets = torch.gather(features.view(batch_size, seq_len, -1), 2, targets_matrix_indices)
-        scores_at_targets = pack_padded_sequence(scores_at_targets.to("cpu"), lengths.to("cpu"), batch_first=True, enforce_sorted=False)[0]
+        scores_at_targets = \
+        pack_padded_sequence(scores_at_targets.to("cpu"), lengths.to("cpu"), batch_first=True, enforce_sorted=False)[0]
         transitions_to_stop = transitions[
             np.repeat(self.stop_tag, features.shape[0]),
             [target[length - 1] for target, length in zip(targets, lengths)],
@@ -151,7 +152,6 @@ class ViterbiLoss(LightningModule):
         """
         targets_per_sentence = []
 
-        targets_list = targets.tolist()
         for target_for_sent, cut in zip(targets, lengths):
             targets_per_sentence.append(target_for_sent.tolist()[:cut])
 
@@ -183,7 +183,7 @@ class ViterbiDecoder(LightningModule):
         self.stop_tag = label2id[STOP_TAG]
 
     def decode(
-            self, features_tuple: tuple, probabilities_for_all_classes: bool
+            self, features: Tensor, lengths, transitions, probabilities_for_all_classes: bool
     ) -> Tuple[List, List]:
         """Decoding function returning the most likely sequence of tags.
 
@@ -193,7 +193,6 @@ class ViterbiDecoder(LightningModule):
 
         Returns: decoded sequences
         """
-        features, lengths, transitions = features_tuple
         all_tags = []
 
         batch_size = features.size(0)
@@ -227,9 +226,17 @@ class ViterbiDecoder(LightningModule):
 
             # If sentence is over, add transition to STOP-tag
             if terminates:
-                scores_upto_t[terminates, t + 1], backpointers[terminates, t + 1, :] = torch.max(
-                    scores_upto_t[terminates, t].unsqueeze(1) + transitions[self.stop_tag].unsqueeze(0), dim=2
-                )
+                ###### EXPERIMENT START ######
+                # potential_scores = scores_upto_t[terminates, t].unsqueeze(1) + transitions[self.stop_tag].unsqueeze(0)
+                #
+                # # Calculate the max scores and the corresponding backpointers for each sequence
+                # max_scores, best_backpointers = torch.max(potential_scores, dim=2)
+                #
+                # # Update the scores and backpointers tensors
+                # scores_upto_t[terminates, t + 1] = max_scores
+                # backpointers[terminates, t + 1, :] = best_backpointers
+                ###### EXPERIMENT START ###### Substitute for the following
+                f(backpointers, scores_upto_t, t, terminates, transitions, self.stop_tag)
 
         # Decode/trace best path backwards
         decoded = torch.zeros((batch_size, backpointers.size(1)), dtype=torch.long, device=self.device)
@@ -255,22 +262,20 @@ class ViterbiDecoder(LightningModule):
         tags = []
         for tag_seq, tag_seq_conf, length_seq in zip(decoded, confidences.values, lengths):
             tags.append(
-                [
-                    (self.label2id.get_item_for_index(tag), conf.item())
-                    for tag, conf in list(zip(tag_seq, tag_seq_conf))[:length_seq]
-                ]
+                [(tag.item(), conf.item()) for tag, conf in list(zip(tag_seq, tag_seq_conf))[:length_seq]]
             )
 
         if probabilities_for_all_classes:
-            all_tags = self._all_scores_for_token(scores.cpu(), tag_seq, lengths)
+            all_tags = self._all_scores_for_token(scores.cpu(), tag_seq,
+                                                  lengths)  # TODO is tag_seq correct at this point?
 
-        return tags, all_tags
+        return decoded, tags, all_tags
 
     def _all_scores_for_token(
             self, scores: torch.Tensor, tag_seq: torch.IntTensor, lengths: torch.IntTensor
     ):
         """Returns all scores for each tag in tag dictionary."""
-        scores = scores.numpy()
+        scores = scores.detach().numpy()
         for i_batch, batch in enumerate(scores):
             for i, (tag_id, tag_scores) in enumerate(zip(tag_seq, batch)):
                 tag_id_int = tag_id if isinstance(tag_id, int) else int(tag_id.item())
@@ -293,3 +298,10 @@ class ViterbiDecoder(LightningModule):
                 ]
             )
         return prob_tags_per_sentence
+
+# https://github.com/pytorch/pytorch/issues/104217#issuecomment-1612967519
+@torch.compile
+def f(backpointers, scores_upto_t, t, terminates, transitions, stop_tag):
+    scores_upto_t[terminates, t + 1], backpointers[terminates, t + 1, :] = torch.max(
+        scores_upto_t[terminates, t].unsqueeze(1) + transitions[stop_tag].unsqueeze(0), dim=2
+    )

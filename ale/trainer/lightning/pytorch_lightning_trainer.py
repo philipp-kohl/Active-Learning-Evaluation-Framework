@@ -53,7 +53,7 @@ class PyTorchLightningTrainer(BaseTrainer):
                                               save_on_train_epoch_end=True, monitor="val_f1_macro", mode="max")
         callbacks = [early_stop_callback, checkpoint_callback]
         self.trainer = Trainer(max_epochs=self.cfg.trainer.max_epochs, devices=1, accelerator=self.cfg.trainer.device,
-                               logger=mlf_logger, deterministic=True,
+                               logger=mlf_logger, deterministic=False, # deterministic True raises exception for crf
                                # profiler="simple"
                                callbacks=callbacks
                                )

@@ -26,6 +26,8 @@ class TransformerCrfLightning(LightningModule):
         self.label2id[STOP_TAG] = len(self.label2id)
         self.id2label[self.label2id[START_TAG]] = START_TAG
         self.id2label[self.label2id[STOP_TAG]] = STOP_TAG
+        # self.bio_id_to_coarse_label_id[self.label2id[START_TAG]] = self.label2id[START_TAG]
+        # self.bio_id_to_coarse_label_id[self.label2id[STOP_TAG]] = self.label2id[STOP_TAG]
 
         self.model = AutoModel.from_pretrained(model_name, num_labels=len(self.id2label),
                                                id2label=self.id2label, label2id=self.label2id)
@@ -76,26 +78,23 @@ class TransformerCrfLightning(LightningModule):
         if labels is not None:
             loss = self.crf_loss(scores, attention_mask.sum(dim=1), self.crf.transitions, labels)
 
-        decoded = self.crf_decoder.decode(scores, True)
+        decoded = self.crf_decoder.decode(scores, attention_mask.sum(dim=1), self.crf.transitions, True)
         return loss, decoded
 
     def training_step(self, batch, batch_idx):
         loss, decoded = self(**batch)
-
-        self.evaluate(batch, cls_per_token, self.train_metrics, self.train_f1_per_label_wo_bio)
+        self.evaluate(batch, decoded[0], self.train_metrics, self.train_f1_per_label_wo_bio)
         self.log("train_loss", loss)
         return loss
 
     def validation_step(self, batch, batch_idx):
-        cls_per_token = self(**batch)
-        loss = -self.crf(cls_per_token, mask=batch["attention_mask"], tags=batch["labels"])
-        self.evaluate(batch, cls_per_token, self.val_metrics, self.val_f1_per_label_wo_bio)
+        loss, decoded = self(**batch)
+        self.evaluate(batch, decoded[0], self.val_metrics, self.val_f1_per_label_wo_bio)
         self.log_dict({'val_loss': loss})
 
     def test_step(self, batch, batch_idx):
-        cls_per_token = self(**batch)
-        loss = -self.crf(cls_per_token, mask=batch["attention_mask"], tags=batch["labels"])
-        self.evaluate(batch, cls_per_token, self.test_metrics, self.test_f1_per_label_wo_bio)
+        loss, decoded = self(**batch)
+        self.evaluate(batch, decoded[0], self.test_metrics, self.test_f1_per_label_wo_bio)
         self.log_dict({'test_loss': loss})
 
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
@@ -169,26 +168,19 @@ class TransformerCrfLightning(LightningModule):
         optimizer = optim.AdamW(self.parameters(), lr=self.learn_rate, weight_decay=self.weight_decay)
         return optimizer
 
-    def evaluate(self, batch, cls_per_token, metrics: Dict[str, Metric], f1_per_label: Metric):
+    def evaluate(self, batch, predictions, metrics: Dict[str, Metric], f1_per_label: Metric):
         mask = batch["attention_mask"]
-        decoded_batch = self.crf.decode(cls_per_token, mask=batch["attention_mask"])
-        # Determine the maximum sequence length
-        max_len = max(len(seq) for seq in decoded_batch)
-
-        # Create a padded tensor for the predicted tags
-        padded_preds = torch.full((len(decoded_batch), max_len), fill_value=-100,
-                                  dtype=torch.int64,
-                                  device=self.device)  # Use a fill value that is ignored in your metric calculation
-        for i, seq in enumerate(decoded_batch):
-            padded_preds[i, :len(seq)] = torch.tensor(seq, dtype=torch.int64)
-
         gold_labels = batch["labels"]
 
         mask_flat = mask.view(-1)
         gold_labels_flat = gold_labels.view(-1)
-        prediction_labels_flat = padded_preds.view(-1)
+        prediction_labels_flat = predictions.reshape(-1)
         # Apply mask: Set predictions to -1 where mask is 0 (padded)
         prediction_labels_flat = torch.where(mask_flat == 1, prediction_labels_flat,
+                                             torch.tensor(-1, device=self.device))
+        prediction_labels_flat = torch.where(prediction_labels_flat == self.label2id[START_TAG], prediction_labels_flat,
+                                             torch.tensor(-1, device=self.device))
+        prediction_labels_flat = torch.where(prediction_labels_flat == self.label2id[STOP_TAG], prediction_labels_flat,
                                              torch.tensor(-1, device=self.device))
         gold_labels_flat = torch.where(mask_flat == 1, gold_labels_flat, torch.tensor(-1, device=self.device))
         prediction_labels_flat_with_ignore = prediction_labels_flat
