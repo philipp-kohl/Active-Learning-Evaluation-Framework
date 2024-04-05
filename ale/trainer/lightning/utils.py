@@ -15,7 +15,7 @@ def derive_labels(labels):
         id2label[idx + 1] = f"I-{label}"
 
     for idx, label in id2label.items():
-        if label is not 'O':
+        if label != 'O':
             label_wo_bio = label.lstrip("B-").lstrip("I-")
             general_label_id_mapping[idx] = labels.index(label_wo_bio) + 1
 
