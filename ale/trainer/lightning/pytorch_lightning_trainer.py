@@ -90,9 +90,8 @@ class PyTorchLightningTrainer(BaseTrainer):
                                     self.cfg.trainer.huggingface_model,
                                     num_workers=self.cfg.trainer.num_workers)
 
+        prediction_batches = self.trainer.predict(self.model, data.predict_dataloader())
         predictions_per_doc = []
-        prediction_batches = self.cfg.trainer.predict(self.model, data.predict_dataloader())
-
         for single_batch in prediction_batches:
             first_key = list(single_batch.keys())[0]
             for i in range(len(single_batch[first_key])):
