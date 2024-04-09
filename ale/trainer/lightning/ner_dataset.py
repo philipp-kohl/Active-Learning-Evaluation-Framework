@@ -3,7 +3,7 @@ from typing import List, Tuple, Callable
 
 import srsly
 import torch
-from lightning import LightningDataModule
+from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader
 from transformers import AutoTokenizer, BatchEncoding
 
