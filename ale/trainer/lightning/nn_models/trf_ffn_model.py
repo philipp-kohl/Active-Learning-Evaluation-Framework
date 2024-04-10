@@ -2,7 +2,7 @@ from typing import List, Dict
 
 import torch
 import torchmetrics
-from lightning import LightningModule
+from pytorch_lightning import LightningModule
 from torch import optim, softmax
 from torchmetrics import Metric
 from transformers import AutoModel
