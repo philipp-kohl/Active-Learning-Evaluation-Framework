@@ -4,11 +4,11 @@ from pathlib import Path
 from typing import Dict, List
 
 import torch
-from lightning import seed_everything
-from lightning.pytorch import Trainer
-from lightning.pytorch.callbacks.early_stopping import EarlyStopping
-from lightning.pytorch.callbacks.model_checkpoint import ModelCheckpoint
-from lightning.pytorch.loggers.mlflow import MLFlowLogger
+from pytorch_lightning import seed_everything
+from pytorch_lightning import Trainer
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
+from pytorch_lightning.loggers.mlflow import MLFlowLogger
 from mlflow import ActiveRun
 from mlflow.entities import Run
 from mlflow.store.artifact.artifact_repository_registry import get_artifact_repository
@@ -23,8 +23,11 @@ from ale.trainer.base_trainer import BaseTrainer, MetricsType
 from ale.trainer.lightning.ner_dataset import PredictionDataModule
 from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence
 
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+torch.set_float32_matmul_precision('medium')
+
 logger = logging.getLogger(__name__)
-logging.getLogger("lightning.pytorch").setLevel(logging.INFO)
+logging.getLogger("pytorch_lightning").setLevel(logging.INFO)
 
 
 @TrainerRegistry.register("pytorch-lightning-trainer")
@@ -42,6 +45,11 @@ class PyTorchLightningTrainer(BaseTrainer):
         self.cfg = cfg
 
     def train(self, train_corpus: Corpus, active_run: ActiveRun) -> MetricsType:
+        self.create_trainer(active_run)
+        self.trainer.fit(self.model, self.dataset)
+        return self.trainer.validate(ckpt_path='best', dataloaders=self.dataset.val_dataloader())[0]
+
+    def create_trainer(self, active_run):
         mlf_logger = MLFlowLogger(experiment_name=self.cfg.mlflow.experiment_name,
                                   tracking_uri=self.cfg.mlflow.url,
                                   run_id=active_run.info.run_id)
@@ -57,10 +65,6 @@ class PyTorchLightningTrainer(BaseTrainer):
                                # profiler="simple"
                                callbacks=callbacks
                                )
-        os.environ["TOKENIZERS_PARALLELISM"] = "false"
-        torch.set_float32_matmul_precision('medium')
-        self.trainer.fit(self.model, self.dataset)
-        return self.trainer.validate(ckpt_path='best', dataloaders=self.dataset.val_dataloader())[0]
 
     def evaluate(self) -> MetricsType:
         return self.trainer.test(ckpt_path='best', dataloaders=self.dataset.test_dataloader())[0]
@@ -76,7 +80,7 @@ class PyTorchLightningTrainer(BaseTrainer):
         artifact_path = "best/model.ckpt"
         logger.info(f"Restore model from: {matching_run.info.run_id}/{artifact_path}")
         model_path = mlflow_utils.load_artifact(matching_run, artifact_path)
-        self.model = self.model.__class__.load_from_checkpoint(model_path)
+        self.model = self.model_class.load_from_checkpoint(model_path)
 
     def delete_artifacts(self, run: Run):
         repository = get_artifact_repository(run.info.artifact_uri)
@@ -89,10 +93,16 @@ class PyTorchLightningTrainer(BaseTrainer):
         data = PredictionDataModule(texts,
                                     self.cfg.trainer.huggingface_model,
                                     num_workers=self.cfg.trainer.num_workers)
+        if hasattr(self, 'trainer'):
+            logging.info("Reuse trainer from training for predictions")
+            trainer = self.trainer
+        else:
+            logger.warning("No trainer is defined. Might be after resume. Let's try a fresh trainer.")
+            trainer = Trainer(max_epochs=self.cfg.trainer.max_epochs, devices=1, accelerator=self.cfg.trainer.device,
+                              deterministic=True)
 
+        prediction_batches = trainer.predict(self.model, data.predict_dataloader())
         predictions_per_doc = []
-        prediction_batches = self.trainer.predict(self.model, data.predict_dataloader())
-
         for single_batch in prediction_batches:
             first_key = list(single_batch.keys())[0]
             for i in range(len(single_batch[first_key])):

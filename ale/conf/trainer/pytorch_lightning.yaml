@@ -9,5 +9,5 @@ num_workers: 4
 device: gpu
 early_stopping_delta: 0.0005
 early_stopping_patience: 5
-label_smoothing: 0.15
+label_smoothing: 0
 model: "trf_ffn"
