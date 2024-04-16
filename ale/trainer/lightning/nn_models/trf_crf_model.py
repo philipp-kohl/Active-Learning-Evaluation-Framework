@@ -66,11 +66,8 @@ class TransformerCrfLightning(LightningModule):
         if labels is not None:
             loss = - self.crf.forward(features, labels, attention_mask)
 
-        confidences = self.crf.compute_marginals(features, mask=attention_mask)
-        confidences = self.masked_label_confidences(confidences, attention_mask)
-
-        decoded_tag_list, _ = self.crf.decode(features, attention_mask)
-        return loss, decoded_tag_list, confidences
+        decoded_tag_list = self.crf.decode(features, attention_mask)
+        return loss, decoded_tag_list, features
 
     def training_step(self, batch, batch_idx):
         loss, decoded, _ = self(**batch)
@@ -91,7 +88,9 @@ class TransformerCrfLightning(LightningModule):
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
         mask = batch['attention_mask']
 
-        loss, decoded, confidences = self(**batch)
+        loss, decoded, emissions = self(**batch)
+        raw_confidences = self.crf.compute_marginals(emissions, mask=mask)
+        confidences = self.masked_label_confidences(raw_confidences, mask)
 
         token_labels = []
         confidences_per_token = []
