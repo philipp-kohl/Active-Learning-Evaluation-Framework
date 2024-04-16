@@ -9,7 +9,7 @@ DECODE_RETURN_TYPE = Tuple[List[List[int]], List[torch.Tensor]]
 
 
 class CRF(LightningModule):
-    """Conditional random field.
+    """Conditional random field. Based on AllenNLP and pytorch-crf
 
     This module implements a conditional random field [LMP01]_. The forward computation
     of this class computes the log likelihood of the given sequence of tags and
