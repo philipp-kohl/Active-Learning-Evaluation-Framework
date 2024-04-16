@@ -5,7 +5,7 @@ import torch.nn as nn
 from torch.nn.functional import softmax
 from pytorch_lightning import LightningModule
 
-DECODE_RETURN_TYPE = Tuple[List[List[int]], List[torch.Tensor]]
+DECODE_RETURN_TYPE = List[List[int]]
 
 
 class CRF(LightningModule):
@@ -274,7 +274,6 @@ class CRF(LightningModule):
         # shape: (batch_size, num_tags)
         score = self.start_transitions + emissions[0]
         history = []
-        history_probs = []
 
         # score is a tensor of size (batch_size, num_tags) where for every batch,
         # value at column j stores the score of the best tag sequence so far that ends
@@ -308,7 +307,6 @@ class CRF(LightningModule):
             # shape: (batch_size, num_tags)
             score = torch.where(mask.bool()[i].unsqueeze(1), next_score, score)
             history.append(indices)
-            history_probs.append(probs)
 
         # End transition score
         # shape: (batch_size, num_tags)
@@ -319,30 +317,25 @@ class CRF(LightningModule):
         # shape: (batch_size,)
         seq_ends = mask.long().sum(dim=0) - 1
         best_tags_list = []
-        confidences_per_batch = []
 
         for idx in range(batch_size):
             # Find the tag which maximizes the score at the last timestep; this is our best tag
             # for the last timestep
 
             _, best_last_tag = score[idx].max(dim=0) # TODO Here we can return the top k and use margin?
-            confidences_per_token = [softmax(score, dim=1)[idx]]
             best_tags = [best_last_tag.item()]
 
             # We trace back where the best last tag comes from, append that to our best tag
             # sequence, and trace it back again, and so on
-            for hist_tag, hist_prob in zip(reversed(history[:seq_ends[idx]]), reversed(history_probs[:seq_ends[idx]])):
+            for hist_tag in reversed(history[:seq_ends[idx]]):
                 best_last_tag = hist_tag[idx][best_tags[-1]]
                 best_tags.append(best_last_tag.item())
-                confidences_per_token.append(hist_prob[idx])
 
             # Reverse the order because we start from the last timestep
             best_tags.reverse()
             best_tags_list.append(best_tags)
-            confidences_per_token.reverse()
-            confidences_per_batch.append(confidences_per_token)
 
-        return best_tags_list, confidences_per_batch
+        return best_tags_list
 
     def forward_alg(self, emissions, mask, start_tag):
         batch_size, seq_length, num_tags = emissions.shape

@@ -3,12 +3,12 @@ from typing import List, Dict
 import torch
 import torchmetrics
 from pytorch_lightning import LightningModule
-from torch import optim, softmax
+from torch import optim
 from torchmetrics import Metric
 from transformers import AutoModel
 
 from ale.registry.registerable_model import ModelRegistry
-from ale.trainer.lightning.modules.allennlp_crf import CRF
+from ale.trainer.lightning.modules.crf import CRF
 from ale.trainer.lightning.utils import derive_labels, create_metrics, LabelGeneralizer, is_valid_for_prog_bar
 
 
@@ -22,13 +22,6 @@ class TransformerCrfLightning(LightningModule):
             ignore_labels = []
 
         self.id2label, self.label2id, self.bio_id_to_coarse_label_id = derive_labels(labels)
-        # self.label2id[START_TAG] = len(self.label2id)
-        # self.label2id[STOP_TAG] = len(self.label2id)
-        # self.id2label[self.label2id[START_TAG]] = START_TAG
-        # self.id2label[self.label2id[STOP_TAG]] = STOP_TAG
-        # self.bio_id_to_coarse_label_id[self.label2id[START_TAG]] = self.label2id[START_TAG]
-        # self.bio_id_to_coarse_label_id[self.label2id[STOP_TAG]] = self.label2id[STOP_TAG]
-
         self.model = AutoModel.from_pretrained(model_name, num_labels=len(self.id2label),
                                                id2label=self.id2label, label2id=self.label2id)
         self.learn_rate = learn_rate
@@ -40,8 +33,6 @@ class TransformerCrfLightning(LightningModule):
         self.linear = torch.nn.Linear(self.model.config.hidden_size, len(self.label2id))
 
         self.crf = CRF(num_tags=len(self.label2id), batch_first=True)
-        # self.crf_loss = ViterbiLoss(self.label2id)
-        # self.crf_decoder = ViterbiDecoder(self.label2id)
 
         self.train_f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1,
                                                               average=None)
@@ -77,7 +68,7 @@ class TransformerCrfLightning(LightningModule):
 
         confidences = self.crf.compute_marginals(features, mask=attention_mask)
         confidences = self.masked_label_confidences(confidences, attention_mask)
-        # TODO work with confidences
+
         decoded_tag_list, _ = self.crf.decode(features, attention_mask)
         return loss, decoded_tag_list, confidences
 
@@ -113,10 +104,7 @@ class TransformerCrfLightning(LightningModule):
                 mapping_label_to_conf = {self.id2label[idx]: token_confidence for idx, token_confidence in enumerate(token)}
                 single_sequence.append(mapping_label_to_conf)
             confidences_per_token.append(single_sequence)
-        # token_labels = self.apply_mask(mask, token_labels)
-        # confidences = self.apply_mask(mask, confidences)
 
-        # TODO store prediction in data structure. Highest conf might not be the best? Or should it be after recomputing with crf?
         result = {'tokens': batch['token_text'], 'token_labels': token_labels,
                   'text': batch['text'], 'offset_mapping': batch['offset_mapping'],
                   'confidences': confidences_per_token}
@@ -168,13 +156,9 @@ class TransformerCrfLightning(LightningModule):
         mask_flat = mask.view(-1)
         gold_labels_flat = gold_labels.view(-1)
         prediction_labels_flat = self.pad_and_flatten(predictions, gold_labels.size()[1], -1)
-        # Apply mask: Set predictions to -1 where mask is 0 (padded)
+
         prediction_labels_flat = torch.where(mask_flat == 1, prediction_labels_flat,
                                              torch.tensor(-1, device=self.device))
-        # prediction_labels_flat = torch.where(prediction_labels_flat == self.label2id[START_TAG], prediction_labels_flat,
-        #                                      torch.tensor(-1, device=self.device))
-        # prediction_labels_flat = torch.where(prediction_labels_flat == self.label2id[STOP_TAG], prediction_labels_flat,
-        #                                      torch.tensor(-1, device=self.device))
         gold_labels_flat = torch.where(mask_flat == 1, gold_labels_flat, torch.tensor(-1, device=self.device))
         prediction_labels_flat_with_ignore = prediction_labels_flat
         gold_labels_flat_with_ignore = gold_labels_flat
