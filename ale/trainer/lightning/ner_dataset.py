@@ -54,7 +54,7 @@ class AleNerDataModule(LightningDataModule):
         token_labels = self.char_to_token_labels(tokenized, labels)
         return token_labels, cleaned_tokens
 
-    def collate(self, batch, pad_label_value: int = -100):
+    def collate(self, batch, pad_label_value: int = 0): # TODO changed padding due to crf error
         # Get individual elements from the batch
         max_length = max(len(example['tokens']['input_ids']) for example in batch)  # Determine the max length
 

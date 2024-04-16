@@ -61,7 +61,7 @@ class PyTorchLightningTrainer(BaseTrainer):
                                               save_on_train_epoch_end=True, monitor="val_f1_macro", mode="max")
         callbacks = [early_stop_callback, checkpoint_callback]
         self.trainer = Trainer(max_epochs=self.cfg.trainer.max_epochs, devices=1, accelerator=self.cfg.trainer.device,
-                               logger=mlf_logger, deterministic=False, # deterministic True raises exception for crf
+                               logger=mlf_logger, deterministic=False,  # deterministic True raises exception for crf
                                # profiler="simple"
                                callbacks=callbacks
                                )
@@ -113,11 +113,12 @@ class PyTorchLightningTrainer(BaseTrainer):
 
         for idx, pred in zip(docs.keys(), predictions_per_doc):
             prediction_result = PredictionResult()
-            for single_token, single_conf_array in zip(pred['tokens'], pred['confidences']):
+            for single_token, single_conf_array, pred_label in zip(pred['tokens'], pred['confidences'],
+                                                                   pred['token_labels']):
                 label_confidences = [LabelConfidence(label=l, confidence=c) for l, c in single_conf_array.items()]
                 prediction_result.ner_confidences_token.append(
-                    TokenConfidence(text=single_token, label_confidence=label_confidences))
-
+                    TokenConfidence(text=single_token, predicted_label=pred_label,
+                                    label_confidence=label_confidences))
             results[idx] = prediction_result
 
         return results
@@ -139,12 +140,13 @@ class PyTorchLightningTrainer(BaseTrainer):
 
         for idx, pred in zip(keys, predictions_per_doc):
             prediction_result = PredictionResult()
-            for single_token, single_conf_array, gold_label in zip(pred['tokens'], pred['confidences'],
-                                                                   pred['gold_labels']):
+            for single_token, single_conf_array, gold_label, pred_label in zip(pred['tokens'], pred['confidences'],
+                                                                               pred['gold_labels'],
+                                                                               pred['token_labels']):
                 label_confidences = [LabelConfidence(label=l, confidence=c) for l, c in single_conf_array.items()]
                 prediction_result.ner_confidences_token.append(
                     TokenConfidence(text=single_token, label_confidence=label_confidences,
-                                    gold_label=gold_label))
+                                    gold_label=gold_label, predicted_label=pred_label))
 
             results[idx] = prediction_result
 

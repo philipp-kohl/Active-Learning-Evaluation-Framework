@@ -1,8 +1,11 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import torch
 import torch.nn as nn
-from lightning import LightningModule
+from torch.nn.functional import softmax
+from pytorch_lightning import LightningModule
+
+DECODE_RETURN_TYPE = Tuple[List[List[int]], List[torch.Tensor]]
 
 
 class CRF(LightningModule):
@@ -114,7 +117,7 @@ class CRF(LightningModule):
         return llh.sum() / mask.type_as(emissions).sum()
 
     def decode(self, emissions: torch.Tensor,
-               mask: Optional[torch.ByteTensor] = None) -> List[List[int]]:
+               mask: Optional[torch.ByteTensor] = None) -> DECODE_RETURN_TYPE:
         """Find the most likely tag sequence using Viterbi algorithm.
 
         Args:
@@ -188,6 +191,7 @@ class CRF(LightningModule):
         for i in range(1, seq_length):
             # Transition score to next tag, only added if next timestep is valid (mask == 1)
             # shape: (batch_size,)
+
             score += self.transitions[tags[i - 1], tags[i]] * mask[i]
 
             # Emission score for next tag, only added if next timestep is valid (mask == 1)
@@ -256,7 +260,7 @@ class CRF(LightningModule):
         return torch.logsumexp(score, dim=1)
 
     def _viterbi_decode(self, emissions: torch.FloatTensor,
-                        mask: torch.ByteTensor) -> List[List[int]]:
+                        mask: torch.ByteTensor) -> DECODE_RETURN_TYPE:
         # emissions: (seq_length, batch_size, num_tags)
         # mask: (seq_length, batch_size)
         assert emissions.dim() == 3 and mask.dim() == 2
@@ -270,6 +274,7 @@ class CRF(LightningModule):
         # shape: (batch_size, num_tags)
         score = self.start_transitions + emissions[0]
         history = []
+        history_probs = []
 
         # score is a tensor of size (batch_size, num_tags) where for every batch,
         # value at column j stores the score of the best tag sequence so far that ends
@@ -293,16 +298,17 @@ class CRF(LightningModule):
             # tag sequence so far that ends with transitioning from tag i to tag j and emitting
             # shape: (batch_size, num_tags, num_tags)
             next_score = broadcast_score + self.transitions + broadcast_emission
-
             # Find the maximum score over all possible current tag
             # shape: (batch_size, num_tags)
             next_score, indices = next_score.max(dim=1)
+            probs = softmax(next_score, dim=1)
 
             # Set score to the next score if this timestep is valid (mask == 1)
             # and save the index that produces the next score
             # shape: (batch_size, num_tags)
             score = torch.where(mask.bool()[i].unsqueeze(1), next_score, score)
             history.append(indices)
+            history_probs.append(probs)
 
         # End transition score
         # shape: (batch_size, num_tags)
@@ -313,21 +319,63 @@ class CRF(LightningModule):
         # shape: (batch_size,)
         seq_ends = mask.long().sum(dim=0) - 1
         best_tags_list = []
+        confidences_per_batch = []
 
         for idx in range(batch_size):
             # Find the tag which maximizes the score at the last timestep; this is our best tag
             # for the last timestep
-            _, best_last_tag = score[idx].max(dim=0)
+
+            _, best_last_tag = score[idx].max(dim=0) # TODO Here we can return the top k and use margin?
+            confidences_per_token = [softmax(score, dim=1)[idx]]
             best_tags = [best_last_tag.item()]
 
             # We trace back where the best last tag comes from, append that to our best tag
             # sequence, and trace it back again, and so on
-            for hist in reversed(history[:seq_ends[idx]]):
-                best_last_tag = hist[idx][best_tags[-1]]
+            for hist_tag, hist_prob in zip(reversed(history[:seq_ends[idx]]), reversed(history_probs[:seq_ends[idx]])):
+                best_last_tag = hist_tag[idx][best_tags[-1]]
                 best_tags.append(best_last_tag.item())
+                confidences_per_token.append(hist_prob[idx])
 
             # Reverse the order because we start from the last timestep
             best_tags.reverse()
             best_tags_list.append(best_tags)
+            confidences_per_token.reverse()
+            confidences_per_batch.append(confidences_per_token)
 
-        return best_tags_list
+        return best_tags_list, confidences_per_batch
+
+    def forward_alg(self, emissions, mask, start_tag):
+        batch_size, seq_length, num_tags = emissions.shape
+        log_alpha = emissions.new_full((batch_size, seq_length, num_tags), fill_value=-10000.0)
+        # log_alpha[:, 0, start_tag] = 0  # Initialize the start tag at the first position
+
+        for i in range(1, seq_length):
+            emit_score = emissions[:, i, :]
+            trans_score = self.start_transitions + self.transitions + self.end_transitions
+            temp_alpha = torch.logsumexp(
+                log_alpha[:, i - 1, :].unsqueeze(2) + trans_score + emit_score.unsqueeze(1), dim=1)
+            log_alpha[:, i, :] = torch.where(mask.bool()[:, i].unsqueeze(-1), temp_alpha, log_alpha[:, i - 1, :])
+        return log_alpha
+
+    def backward_alg(self, emissions, mask, end_tag):
+        batch_size, seq_length, num_tags = emissions.shape
+        log_beta = emissions.new_full((batch_size, seq_length, num_tags), fill_value=-10000.0)
+        # log_beta[:, -1, :] = 0  # Initialize the end positions
+
+        for i in reversed(range(seq_length - 1)):
+            emit_score = emissions[:, i + 1, :]
+            trans_score = self.start_transitions + self.transitions + self.end_transitions
+            temp_beta = torch.logsumexp(
+                log_beta[:, i + 1, :].unsqueeze(1) + trans_score + emit_score.unsqueeze(2), dim=2)
+
+            log_beta[:, i, :] = torch.where(mask.bool()[:, i + 1].unsqueeze(-1), temp_beta, log_beta[:, i + 1, :])
+        return log_beta
+
+    def compute_marginals(self, emissions, mask, start_tag=0, end_tag=-1):
+        alpha = self.forward_alg(emissions, mask, start_tag)
+        beta = self.backward_alg(emissions, mask, end_tag)
+        marginal = alpha + beta
+        marginal -= torch.logsumexp(marginal, dim=2, keepdim=True)  # Normalize to get probabilities
+        return torch.exp(marginal)  # Convert from log probabilities to probabilities
+
+

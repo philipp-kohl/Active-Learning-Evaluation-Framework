@@ -2,13 +2,13 @@ from typing import List, Dict
 
 import torch
 import torchmetrics
-from lightning import LightningModule
+from pytorch_lightning import LightningModule
 from torch import optim, softmax
 from torchmetrics import Metric
 from transformers import AutoModel
 
 from ale.registry.registerable_model import ModelRegistry
-from ale.trainer.lightning.modules.flair_crf import CRF, ViterbiLoss, ViterbiDecoder, START_TAG, STOP_TAG
+from ale.trainer.lightning.modules.allennlp_crf import CRF
 from ale.trainer.lightning.utils import derive_labels, create_metrics, LabelGeneralizer, is_valid_for_prog_bar
 
 
@@ -22,10 +22,10 @@ class TransformerCrfLightning(LightningModule):
             ignore_labels = []
 
         self.id2label, self.label2id, self.bio_id_to_coarse_label_id = derive_labels(labels)
-        self.label2id[START_TAG] = len(self.label2id)
-        self.label2id[STOP_TAG] = len(self.label2id)
-        self.id2label[self.label2id[START_TAG]] = START_TAG
-        self.id2label[self.label2id[STOP_TAG]] = STOP_TAG
+        # self.label2id[START_TAG] = len(self.label2id)
+        # self.label2id[STOP_TAG] = len(self.label2id)
+        # self.id2label[self.label2id[START_TAG]] = START_TAG
+        # self.id2label[self.label2id[STOP_TAG]] = STOP_TAG
         # self.bio_id_to_coarse_label_id[self.label2id[START_TAG]] = self.label2id[START_TAG]
         # self.bio_id_to_coarse_label_id[self.label2id[STOP_TAG]] = self.label2id[STOP_TAG]
 
@@ -39,9 +39,9 @@ class TransformerCrfLightning(LightningModule):
 
         self.linear = torch.nn.Linear(self.model.config.hidden_size, len(self.label2id))
 
-        self.crf = CRF(self.label2id)
-        self.crf_loss = ViterbiLoss(self.label2id)
-        self.crf_decoder = ViterbiDecoder(self.label2id)
+        self.crf = CRF(num_tags=len(self.label2id), batch_first=True)
+        # self.crf_loss = ViterbiLoss(self.label2id)
+        # self.crf_decoder = ViterbiDecoder(self.label2id)
 
         self.train_f1_per_label_wo_bio = torchmetrics.F1Score(task="multiclass", num_classes=len(labels) + 1,
                                                               average=None)
@@ -66,67 +66,60 @@ class TransformerCrfLightning(LightningModule):
         self.move_metrics_to_device(self.train_metrics)
         self.move_metrics_to_device(self.val_metrics)
         self.move_metrics_to_device(self.test_metrics)
-        self.crf_loss = self.crf_loss.to(self.device)
-        self.crf_decoder = self.crf_decoder.to(self.device)
 
     def forward(self, input_ids, attention_mask, labels=None, **kwargs):
         embeddings = self.model(input_ids, attention_mask=attention_mask)
         features = self.linear(embeddings.last_hidden_state)
-        scores = self.crf(features)
 
         loss = 0.0
         if labels is not None:
-            loss = self.crf_loss(scores, attention_mask.sum(dim=1), self.crf.transitions, labels)
+            loss = - self.crf.forward(features, labels, attention_mask)
 
-        decoded = self.crf_decoder.decode(scores, attention_mask.sum(dim=1), self.crf.transitions, True)
-        return loss, decoded
+        confidences = self.crf.compute_marginals(features, mask=attention_mask)
+        confidences = self.masked_label_confidences(confidences, attention_mask)
+        # TODO work with confidences
+        decoded_tag_list, _ = self.crf.decode(features, attention_mask)
+        return loss, decoded_tag_list, confidences
 
     def training_step(self, batch, batch_idx):
-        loss, decoded = self(**batch)
-        self.evaluate(batch, decoded[0], self.train_metrics, self.train_f1_per_label_wo_bio)
+        loss, decoded, _ = self(**batch)
+        self.evaluate(batch, decoded, self.train_metrics, self.train_f1_per_label_wo_bio)
         self.log("train_loss", loss)
         return loss
 
     def validation_step(self, batch, batch_idx):
-        loss, decoded = self(**batch)
-        self.evaluate(batch, decoded[0], self.val_metrics, self.val_f1_per_label_wo_bio)
+        loss, decoded, _ = self(**batch)
+        self.evaluate(batch, decoded, self.val_metrics, self.val_f1_per_label_wo_bio)
         self.log_dict({'val_loss': loss})
 
     def test_step(self, batch, batch_idx):
-        loss, decoded = self(**batch)
-        self.evaluate(batch, decoded[0], self.test_metrics, self.test_f1_per_label_wo_bio)
+        loss, decoded, _ = self(**batch)
+        self.evaluate(batch, decoded, self.test_metrics, self.test_f1_per_label_wo_bio)
         self.log_dict({'test_loss': loss})
 
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
         mask = batch['attention_mask']
 
-        outputs = self(**batch)
-        predictions = self.crf.decode(outputs, mask=mask)
-
-        softmax_logits = softmax(logits, dim=-1)
-        class_predictions = torch.argmax(softmax_logits, dim=-1)
-        class_predictions_numpy = class_predictions.cpu().numpy() if class_predictions.is_cuda else class_predictions.numpy()
-        class_predictions_numpy = self.apply_mask(mask, class_predictions_numpy)
+        loss, decoded, confidences = self(**batch)
 
         token_labels = []
-        for sequence in class_predictions_numpy:
-            sequence_labels = [self.id2label[index] for index in sequence]
+        confidences_per_token = []
+
+        for sequence_tags, sequence_confidences in zip(decoded, confidences):
+            sequence_labels = [self.id2label[index] for index in sequence_tags]
             token_labels.append(sequence_labels)
-        token_labels = self.apply_mask(mask, token_labels)
-
-        confidences = []
-        confidences_numpy = softmax_logits.cpu().numpy() if softmax_logits.is_cuda else softmax_logits.numpy()
-        for conf_batch in confidences_numpy:
             single_sequence = []
-            for token in conf_batch:
-                single_sequence.append(
-                    {self.id2label[idx]: token_confidence for idx, token_confidence in enumerate(token)})
-            confidences.append(single_sequence)
-        confidences = self.apply_mask(mask, confidences)
+            for token in sequence_confidences:
+                mapping_label_to_conf = {self.id2label[idx]: token_confidence for idx, token_confidence in enumerate(token)}
+                single_sequence.append(mapping_label_to_conf)
+            confidences_per_token.append(single_sequence)
+        # token_labels = self.apply_mask(mask, token_labels)
+        # confidences = self.apply_mask(mask, confidences)
 
+        # TODO store prediction in data structure. Highest conf might not be the best? Or should it be after recomputing with crf?
         result = {'tokens': batch['token_text'], 'token_labels': token_labels,
                   'text': batch['text'], 'offset_mapping': batch['offset_mapping'],
-                  'confidences': confidences}
+                  'confidences': confidences_per_token}
 
         if "labels" in batch:
             gold_labels = []
@@ -174,14 +167,14 @@ class TransformerCrfLightning(LightningModule):
 
         mask_flat = mask.view(-1)
         gold_labels_flat = gold_labels.view(-1)
-        prediction_labels_flat = predictions.reshape(-1)
+        prediction_labels_flat = self.pad_and_flatten(predictions, gold_labels.size()[1], -1)
         # Apply mask: Set predictions to -1 where mask is 0 (padded)
         prediction_labels_flat = torch.where(mask_flat == 1, prediction_labels_flat,
                                              torch.tensor(-1, device=self.device))
-        prediction_labels_flat = torch.where(prediction_labels_flat == self.label2id[START_TAG], prediction_labels_flat,
-                                             torch.tensor(-1, device=self.device))
-        prediction_labels_flat = torch.where(prediction_labels_flat == self.label2id[STOP_TAG], prediction_labels_flat,
-                                             torch.tensor(-1, device=self.device))
+        # prediction_labels_flat = torch.where(prediction_labels_flat == self.label2id[START_TAG], prediction_labels_flat,
+        #                                      torch.tensor(-1, device=self.device))
+        # prediction_labels_flat = torch.where(prediction_labels_flat == self.label2id[STOP_TAG], prediction_labels_flat,
+        #                                      torch.tensor(-1, device=self.device))
         gold_labels_flat = torch.where(mask_flat == 1, gold_labels_flat, torch.tensor(-1, device=self.device))
         prediction_labels_flat_with_ignore = prediction_labels_flat
         gold_labels_flat_with_ignore = gold_labels_flat
@@ -204,3 +197,29 @@ class TransformerCrfLightning(LightningModule):
             if len(valid_prediction_labels) > 0:  # TODO why are labels all -1?
                 metric.update(valid_prediction_labels, valid_gold_labels)
         f1_per_label.update(t1, t2)
+
+    def pad_and_flatten(self, labels, max_length, pad_token):
+        padded_labels = []
+        for sublist in labels:
+            # Pad if the sublist is shorter than max_length
+            padded = sublist + [pad_token] * (max_length - len(sublist)) \
+                if len(sublist) < max_length else sublist[:max_length]
+            padded_labels.append(padded)
+
+        # Flatten the list of lists
+        flattened_labels = [item for sublist in padded_labels for item in sublist]
+        return torch.tensor(flattened_labels, device=self.device)
+
+    def masked_label_confidences(self, predictions, mask):
+        batch_size, sequence_length, num_labels = predictions.shape
+        output = []
+
+        for i in range(batch_size):
+            valid_length = int(mask[i].sum())  # Calculate valid length based on the mask
+            # Extract the labels for the valid sequence length and convert to list of floats
+            labels_list = predictions[i, :valid_length].tolist()
+            output.append(labels_list)
+
+        return output
+
+

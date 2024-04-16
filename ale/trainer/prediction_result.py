@@ -24,13 +24,15 @@ class TokenConfidence(BaseModel):
     text: str
     label_confidence: List[LabelConfidence]
     gold_label: Optional[str] = None
+    predicted_label: str
 
     def __hash__(self):
         return hash((self.text, self.label_confidence))
 
-    @property
-    def predicted_label(self):
-        return self.get_highest_confidence().label
+    def get_confidence_for_label(self, label: str) -> float:
+        for label_confidence in self.label_confidence:
+            if label_confidence.label == label:
+                return label_confidence.confidence
 
     def get_highest_confidence(self) -> LabelConfidence:
         return max(self.label_confidence, key=lambda x: x.confidence)
