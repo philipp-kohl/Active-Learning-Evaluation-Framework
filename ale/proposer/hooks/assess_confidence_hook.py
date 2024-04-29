@@ -64,7 +64,7 @@ class AssessConfidenceHook(ProposeHook):
                     true_positives.append(1)
                 else:
                     true_positives.append(0)
-                confidences.append(token_prediction.get_highest_confidence().confidence)
+                confidences.append(token_prediction.get_confidence_for_predicted_label())
 
         ece_score = self.calculate_ece(confidences, true_positives, num_bins=10)
         self.plot_reliability_diagram_plotly(confidences, true_positives, new_run,
@@ -161,9 +161,7 @@ class AssessConfidenceHook(ProposeHook):
                                  mode='markers+lines', name='Model Calibration',
                                  error_y=dict(type='data', array=np.sqrt(
                                      bin_tp_frequency[effective_bins] * (1 - bin_tp_frequency[effective_bins]) /
-                                     bin_count[
-                                         effective_bins]),
-                                              visible=True)))
+                                     bin_count[effective_bins]), visible=True)))
         # Add line for perfect calibration
         fig.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode='lines', name='Perfect Calibration', line=dict(dash='dash')))
 
