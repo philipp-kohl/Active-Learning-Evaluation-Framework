@@ -85,7 +85,7 @@ class AssessConfidenceHook(ProposeHook):
 
         Args:
         - confidences (np.array): Array of confidence scores from the model.
-        - true_labels (np.array): Array of the true labels.
+        - true_positives (np.array): Array indicating if the model predicted the true label (1) or not (0).
         - num_bins (int): Number of bins to use for calibration error calculation.
 
         Returns:
