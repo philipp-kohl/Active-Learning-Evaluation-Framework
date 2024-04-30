@@ -74,7 +74,7 @@ docker compose -f docker-compose.mlflow.yaml up --build
 2. Build your docker image:
 
 ```bash 
-docker build -f DockerfileCUDA -t ale-cuda:1.0 .
+docker build -f DockerfileCUDA -t ale-cuda:1.5 .
 ```
 
 3. Start your experiment:
