@@ -13,6 +13,7 @@ from ale.corpus.corpus import Corpus
 from ale.proposer.hooks.abstract_hook import ProposeHook
 from ale.proposer.hooks.assess_bias_hook import AssessBiasHook
 from ale.proposer.hooks.assess_confidence_hook import AssessConfidenceHook
+from ale.proposer.hooks.early_stopping import EarlyStopping
 from ale.proposer.hooks.measure_times import MeasureTimes
 from ale.proposer.hooks.stop_after_n_al_cycles import StopAfterNAlCycles
 from ale.registry.registerable_corpus import CorpusRegistry
@@ -130,6 +131,10 @@ class AleBartenderPerSeed:
 
         # The MeasureTimes hook should always be the first in the list. Thus, we do not measure much overhead.
         hooks: List[ProposeHook] = [MeasureTimes(self.cfg, self.parent_run_id, self.corpus)]
+        if self.cfg.experiment.stop_after_n_al_cycles > 0:
+            hooks.append(StopAfterNAlCycles(self.cfg, self.parent_run_id, self.corpus))
+        if self.cfg.experiment.early_stopping_threshold > 0:
+            hooks.append(EarlyStopping(self.cfg, self.parent_run_id, self.corpus))
         if self.cfg.experiment.assess_data_bias:
             hooks.append(AssessBiasHook(self.cfg, self.parent_run_id, self.corpus,
                                         train_file_raw=self.train_file_raw,
@@ -137,8 +142,6 @@ class AleBartenderPerSeed:
                                         trainer=self.trainer))
         if self.cfg.experiment.assess_overconfidence:
             hooks.append(AssessConfidenceHook(self.cfg, self.parent_run_id, self.corpus, trainer=self.trainer))
-        if self.cfg.experiment.stop_after_n_al_cycles > 0:
-            hooks.append(StopAfterNAlCycles(self.cfg, self.parent_run_id, self.corpus))
 
         while self.corpus.do_i_have_to_annotate():
             [h.on_iter_start() for h in hooks]
@@ -157,7 +160,8 @@ class AleBartenderPerSeed:
             evaluation_metrics, test_metrics, new_run = self.train(
                 self.corpus, f"train {len(self.corpus)}", self.seed
             )
-            [h.after_training(new_run) for h in hooks]
+            self.teacher.after_train(evaluation_metrics)
+            [h.after_training(new_run, evaluation_metrics, test_metrics) for h in hooks]
 
             [h.before_prediction() for h in hooks]
             preds_train = None
@@ -174,7 +178,6 @@ class AleBartenderPerSeed:
             # Delete artifacts for old run. We do not need them for resume
             self.trainer.delete_artifacts(old_run)
             old_run = new_run
-            self.teacher.after_train(evaluation_metrics)
             [h.on_iter_end() for h in hooks]
             logger.info("Iteration end. Store log file!")
             utils.store_log_file_to_mlflow("main.log", new_run.info.run_id)

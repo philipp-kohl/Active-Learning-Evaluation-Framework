@@ -27,7 +27,7 @@ class ProposeHook:
     def before_training(self) -> None:
         pass
 
-    def after_training(self, mlflow_run: Run) -> None:
+    def after_training(self, mlflow_run: Run, dev_metrics, test_metrics) -> None:
         pass
 
     def on_iter_start(self) -> None:

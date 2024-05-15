@@ -46,7 +46,7 @@ class MeasureTimes(ProposeHook):
         self._log_time('training', before=True)
 
     @override
-    def after_training(self, mlflow_run: Run) -> None:
+    def after_training(self, mlflow_run: Run, dev_metrics, test_metrics) -> None:
         self._log_time('training', before=False)
 
     @override

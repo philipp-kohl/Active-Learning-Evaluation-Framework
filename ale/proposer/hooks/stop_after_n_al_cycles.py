@@ -19,7 +19,11 @@ class StopAfterNAlCycles(ProposeHook):
         self.iteration_counter += 1
 
     def may_continue(self) -> bool:
-        return self.iteration_counter <= self.cfg.experiment.stop_after_n_al_cycles
+        if self.iteration_counter <= self.cfg.experiment.stop_after_n_al_cycles:
+            return True
+        else:
+            logger.warning(f"Stopping AL cycle after {self.iteration_counter} iterations")
+            return False
 
 
 
