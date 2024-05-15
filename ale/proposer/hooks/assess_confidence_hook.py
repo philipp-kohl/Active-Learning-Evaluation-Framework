@@ -3,6 +3,7 @@ import tempfile
 from typing import Optional, Dict
 
 import numpy as np
+import pandas as pd
 from mlflow import MlflowClient
 from mlflow.entities import Run
 from typing_extensions import override
@@ -66,7 +67,10 @@ class AssessConfidenceHook(ProposeHook):
                     true_positives.append(0)
                 confidences.append(token_prediction.get_confidence_for_predicted_label())
 
-        ece_score = self.calculate_ece(confidences, true_positives, num_bins=10)
+        ece_score = self.calculate_ece(confidences, true_positives,
+                                       new_run,
+                                       self.build_artifact_path(prefix, "ece"),
+                                       num_bins=10)
         self.plot_reliability_diagram_plotly(confidences, true_positives, new_run,
                                              self.build_artifact_path(prefix, "reliability_diagram"))
         utils.store_histogram(confidences, new_run, self.build_artifact_path(prefix, "confidences"),
@@ -79,7 +83,7 @@ class AssessConfidenceHook(ProposeHook):
             step=len(self.corpus)
         )
 
-    def calculate_ece(self, confidences, true_labels, num_bins=15):
+    def calculate_ece(self, confidences, true_labels, new_run, artifact_path, num_bins=15):
         """
         Compute the Expected Calibration Error (ECE).
 
@@ -106,6 +110,11 @@ class AssessConfidenceHook(ProposeHook):
         # Define bin edges and bin width
         bin_edges = np.linspace(0, 1, num_bins + 1)
 
+        # Initialize arrays to store bin data
+        bin_accuracies = np.zeros(num_bins)
+        avg_confidences = np.zeros(num_bins)
+        bin_counts = np.zeros(num_bins)
+
         # Calculate ECE
         for i in range(num_bins):
             # Get the confidences and corresponding true labels in the bin
@@ -123,6 +132,23 @@ class AssessConfidenceHook(ProposeHook):
 
                 # Update the ECE
                 ece += bin_error * bin_weight
+
+                # Store bin data
+                bin_accuracies[i] = accuracy_in_bin
+                avg_confidences[i] = avg_confidence_in_bin
+                bin_counts[i] = len(bin_confidences)
+
+        # Create the pandas DataFrame with bin data
+        data = {
+            'bin_start': bin_edges[:-1],
+            'bin_end': bin_edges[1:],
+            'bin_accuracy': bin_accuracies,
+            'avg_confidence': avg_confidences,
+            'bin_count': bin_counts
+        }
+        df = pd.DataFrame(data)
+        utils.store_csv(df, new_run, artifact_path)
+
         return ece
 
     def plot_reliability_diagram_plotly(self, predicted_probabilities, true_labels, new_run, artifact_path, n_bins=10):
@@ -177,3 +203,13 @@ class AssessConfidenceHook(ProposeHook):
             fig.write_html(path)
 
             utils.log_artifact(new_run, path, artifact_path=artifact_path)
+
+        data = {
+            'bin_start': bins[:-1],
+            'bin_end': bins[1:],
+            'tp_frequency': bin_tp_frequency,
+            'confidence': bin_confidence,
+            'count': bin_count
+        }
+        df = pd.DataFrame(data)
+        utils.store_csv(df, new_run, artifact_path)

@@ -238,6 +238,14 @@ def store_bar_plot(distribution: Dict[str, float], mlflow_run: Run, artifact_nam
         log_artifact(mlflow_run, csv_path, artifact_path=artifact_name)
 
 
+def store_csv(data_frame: pd.DataFrame, mlflow_run: Run, artifact_name: str):
+    with tempfile.TemporaryDirectory() as temp_dir:
+        csv_path = f'{temp_dir}/data.csv'
+        # Save the DataFrame to a CSV file
+        data_frame.to_csv(csv_path, index=False)
+        log_artifact(mlflow_run, csv_path, artifact_path=artifact_name)
+
+
 def store_histogram(data: List[Union[int, float]], mlflow_run: Run, artifact_name: str,
                     columns: List[str], bins=10) -> None:
     data = pd.DataFrame({
