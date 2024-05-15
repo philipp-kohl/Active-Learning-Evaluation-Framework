@@ -13,6 +13,7 @@ from ale.corpus.corpus import Corpus
 from ale.proposer.hooks.abstract_hook import ProposeHook
 from ale.proposer.hooks.assess_bias_hook import AssessBiasHook
 from ale.proposer.hooks.assess_confidence_hook import AssessConfidenceHook
+from ale.proposer.hooks.stop_after_n_al_cycles import StopAfterNAlCycles
 from ale.registry.registerable_corpus import CorpusRegistry
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.registry.registerable_trainer import TrainerRegistry
@@ -134,11 +135,17 @@ class AleBartenderPerSeed:
                                         trainer=self.trainer))
         if self.cfg.experiment.assess_overconfidence:
             hooks.append(AssessConfidenceHook(self.cfg, self.parent_run_id, self.corpus, trainer=self.trainer))
+        if self.cfg.experiment.stop_after_n_al_cycles > 0:
+            hooks.append(StopAfterNAlCycles(self.cfg, self.parent_run_id, self.corpus))
 
         while self.corpus.do_i_have_to_annotate():
             if len(self.corpus) >= annotation_budget:
                 logger.info(f"Stop seed run due to exceeded annotation budget ({annotation_budget})")
                 break
+
+            if self.may_continue(hooks) is False:
+                break
+
 
             [h.before_proposing() for h in hooks]
             self.propose_new_data(self.corpus)  # TODO time it
@@ -288,3 +295,10 @@ class AleBartenderPerSeed:
 
     def perform_predictions(self, data_loader: DataLoader):
         return self.trainer.predict_with_known_gold_labels(data_loader)
+
+    def may_continue(self, hooks: List[ProposeHook]) -> bool:
+        for hook in hooks:
+            if hook.may_continue() is False:
+                logger.info(f"Hook ({hook.__class__.__name__}) caused the AL cycle to stop!")
+                return False
+        return True
