@@ -24,13 +24,22 @@ class ProposeHook:
     def after_proposing(self) -> None:
         pass
 
+    def before_training(self) -> None:
+        pass
+
     def after_training(self, mlflow_run: Run) -> None:
+        pass
+
+    def on_iter_start(self) -> None:
         pass
 
     def on_iter_end(self) -> None:
         pass
 
     def on_seed_end(self) -> None:
+        pass
+
+    def before_prediction(self) -> None:
         pass
 
     def after_prediction(self,

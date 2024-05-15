@@ -13,6 +13,7 @@ from ale.corpus.corpus import Corpus
 from ale.proposer.hooks.abstract_hook import ProposeHook
 from ale.proposer.hooks.assess_bias_hook import AssessBiasHook
 from ale.proposer.hooks.assess_confidence_hook import AssessConfidenceHook
+from ale.proposer.hooks.measure_times import MeasureTimes
 from ale.proposer.hooks.stop_after_n_al_cycles import StopAfterNAlCycles
 from ale.registry.registerable_corpus import CorpusRegistry
 from ale.registry.registerable_teacher import TeacherRegistry
@@ -127,7 +128,8 @@ class AleBartenderPerSeed:
 
         annotation_budget: int = self.cfg.experiment.annotation_budget
 
-        hooks: List[ProposeHook] = []
+        # The MeasureTimes hook should always be the first in the list. Thus, we do not measure much overhead.
+        hooks: List[ProposeHook] = [MeasureTimes(self.cfg, self.parent_run_id, self.corpus)]
         if self.cfg.experiment.assess_data_bias:
             hooks.append(AssessBiasHook(self.cfg, self.parent_run_id, self.corpus,
                                         train_file_raw=self.train_file_raw,
@@ -139,6 +141,7 @@ class AleBartenderPerSeed:
             hooks.append(StopAfterNAlCycles(self.cfg, self.parent_run_id, self.corpus))
 
         while self.corpus.do_i_have_to_annotate():
+            [h.on_iter_start() for h in hooks]
             if len(self.corpus) >= annotation_budget:
                 logger.info(f"Stop seed run due to exceeded annotation budget ({annotation_budget})")
                 break
@@ -146,17 +149,17 @@ class AleBartenderPerSeed:
             if self.may_continue(hooks) is False:
                 break
 
-
             [h.before_proposing() for h in hooks]
-            self.propose_new_data(self.corpus)  # TODO time it
+            self.propose_new_data(self.corpus)
             [h.after_proposing() for h in hooks]
 
+            [h.before_training() for h in hooks]
             evaluation_metrics, test_metrics, new_run = self.train(
                 self.corpus, f"train {len(self.corpus)}", self.seed
             )
-
             [h.after_training(new_run) for h in hooks]
 
+            [h.before_prediction() for h in hooks]
             preds_train = None
             preds_dev = None
             if any([h.needs_train_predictions() for h in hooks]):
