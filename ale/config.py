@@ -65,6 +65,14 @@ class Experiment:
     value < 1 is treated as no stopping.
     value > 0 is treated as stopping.
     """
+    early_stopping_threshold: float
+    """
+    Defines the threshold for the optimization metric
+    """
+    early_stopping_n_iter: int
+    """
+    Number of consecutive iterations the threshold is reached before stopping.
+    """
 
 
 @dataclass
