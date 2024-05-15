@@ -60,6 +60,11 @@ class Experiment:
     assess_data_bias_eval_freq: int
     assess_overconfidence: bool
     assess_overconfidence_eval_freq: int
+    stop_after_n_al_cycles: int
+    """
+    value < 1 is treated as no stopping.
+    value > 0 is treated as stopping.
+    """
 
 
 @dataclass

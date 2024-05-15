@@ -15,6 +15,9 @@ class ProposeHook:
         self.artifact_base_path = artifact_base_path
         self.kwargs = kwargs
 
+    def may_continue(self) -> bool:
+        return True
+
     def before_proposing(self) -> None:
         pass
 
