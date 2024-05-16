@@ -51,7 +51,11 @@ class TeacherConfig:
 @dataclass
 class Experiment:
     step_size: int
-    initial_data_ratio: float
+    initial_data_size: float
+    """
+    Value between 0 and 1 is treated as ratio.
+    Value > 1 is treated as nominal value.
+    """
     initial_data_strategy: str
     tracking_metrics: List[str]
     seeds: List[int]
