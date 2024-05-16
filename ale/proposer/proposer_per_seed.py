@@ -106,9 +106,9 @@ class AleBartenderPerSeed:
         """
         logger.info(f"Start seed: {self.seed}")
 
-        initial_data_ratio = self.cfg.experiment.initial_data_ratio
         all_ids = self.corpus.get_not_annotated_data_points_ids()
-        first_step_size = int(initial_data_ratio * len(all_ids))
+        first_step_size = self.determine_initial_step_size(all_ids)
+
         logger.info(f"Initial step size: {first_step_size}")
 
         old_run: Optional[Run] = None
@@ -184,6 +184,17 @@ class AleBartenderPerSeed:
 
         [h.on_seed_end() for h in hooks]
         logger.info("End seed: %s", self.seed)
+
+    def determine_initial_step_size(self, all_ids: List[int]):
+        initial_data_parameter = self.cfg.experiment.initial_data_size
+        if 0.0 <= initial_data_parameter <= 1.00:
+            logger.info(f"Initial step size treated as ratio ({initial_data_parameter})")
+            initial_data_ratio = initial_data_parameter
+            first_step_size = int(initial_data_ratio * len(all_ids))
+        else:
+            logger.info(f"Initial step size treated as absolute value ({initial_data_parameter})")
+            first_step_size = int(initial_data_parameter)
+        return first_step_size
 
     def train(self, corpus: Corpus, run_name: str, seed: int) -> Tuple[MetricsType, MetricsType, Run]:
         """
