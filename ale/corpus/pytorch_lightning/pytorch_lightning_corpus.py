@@ -29,7 +29,9 @@ class PytorchLightningCorpus(Corpus):
                                             labels=labels,
                                             batch_size=self.cfg.trainer.batch_size,
                                             num_workers=self.cfg.trainer.num_workers,
-                                            train_filter_func=filter_relevant_ids)
+                                            train_filter_func=filter_relevant_ids,
+                                            text_column=self.cfg.data.text_column,
+                                            label_column=self.cfg.data.label_column)
 
         logger.info("Start indexing corpus")
         self.index = {}

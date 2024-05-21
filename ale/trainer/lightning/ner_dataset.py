@@ -12,7 +12,11 @@ from ale.trainer.lightning.utils import derive_labels
 
 class AleNerDataModule(LightningDataModule):
     def __init__(self, data_dir: str = None, model_name: str = None, labels: List[str] = None, batch_size: int = 32,
-                 num_workers: int = 1, train_filter_func: Callable = lambda x: x):
+                 num_workers: int = 1, train_filter_func: Callable = lambda x: x,
+                 text_column: str = "text",
+                 label_column: str = "labels"
+
+    ):
         super().__init__()
         self.data_dir: Path = Path(data_dir)
         self.batch_size = batch_size
@@ -23,6 +27,8 @@ class AleNerDataModule(LightningDataModule):
         self.dev = None
         self.test = None
         self.train_filter_func = train_filter_func
+        self.text_column = text_column
+        self.label_column = label_column
 
     def prepare_data(self):
         self.train = self.load_dataset(self.data_dir / "train.jsonl")
@@ -32,8 +38,8 @@ class AleNerDataModule(LightningDataModule):
     def load_dataset(self, path: Path):
         result = []
         for entry in srsly.read_jsonl(path):
-            text = entry["text"]
-            labels = entry["labels"]
+            text = entry[self.text_column]
+            labels = entry[self.label_column]
 
             tokenized = self.tokenizer(text, add_special_tokens=True, return_offsets_mapping=True, truncation=True)
             token_labels, tokens_text = self.create_token_labels(labels, tokenized)
