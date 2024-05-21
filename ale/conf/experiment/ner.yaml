@@ -8,7 +8,7 @@ assess_data_bias: true
 assess_data_bias_eval_freq: 1
 assess_overconfidence: true
 assess_overconfidence_eval_freq: 1
-stop_after_n_al_cycles: 2
+stop_after_n_al_cycles: 0
 early_stopping_threshold: 0
 early_stopping_n_iter: 3
 
