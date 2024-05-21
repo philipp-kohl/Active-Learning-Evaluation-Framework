@@ -4,5 +4,5 @@ test_file: test
 dev_file: dev
 file_format: jsonl
 text_column: text
-label_column: coarse_abels
+label_column: coarse_labels
 nlp_task: NER
