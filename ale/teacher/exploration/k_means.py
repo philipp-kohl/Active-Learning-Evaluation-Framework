@@ -131,7 +131,6 @@ class KMeansClusterBasedTeacher(BaseTeacher):
                         output_ids.extend(sorted_docs_cluster)
                         empty_clusters.append(cluster)
                     else:
-                        rest -= docs_per_rest_clusters
                         output_ids.extend(sorted_docs_cluster[:docs_per_rest_clusters])
         
         return output_ids
