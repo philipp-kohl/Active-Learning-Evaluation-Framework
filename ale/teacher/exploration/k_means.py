@@ -108,7 +108,7 @@ class KMeansClusterBasedTeacher(BaseTeacher):
         docs = self.clustered_documents.get_clustered_docs_by_idx(potential_ids)
         clusters = self.clustered_documents.clusters
         docs_per_cluster = int(step_size/len(clusters)) # equal distribution
-        output_ids = []
+        output_ids: List[ClusterDocument] = []
         empty_clusters = []
 
         for cluster in clusters:
@@ -127,10 +127,10 @@ class KMeansClusterBasedTeacher(BaseTeacher):
                     potential_docs_cluster = [doc for doc in docs if doc.cluster_idx==cluster]
                     potential_docs_cluster.sort(key=lambda x: x.distance, reverse=True)
                     if len(potential_docs_cluster) < docs_per_rest_clusters: # less docs in cluster left than needed
-                        rest -= len(potential_docs_cluster)
                         output_ids.extend(potential_docs_cluster)
                         empty_clusters.append(cluster)
                     else:
                         output_ids.extend(potential_docs_cluster[:docs_per_rest_clusters])
         
-        return output_ids
+        out_ids = [item.idx for item in output_ids]
+        return out_ids
