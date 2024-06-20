@@ -113,24 +113,24 @@ class KMeansClusterBasedTeacher(BaseTeacher):
 
         for cluster in clusters:
             potential_docs_cluster = [doc for doc in docs if doc.cluster_idx==cluster]
-            sorted_docs_cluster = potential_docs_cluster.sort(key=lambda x: x.distance, reverse=True)
-            if len(sorted_docs_cluster) < docs_per_cluster: # less docs in cluster left than needed
-                output_ids.extend(sorted_docs_cluster)
+            potential_docs_cluster.sort(key=lambda x: x.distance, reverse=True)
+            if len(potential_docs_cluster) < docs_per_cluster: # less docs in cluster left than needed
+                output_ids.extend(potential_docs_cluster)
                 empty_clusters.append(cluster)
             else:
-                output_ids.extend(sorted_docs_cluster[:docs_per_cluster])
+                output_ids.extend(potential_docs_cluster[:docs_per_cluster])
 
         while step_size>len(output_ids) and len(empty_clusters)<len(clusters): # rest left
             docs_per_rest_clusters = max(int(step_size-len(output_ids))/(len(clusters)-len(empty_clusters)),1) # equally distribute to not empty clusters
             for cluster in clusters:
                 if cluster not in empty_clusters:
                     potential_docs_cluster = [doc for doc in docs if doc.cluster_idx==cluster]
-                    sorted_docs_cluster = potential_docs_cluster.sort(key=lambda x: x.distance, reverse=True)
-                    if len(sorted_docs_cluster) < docs_per_rest_clusters: # less docs in cluster left than needed
-                        rest -= len(sorted_docs_cluster)
-                        output_ids.extend(sorted_docs_cluster)
+                    potential_docs_cluster.sort(key=lambda x: x.distance, reverse=True)
+                    if len(potential_docs_cluster) < docs_per_rest_clusters: # less docs in cluster left than needed
+                        rest -= len(potential_docs_cluster)
+                        output_ids.extend(potential_docs_cluster)
                         empty_clusters.append(cluster)
                     else:
-                        output_ids.extend(sorted_docs_cluster[:docs_per_rest_clusters])
+                        output_ids.extend(potential_docs_cluster[:docs_per_rest_clusters])
         
         return output_ids
