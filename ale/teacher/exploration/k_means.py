@@ -121,7 +121,7 @@ class KMeansClusterBasedTeacher(BaseTeacher):
                 output_ids.extend(potential_docs_cluster[:docs_per_cluster])
 
         while step_size>len(output_ids) and len(empty_clusters)<len(clusters): # rest left
-            docs_per_rest_clusters = max(int(step_size-len(output_ids))/(len(clusters)-len(empty_clusters)),1) # equally distribute to not empty clusters
+            docs_per_rest_clusters = max(int((step_size-len(output_ids))/(len(clusters)-len(empty_clusters))),1) # equally distribute to not empty clusters
             for cluster in clusters:
                 if cluster not in empty_clusters:
                     potential_docs_cluster = [doc for doc in docs if doc.cluster_idx==cluster]
