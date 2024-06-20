@@ -1,6 +1,6 @@
 defaults:
-  - data: onto_notes5
-  - teacher: k_means_margin
+  - data: conll2003.yaml
+  - teacher: least_confidence
   - trainer: pytorch_lightning
   - mlflow: localhost
   - experiment: ner
