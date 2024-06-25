@@ -1,8 +1,8 @@
 initial_data_size: 0.01
 initial_data_strategy: randomizer
 tracking_metrics: [test_f1_macro]
-step_size: 15000
-seeds: [42]
+step_size: 100
+seeds: [42, 4711, 815, 88, 26, 4, 928473, 1288, 204, 51874]
 annotation_budget: 25000
 assess_data_bias: true
 assess_data_bias_eval_freq: 1
