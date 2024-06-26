@@ -28,9 +28,10 @@ from ale.pipeline.pipeline_components.load_data_converted_component import (
 )
 from ale.pipeline.pipeline_components.propose_data_component import ProposeDataComponent
 from ale.registry.registerable_pipeline_component import PipelineComponentRegistry
-from config import AppConfig, register_configs
+from config import AppConfig
 
 logger = logging.getLogger(__name__)
+
 
 @hydra.main(config_path="conf", config_name="config", version_base="1.2")
 def ale(cfg: AppConfig) -> None:
@@ -76,8 +77,7 @@ def run(cfg: AppConfig):
 
 if __name__ == "__main__":
     # https://hydra.cc/docs/tutorials/basic/running_your_app/working_directory/#disable-changing-current-working-dir-to-jobs-output-dir
-    #torch.use_deterministic_algorithms(True, warn_only=True)
+    # torch.use_deterministic_algorithms(True, warn_only=True)
     sys.argv.append("hydra.job.chdir=False")
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
-    config_store = register_configs()
     ale()

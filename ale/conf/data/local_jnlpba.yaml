@@ -1,0 +1,9 @@
+data_dir: /home/philipp/Repositories/Diss/ner-corpora/processed_data/jnlpba
+train_file: train
+test_file: test
+dev_file: dev
+file_format: jsonl
+text_column: text
+label_column: labels
+nlp_task: NER
+

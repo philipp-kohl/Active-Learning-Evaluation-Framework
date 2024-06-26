@@ -65,7 +65,7 @@ class AleBartenderPerSeed:
             self.cfg.teacher.strategy
         )
 
-        if self.cfg.teacher.aggregation_method:
+        if "aggregation_method" in self.cfg.teacher and self.cfg.teacher.aggregation_method:
             self.teacher: BaseTeacher = teacher_strategy_class(
                 corpus=self.corpus,
                 predictor=self.trainer,

@@ -1,3 +1,2 @@
 strategy: k-means-margin-confidence
 sampling_budget: 13200
-aggregation_method: AVERAGE

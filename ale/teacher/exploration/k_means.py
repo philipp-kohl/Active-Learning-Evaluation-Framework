@@ -129,7 +129,7 @@ class KMeansClusterBasedTeacher(BaseTeacher):
                     curr_cluster = not_empty_clusters[i]
                     potential_docs_cluster = [doc for doc in docs if doc.cluster_idx==curr_cluster]
                     potential_docs_cluster.sort(key=lambda x: x.distance, reverse=True)
-                    output_ids.extend(potential_docs_cluster[0])
+                    output_ids.append(potential_docs_cluster[0])
 
             for cluster in clusters:
                 if cluster not in empty_clusters:

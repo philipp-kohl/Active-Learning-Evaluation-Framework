@@ -1,13 +1,10 @@
-from typing import Optional, List
 from enum import Enum
+from typing import Optional, List
 
-from hydra.core.config_store import ConfigStore
-from pydantic import root_validator
-from pydantic.dataclasses import dataclass
+from pydantic import BaseModel, model_validator
 
 
-@dataclass
-class MlFlowConfig:
+class MlFlowConfig(BaseModel):
     url: str
     experiment_name: str
     run_name: Optional[str] = None
@@ -16,8 +13,7 @@ class MlFlowConfig:
     source_name: Optional[str] = None
 
 
-@dataclass
-class TrainerConfig:
+class TrainerConfig(BaseModel):
     trainer_name: str
     huggingface_model: str
     corpus_manager: str
@@ -41,15 +37,13 @@ class AggregationMethod(str, Enum):
     SUM = "SUM"
 
 
-@dataclass
-class TeacherConfig:
+class TeacherConfig(BaseModel):
     strategy: str
     sampling_budget: int
     aggregation_method: Optional[AggregationMethod] = None
 
 
-@dataclass
-class Experiment:
+class Experiment(BaseModel):
     step_size: int
     initial_data_size: float
     """
@@ -79,8 +73,7 @@ class Experiment:
     """
 
 
-@dataclass
-class TechnicalConfig:
+class TechnicalConfig(BaseModel):
     use_gpu: int
     number_threads: int
     adjust_wrong_step_size: bool
@@ -91,8 +84,7 @@ class NLPTask(str, Enum):
     NER = "NER"
 
 
-@dataclass
-class DataConfig:
+class DataConfig(BaseModel):
     data_dir: str
     train_file: str
     test_file: str
@@ -103,14 +95,12 @@ class DataConfig:
     label_column: Optional[str] = "label"
 
 
-@dataclass
-class ConverterConfig:
+class ConverterConfig(BaseModel):
     converter_class: str
     target_format: str
 
 
-@dataclass
-class AppConfig:
+class AppConfig(BaseModel):
     data: DataConfig
     experiment: Experiment
     mlflow: MlFlowConfig
@@ -119,7 +109,7 @@ class AppConfig:
     converter: ConverterConfig
     technical: TechnicalConfig
 
-    @root_validator(pre=True)
+    @model_validator(mode="before")
     def check_configuration(cls, values):
         teacher: TeacherConfig = values.get("teacher")
         experiment: Experiment = values.get("experiment")
@@ -128,8 +118,3 @@ class AppConfig:
             raise ValueError(f"Teacher.budget ({teacher.sampling_budget}) must be >= experiment.step_size ({experiment.step_size})")
 
         return values
-
-
-def register_configs():
-    cs = ConfigStore.instance()
-    cs.store(name="config", node=AppConfig)
