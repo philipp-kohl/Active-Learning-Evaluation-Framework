@@ -6,10 +6,9 @@ while getopts "t:a:" option; do
        a)aggregation=${OPTARG};;
    esac
 done
+if [ -z "$aggregation" ]; then aggregation="MINIMUM"; else echo "Aggregation method: $aggregation"; fi
 
-echo "$aggregation"
-
-echo "Start evaluation experiments for teacher $teacher."
+echo "Start evaluation experiments for teacher $teacher with aggregation method $aggregation."
 
 echo "Start variance test on CoNLL 2003 data."
 
@@ -49,6 +48,3 @@ echo "Performance test on GermEval data done."
 echo "Performance tests done."
 
 echo "Script done. Teacher $teacher evaluated. Have a look at results on the ML Flow tracking server :)"
-
-
-

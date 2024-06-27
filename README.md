@@ -88,7 +88,12 @@ ale-cuda:1.0 \
 conda run --no-capture-output -n ale-cuda python ale/main.py teacher=randomizer mlflow.experiment_name=randomizer mlflow.url=http://localhost:5000
 ```
 
-4. Shutdown mlflow services:
+4. Evaluate a teacher: If you want to use our pre-defined experiment series for evaluating a teacher, please run:
+```
+./evaluation_scripts/evaluation_test.sh -t <your_teacher> -a <aggregation_method>
+```
+
+5. Shutdown mlflow services:
     1. Without deleting volumes
        ```bash
        docker compose -f docker-compose.mlflow.yaml down
