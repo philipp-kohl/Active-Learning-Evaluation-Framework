@@ -53,7 +53,6 @@ def cluster_documents(corpus: Corpus, k: int) -> ClusteredDocuments:
 
         # get the distance to the corresponding cluster centroid for each document
         npm_tfidf = X.todense()
-        idx2distance = dict()
         centers = model.cluster_centers_
         clustered_documents: List[ClusteredDocuments] = []
         for i in range(len(ids)):
