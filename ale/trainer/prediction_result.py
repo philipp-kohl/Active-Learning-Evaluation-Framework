@@ -24,7 +24,7 @@ class TokenConfidence(BaseModel):
     text: str
     label_confidence: List[LabelConfidence]
     gold_label: Optional[str] = None
-    predicted_label: str
+    predicted_label: str = ""
 
     def __hash__(self):
         return hash((self.text, self.label_confidence))
@@ -80,4 +80,4 @@ class PredictionResult(BaseModel):
         else:
             token_confidence: TokenConfidence = self.ner_confidences_token[0]
             label_confidences: List[LabelConfidence] = token_confidence.label_confidence
-            return [conf.label for conf in label_confidences]
+            return [conf.label for conf in label_confidences if conf.label not in ["","0","O"]]
