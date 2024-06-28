@@ -71,3 +71,13 @@ class PredictionResult(BaseModel):
             return max(self.ner_confidences_span, key=self.ner_confidences_span.get).label
         else:
             return None
+        
+    def get_all_label_classes(self) -> List[str]:
+        if self.classification_confidences:
+            return list(self.classification_confidences.keys())
+        elif self.ner_confidences_span:
+            return list(self.ner_confidences_span.keys())
+        else:
+            token_confidence: TokenConfidence = self.ner_confidences_token[0]
+            label_confidences: List[LabelConfidence] = token_confidence.label_confidence
+            return [conf.label for conf in label_confidences]
