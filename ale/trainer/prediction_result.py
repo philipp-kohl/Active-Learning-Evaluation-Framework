@@ -33,6 +33,10 @@ class TokenConfidence(BaseModel):
         for label_confidence in self.label_confidence:
             if label_confidence.label == label:
                 return label_confidence.confidence
+            
+    def get_predicted_label(self) -> str:
+        self.predicted_label = max(self.label_confidence, key=lambda x: x.confidence).label
+        return self.predicted_label
 
     def get_confidence_for_predicted_label(self) -> float:
         return self.get_confidence_for_label(self.predicted_label)
