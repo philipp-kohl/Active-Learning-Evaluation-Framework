@@ -84,7 +84,7 @@ def test_initial_train(prediction_results: Dict[int, PredictionResult]):
     out_ids: List[int] = fluct_teacher.compute_function(prediction_results, 2)
     assert fluct_teacher.historical_sequence.__class__ == HistoricalSequence
 
-def test_tag_flip_for_sum(prediction_results: Dict[int, PredictionResult], prediction_results_changed: Dict[int,PredictionResult]):
+def test_tag_flip_for_max(prediction_results: Dict[int, PredictionResult], prediction_results_changed: Dict[int,PredictionResult]):
     fluct_teacher: FluctuationHistoricalSequenceTeacher = FluctuationHistoricalSequenceTeacher(None, None, 0, LABELS, NLPTask.NER,
                                                   AggregationMethod.MAXIMUM)
     assert fluct_teacher.historical_sequence == None
