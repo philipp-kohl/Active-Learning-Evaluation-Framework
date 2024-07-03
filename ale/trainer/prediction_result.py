@@ -1,5 +1,5 @@
 from typing import Dict, Optional, Union, List
-
+from ale.teacher.utils import is_named_entity
 from pydantic import BaseModel
 
 
@@ -85,4 +85,4 @@ class PredictionResult(BaseModel):
         else:
             token_confidence: TokenConfidence = self.ner_confidences_token[0]
             label_confidences: List[LabelConfidence] = token_confidence.label_confidence
-            return [conf.label for conf in label_confidences if conf.label not in ["","0","O"]]
+            return [conf.label for conf in label_confidences if is_named_entity(conf.label)]

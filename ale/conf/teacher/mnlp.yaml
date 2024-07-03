@@ -1,3 +1,0 @@
-strategy: mnlp
-sampling_budget: 13200
-aggregation_method: AVERAGE
