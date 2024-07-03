@@ -1,5 +1,5 @@
+import pytest
 from typing import List, Dict
-
 from ale.config import NLPTask
 from ale.import_helper import import_registrable_components
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod
@@ -7,7 +7,6 @@ from ale.teacher.exploitation.entropy_confidence import EntropyTeacher
 from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence
 
 import_registrable_components()
-import pytest
 
 LABELS = ["O", "B-PER", "B-ORG"]
 
@@ -55,7 +54,8 @@ def test_entropy_for_ner_min(prediction_results: Dict[int, PredictionResult]):
     entropy_teacher: EntropyTeacher = EntropyTeacher(None, None, 0, LABELS, NLPTask.NER,
                                                      AggregationMethod.MINIMUM)
 
-    out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
+    out_ids: List[int] = entropy_teacher.compute_function(
+        prediction_results, 2)
     assert out_ids == [0, 1]
 
 
@@ -63,7 +63,8 @@ def test_entropy_for_ner_avg(prediction_results: Dict[int, PredictionResult]):
     entropy_teacher: EntropyTeacher = EntropyTeacher(None, None, 0, LABELS, NLPTask.NER,
                                                      AggregationMethod.AVERAGE)
 
-    out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
+    out_ids: List[int] = entropy_teacher.compute_function(
+        prediction_results, 2)
     assert out_ids == [1, 2]
 
 
@@ -71,7 +72,8 @@ def test_entropy_for_ner_max(prediction_results: Dict[int, PredictionResult]):
     entropy_teacher: EntropyTeacher = EntropyTeacher(None, None, 0, LABELS, NLPTask.NER,
                                                      AggregationMethod.MAXIMUM)
 
-    out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
+    out_ids: List[int] = entropy_teacher.compute_function(
+        prediction_results, 2)
     assert out_ids == [1, 2]
 
 
@@ -79,7 +81,8 @@ def test_entropy_for_ner_std(prediction_results: Dict[int, PredictionResult]):
     entropy_teacher: EntropyTeacher = EntropyTeacher(None, None, 0, LABELS, NLPTask.NER,
                                                      AggregationMethod.STD)
 
-    out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
+    out_ids: List[int] = entropy_teacher.compute_function(
+        prediction_results, 2)
     assert out_ids == [1, 2]
 
 
@@ -87,5 +90,6 @@ def test_entropy_for_ner_sum(prediction_results: Dict[int, PredictionResult]):
     entropy_teacher: EntropyTeacher = EntropyTeacher(None, None, 0, LABELS, NLPTask.NER,
                                                      AggregationMethod.SUM)
 
-    out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
+    out_ids: List[int] = entropy_teacher.compute_function(
+        prediction_results, 2)
     assert out_ids == [1, 2]

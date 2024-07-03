@@ -1,5 +1,5 @@
 from typing import Dict, Optional, Union, List
-
+from ale.teacher.utils import is_named_entity
 from pydantic import BaseModel
 
 
@@ -24,7 +24,7 @@ class TokenConfidence(BaseModel):
     text: str
     label_confidence: List[LabelConfidence]
     gold_label: Optional[str] = None
-    predicted_label: str
+    predicted_label: Optional[str] = None
 
     def __hash__(self):
         return hash((self.text, self.label_confidence))
@@ -33,6 +33,11 @@ class TokenConfidence(BaseModel):
         for label_confidence in self.label_confidence:
             if label_confidence.label == label:
                 return label_confidence.confidence
+            
+    def get_predicted_label(self) -> str:
+        if not self.predicted_label:
+            self.predicted_label = max(self.label_confidence, key=lambda x: x.confidence).label
+        return self.predicted_label
 
     def get_confidence_for_predicted_label(self) -> float:
         return self.get_confidence_for_label(self.predicted_label)
@@ -71,3 +76,13 @@ class PredictionResult(BaseModel):
             return max(self.ner_confidences_span, key=self.ner_confidences_span.get).label
         else:
             return None
+        
+    def get_all_label_classes(self) -> List[str]:
+        if self.classification_confidences:
+            return list(self.classification_confidences.keys())
+        elif self.ner_confidences_span:
+            return list(self.ner_confidences_span.keys())
+        else:
+            token_confidence: TokenConfidence = self.ner_confidences_token[0]
+            label_confidences: List[LabelConfidence] = token_confidence.label_confidence
+            return [conf.label for conf in label_confidences if is_named_entity(conf.label)]
