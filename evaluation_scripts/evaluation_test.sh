@@ -10,7 +10,7 @@ done
 if [ -z "$aggregation" ]; then aggregation="MINIMUM"; else echo "Aggregation method: $aggregation"; fi;
 if [ -z "$gpu" ]; then gpu=0; else echo "GPU: $gpu"; fi;
 
-ale_version=1.6
+ale_version=1.7
 tracking_url="http://localhost:5000"
 
 batch_size=64
