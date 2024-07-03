@@ -1,5 +1,5 @@
+import pytest
 from typing import List, Dict
-
 from ale.config import NLPTask
 from ale.import_helper import import_registrable_components
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod
@@ -7,7 +7,6 @@ from ale.teacher.exploitation.max_tag_count import MaxTagCountTeacher
 from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence
 
 import_registrable_components()
-import pytest
 
 LABELS = ["O", "B-PER", "B-ORG"]
 
@@ -53,8 +52,8 @@ def prediction_results() -> Dict[int, PredictionResult]:
 
 def test_tag_count_for_ner_sum(prediction_results: Dict[int, PredictionResult]):
     entropy_teacher: MaxTagCountTeacher = MaxTagCountTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                     AggregationMethod.SUM)
+                                                             AggregationMethod.SUM)
 
-    out_ids: List[int] = entropy_teacher.compute_function(prediction_results, 2)
+    out_ids: List[int] = entropy_teacher.compute_function(
+        prediction_results, 2)
     assert out_ids == [1, 0]
-

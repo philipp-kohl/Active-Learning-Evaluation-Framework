@@ -1,5 +1,5 @@
+import pytest
 from typing import List, Dict
-
 from ale.import_helper import import_registrable_components
 from ale.config import NLPTask
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod
@@ -7,7 +7,6 @@ from ale.teacher.exploitation.round_robin import RoundRobinHighestConfidenceTeac
 from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence
 
 import_registrable_components()
-import pytest
 
 LABELS = ["O", "B-PER", "B-ORG"]
 
@@ -27,10 +26,10 @@ def create_prediction_result(data: Dict[str, List[float]]) -> PredictionResult:
 @pytest.fixture
 def prediction_results() -> Dict[int, PredictionResult]:
     predictions_1 = create_prediction_result({
-        "Token 1": [0.3, 0.2, 0.5], 
-        "Token 2": [0.1, 0.1, 0.5],  
-        "Token 3": [0.4, 0.3, 0.8],  
-    }) 
+        "Token 1": [0.3, 0.2, 0.5],
+        "Token 2": [0.1, 0.1, 0.5],
+        "Token 3": [0.4, 0.3, 0.8],
+    })
     # Avg: "B-PER"=0.2, "B-ORG"=0.6
     # Max: "B-PER"=0.3, "B-ORG"=0.8
 
@@ -59,15 +58,15 @@ def prediction_results() -> Dict[int, PredictionResult]:
 
 def test_round_robin_for_ner_avg(prediction_results: Dict[int, PredictionResult]):
     robin_teacher: RoundRobinHighestConfidenceTeacher = RoundRobinHighestConfidenceTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                  AggregationMethod.AVERAGE)
+                                                                                           AggregationMethod.AVERAGE)
 
     out_ids: List[int] = robin_teacher.compute_function(prediction_results, 2)
-    assert out_ids == [1,0]
+    assert out_ids == [1, 0]
 
 
 def test_margin_for_ner_max(prediction_results: Dict[int, PredictionResult]):
     robin_teacher: RoundRobinHighestConfidenceTeacher = RoundRobinHighestConfidenceTeacher(None, None, 0, LABELS, NLPTask.NER,
-                                                  AggregationMethod.MAXIMUM)
+                                                                                           AggregationMethod.MAXIMUM)
 
     out_ids: List[int] = robin_teacher.compute_function(prediction_results, 2)
     assert out_ids == [0, 1]

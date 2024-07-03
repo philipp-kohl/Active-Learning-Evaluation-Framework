@@ -1,5 +1,5 @@
+import pytest
 from typing import List, Dict
-
 from ale.config import NLPTask
 from ale.import_helper import import_registrable_components
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod
@@ -7,7 +7,6 @@ from ale.teacher.exploitation.least_confidence import LeastConfidenceTeacher
 from ale.trainer.prediction_result import PredictionResult, TokenConfidence, LabelConfidence
 
 import_registrable_components()
-import pytest
 
 LABELS = ["O", "B-PER", "B-ORG"]
 
