@@ -90,7 +90,7 @@ conda run --no-capture-output -n ale-cuda python ale/main.py teacher=randomizer 
 
 4. Evaluate a teacher: If you want to use our pre-defined experiment series for evaluating a teacher, please run:
 ```
-./evaluation_scripts/evaluation_test.sh -t <your_teacher> -a <aggregation_method>
+./evaluation_scripts/evaluation_test.sh -t <your_teacher> -a <aggregation_method> -g <gpu_number>
 ```
 
 5. Shutdown mlflow services:
