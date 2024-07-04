@@ -8,3 +8,4 @@ from ale.teacher.exploitation.tag_flip_historical import TagFlipTeacher
 from ale.teacher.exploitation.round_robin import RoundRobinHighestConfidenceTeacher
 from ale.teacher.exploitation.max_tag_count import MaxTagCountTeacher
 from ale.teacher.exploitation.fluctuation_historical_sequence import FluctuationHistoricalSequenceTeacher
+from ale.teacher.exploration.diversity import DiversityTeacher
