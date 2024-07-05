@@ -5,7 +5,6 @@ import random
 from numpy.linalg import norm
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
@@ -73,7 +72,7 @@ class DiversityTeacher(BaseTeacher):
             # calculate similarity score for doc with labeled corpus, use complete linkage: max cosine-similarity
             labeled_indices: List[int] = [self.get_index_for_embeddings(id) for id in annotated_ids]
             embeddings_annotated = npm_tfidf[labeled_indices]
-            similarity_scores: np.ndarray = cosine_similarity(doc_vector, embeddings_annotated)
+            similarity_scores: np.ndarray = [np.dot(doc_vector,annotated_vector)/(norm(doc_vector)*norm(annotated_vector)) for annotated_vector in embeddings_annotated]
 
             # use max_sim as overall similarity score of the current doc to labeled dataset
             scores[doc_id] = max(similarity_scores)
