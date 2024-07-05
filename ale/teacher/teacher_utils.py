@@ -2,6 +2,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from ale.corpus.corpus import Corpus
 from typing import Dict
 from scipy.sparse import spmatrix
+from sentence_transformers import SentenceTransformer
 
 
 def is_named_entity(label: str) -> bool:
@@ -26,12 +27,27 @@ def tfidf_vectorize(id2text: Dict[int, str]):
     return X
 
 
+def bert_vectorize(corpus: Corpus):
+    """ Vectorizes the given data with BERT
+
+    Args:
+        - corpus (Corpus): The corpus.
+
+    Returns:
+        - sentence_embeddings (ndarray): ND-Array containing the BERT embeddings for the corpus.
+    """
+    data: Dict[int, str] = corpus.get_all_texts_with_ids()
+    model = SentenceTransformer('bert-base-nli-mean-tokens')
+    sentence_embeddings = model.encode(data.values())
+    return sentence_embeddings
+
+
 def embed_documents_with_tfidf(corpus: Corpus) -> spmatrix:
     """ Calculates embeddings for the given corpus data.
 
     Args:
         - corpus (Corpus): The corpus.
-    
+
     Returns: 
         - X (spmatrix): An spmatrix containing the TFIDF embeddings for the corpus.
     """

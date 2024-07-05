@@ -2,12 +2,12 @@ from typing import List, Any
 import random
 from numpy.linalg import norm
 import numpy as np
-from ale.teacher.utils import embed_documents_with_tfidf
+from ale.teacher.teacher_utils import embed_documents_with_tfidf
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
-from ale.trainer.base_trainer import Predictor
+from ale.trainer.predictor import Predictor
 
 
 @TeacherRegistry.register("diversity")

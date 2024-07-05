@@ -6,8 +6,9 @@ from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
-from ale.trainer.base_trainer import Predictor
-from ale.teacher.utils import embed_documents_with_tfidf
+from ale.trainer.predictor import Predictor
+from ale.teacher.teacher_utils import embed_documents_with_tfidf
+
 
 @TeacherRegistry.register("representative-diversity")
 class RepresentativeDiversityTeacher(BaseTeacher):
@@ -70,7 +71,8 @@ class RepresentativeDiversityTeacher(BaseTeacher):
             ]
 
             # use max_sim as overall similarity score of the current doc to labeled dataset
-            scores[doc_id] = (1-np.mean(diversity_scores)) * np.mean(representative_scores)
+            scores[doc_id] = (1-np.mean(diversity_scores)) * \
+                np.mean(representative_scores)
 
         sorted_dict_by_score = sorted(
             scores.items(), key=lambda x: x[1], reverse=True)  # select items with minimal similarity to labeled docs (1-avg(diversity_scores)) and maximal similarity to unlabeled docs (avg(representative_scores))

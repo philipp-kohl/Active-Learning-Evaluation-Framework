@@ -1,3 +1,2 @@
 strategy: representative-diversity
 sampling_budget: 13200
-aggregation_method: AVERAGE
