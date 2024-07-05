@@ -41,18 +41,3 @@ class BaseTrainer(ABC):
     def predict_with_known_gold_labels(self, data_loader: DataLoader) -> Dict[int, PredictionResult]:
         pass
 
-
-class Predictor(ABC):
-    """
-    Mixin for all prediction trainers to implement the predict method.
-    """
-
-    @abstractmethod
-    def predict(self, docs: Dict[int, str]) -> Dict[int, PredictionResult]:
-        ...
-
-
-class PredictionTrainer(BaseTrainer, Predictor):
-    """
-    Trainer for prediction tasks.
-    """

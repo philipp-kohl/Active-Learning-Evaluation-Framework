@@ -20,7 +20,8 @@ from ale.registry.registerable_corpus import CorpusRegistry
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.registry.registerable_trainer import TrainerRegistry
 from ale.teacher.base_teacher import BaseTeacher
-from ale.trainer.base_trainer import MetricsType, PredictionTrainer
+from ale.trainer.base_trainer import MetricsType
+from ale.trainer.prediction_trainer import PredictionTrainer
 
 logger = logging.getLogger(__name__)
 

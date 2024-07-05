@@ -11,8 +11,9 @@ from ale.config import NLPTask, AppConfig
 from ale.corpus.corpus import Corpus
 from ale.mlflowutils.mlflow_utils import log_dict_as_artifact
 from ale.registry.registerable_trainer import TrainerRegistry
-from ale.trainer.base_trainer import MetricsType, PredictionTrainer
+from ale.trainer.base_trainer import MetricsType
 from ale.trainer.prediction_result import PredictionResult
+from ale.trainer.prediction_trainer import PredictionTrainer
 
 logger = logging.getLogger(__name__)
 

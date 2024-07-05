@@ -11,7 +11,7 @@ from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
-from ale.trainer.base_trainer import Predictor
+from ale.trainer.predictor import Predictor
 
 logger = logging.getLogger(__name__)
 lock = Lock()
