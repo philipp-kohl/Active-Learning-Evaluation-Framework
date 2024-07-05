@@ -9,3 +9,4 @@ from ale.teacher.exploitation.round_robin import RoundRobinHighestConfidenceTeac
 from ale.teacher.exploitation.max_tag_count import MaxTagCountTeacher
 from ale.teacher.exploitation.fluctuation_historical_sequence import FluctuationHistoricalSequenceTeacher
 from ale.teacher.exploration.diversity import DiversityTeacher
+from ale.teacher.exploration.representativeness_diversity import RepresentativeDiversityTeacher

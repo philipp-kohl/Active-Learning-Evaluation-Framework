@@ -2,23 +2,23 @@ from typing import List, Any
 import random
 from numpy.linalg import norm
 import numpy as np
-from ale.teacher.utils import embed_documents_with_tfidf
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.trainer.base_trainer import Predictor
+from ale.teacher.utils import embed_documents_with_tfidf
 
-
-@TeacherRegistry.register("diversity")
-class DiversityTeacher(BaseTeacher):
+@TeacherRegistry.register("representative-diversity")
+class RepresentativeDiversityTeacher(BaseTeacher):
     """
-    The diversity teacher proposes samples that are most dissimilar to already labeled samples (based on TF-IDF embeddings)
+    The representative diversity teacher proposes samples that are most dissimilar to already labeled samples and most similar to unlabeled samples (based on TF-IDF embeddings)
 
     Applied to ER task:
-        - Chen, Y., Lasko, T.A., Mei, Q., Denny, J.C., Xu, H.: A study of active learning methods for named entity recognition
-        in clinical text. Journal of Biomedical Informatics 58, 11–18 (Dec 2015). https://doi.org/10.1016/j.jbi.2015.09.010
-        (in paper: embeddings based on word similarity)
+        - Kholghi, M., Sitbon, L., Zuccon, G., Nguyen, A.: External knowledge and query strategies in active learning: A study in 
+        clinical information extraction. In: International Conference on Information and Knowledge Management, Proceedings. 
+        vol. 19-23-Oct-2015, pp. 143–152 (2015). doi: 10.1145/2806416.280655
+        (no information about embeddings used for equation (10))
     """
 
     def __init__(self, corpus: Corpus, predictor: Predictor, seed: int, labels: List[Any], nlp_task: NLPTask):
@@ -53,18 +53,27 @@ class DiversityTeacher(BaseTeacher):
             doc_id = batch[i]
             doc_vector = npm_tfidf[self.get_index_for_embeddings(doc_id)]
 
-            # calculate similarity score for doc with labeled corpus, use complete linkage: max cosine-similarity
+            # calculate diversity score for doc with labeled corpus, use average of all labeled docs: avg cosine-similarity
             labeled_indices: List[int] = [
                 self.get_index_for_embeddings(id) for id in annotated_ids]
             embeddings_annotated = npm_tfidf[labeled_indices]
-            similarity_scores: np.ndarray = [np.dot(doc_vector, annotated_vector)/(norm(
+            diversity_scores: np.ndarray = [np.dot(doc_vector, annotated_vector)/(norm(
                 doc_vector)*norm(annotated_vector)) for annotated_vector in embeddings_annotated]
 
+            # calculate representativeness score for doc with unlabeled docs, use average of all unlabeled docs: avg cosine-similarity
+            unlabeled_indices: List[int] = [
+                self.get_index_for_embeddings(id) for id in batch
+            ]
+            embeddings_not_annotated = npm_tfidf[unlabeled_indices]
+            representative_scores: np.ndarray = [np.dot(doc_vector, not_annotated_vector)/(norm(
+                doc_vector)*norm(not_annotated_vector)) for not_annotated_vector in embeddings_not_annotated
+            ]
+
             # use max_sim as overall similarity score of the current doc to labeled dataset
-            scores[doc_id] = max(similarity_scores)
+            scores[doc_id] = (1-np.mean(diversity_scores)) * np.mean(representative_scores)
 
         sorted_dict_by_score = sorted(
-            scores.items(), key=lambda x: x[1])  # select items with minimal similarity to labeled docs
+            scores.items(), key=lambda x: x[1], reverse=True)  # select items with minimal similarity to labeled docs (1-avg(diversity_scores)) and maximal similarity to unlabeled docs (avg(representative_scores))
 
         out_ids = [item[0] for item in sorted_dict_by_score[:step_size]]
         return out_ids
