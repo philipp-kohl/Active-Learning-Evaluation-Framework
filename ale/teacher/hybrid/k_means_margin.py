@@ -8,7 +8,7 @@ from ale.teacher.base_teacher import BaseTeacher
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod
 from ale.teacher.exploitation.margin_confidence import MarginTeacher
 from ale.teacher.exploration.k_means import KMeansTeacher
-from ale.trainer.base_trainer import Predictor
+from ale.trainer.predictor import Predictor
 
 
 @TeacherRegistry.register("k-means-margin-confidence")

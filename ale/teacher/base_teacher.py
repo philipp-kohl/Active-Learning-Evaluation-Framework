@@ -4,7 +4,7 @@ from typing import List, Dict, Any, Callable, Optional
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod, Aggregation
-from ale.trainer.base_trainer import Predictor
+from ale.trainer.predictor import Predictor
 from ale.trainer.prediction_result import PredictionResult
 
 

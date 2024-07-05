@@ -1,18 +1,18 @@
+from ale.import_helper import import_registrable_components
+
+import_registrable_components()
+
 from typing import List
 
 from ale.config import AppConfig
 from ale.corpus import PytorchLightningCorpus
 from ale.corpus.corpus import Corpus
-from ale.import_helper import import_registrable_components
-
-import_registrable_components()
+from ale.proposer.proposer_per_seed import AleBartenderPerSeed
 
 from pathlib import Path
 
 import pytest
 from hydra import initialize, compose
-
-from ale.proposer.proposer_per_seed import AleBartenderPerSeed
 
 
 @pytest.fixture
