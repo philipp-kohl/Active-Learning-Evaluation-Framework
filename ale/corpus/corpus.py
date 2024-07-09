@@ -67,3 +67,7 @@ class Corpus(ABC):
     
     def get_annotated_data_points_ids(self) -> List[int]:
         return self.relevant_ids
+    
+    @abstractmethod
+    def get_all_tokens(self) -> Dict[int, List[str]]:
+        pass
