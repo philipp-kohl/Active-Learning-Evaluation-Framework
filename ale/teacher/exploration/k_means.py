@@ -4,7 +4,7 @@ from typing import List, Dict, Any
 
 from numpy.linalg import norm
 import numpy as np
-from ale.teacher.teacher_utils import tfidf_vectorize, bert_vectorize
+from ale.teacher.teacher_utils import tfidf_vectorize, bert_vectorize, ClusterDocument, ClusteredDocuments
 from sklearn.cluster import KMeans
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
@@ -14,23 +14,6 @@ from ale.trainer.predictor import Predictor
 
 logger = logging.getLogger(__name__)
 lock = Lock()
-
-
-class ClusterDocument:
-    def __init__(self, idx: int, cluster_idx: int, distance: float):
-        self.idx = idx
-        self.cluster_idx = cluster_idx
-        self.distance = distance
-
-
-class ClusteredDocuments:
-    def __init__(self, documents: List[ClusterDocument], num_clusters: int):
-        self.clusters = np.arange(0, num_clusters)
-        self.documents = documents
-
-    def get_clustered_docs_by_idx(self, indices: List[int]) -> List[ClusterDocument]:
-        output = [doc for doc in self.documents if doc.idx in indices]
-        return output
 
 
 def cluster_documents(corpus: Corpus, k: int) -> ClusteredDocuments:

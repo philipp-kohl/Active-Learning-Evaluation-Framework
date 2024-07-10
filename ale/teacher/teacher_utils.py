@@ -54,3 +54,20 @@ def embed_documents_with_tfidf(corpus: Corpus) -> spmatrix:
     # tfidf vectorize the dataset
     data: Dict[int, str] = corpus.get_all_texts_with_ids()
     return tfidf_vectorize(id2text=data)
+
+
+class ClusterDocument:
+    def __init__(self, idx: int, cluster_idx: int, distance: float):
+        self.idx = idx
+        self.cluster_idx = cluster_idx
+        self.distance = distance
+
+
+class ClusteredDocuments:
+    def __init__(self, documents: List[ClusterDocument], num_clusters: int):
+        self.clusters = np.arange(0, num_clusters)
+        self.documents = documents
+
+    def get_clustered_docs_by_idx(self, indices: List[int]) -> List[ClusterDocument]:
+        output = [doc for doc in self.documents if doc.idx in indices]
+        return output

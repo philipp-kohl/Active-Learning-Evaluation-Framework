@@ -1,25 +1,24 @@
 from typing import List, Any, Dict
 import random
 import numpy as np
-from gensim.models import Word2Vec,KeyedVectors
+from gensim.models import Word2Vec
 from sklearn.cluster import KMeans
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.trainer.predictor import Predictor
-from ale.teacher.exploration.k_means import ClusteredDocuments, ClusterDocument
+from ale.teacher.teacher_utils import ClusteredDocuments, ClusterDocument
 from ale.trainer.prediction_result import TokenConfidence, PredictionResult
 
 class NGramVectors:
-    def __init__(self, sizes: List[int], seed: int, lexical_dimension: int = 50, word_embedding_dimension: int = 50) -> None:
+    def __init__(self, sizes: List[int], seed: int, lexical_dimension: int = 50) -> None:
         self.sizes: List[int] = sizes
         self.seed: int = seed
         self.lexical_dimension: int = lexical_dimension
-        self.word_embedding_dimension: int = word_embedding_dimension
         self.vector_dict: Dict[str,np.ndarray] = dict()
 
-    def generate_n_grams(self, token: str) -> List[np.ndarray]:
+    def generate_lexical_token_vector(self, token: str) -> List[np.ndarray]:
         """ Generates n grams of the given sizes
         """ 
         subsequences: List[str] = []
@@ -39,31 +38,26 @@ class NGramVectors:
     def get_lexical_token_vector(self, token: str) -> np.ndarray:
         """ Get the normalized sum of the token n-grams
         """
-        vectors: List[np.ndarray] = self.generate_n_grams(token)
+        vectors: List[np.ndarray] = self.generate_lexical_token_vector(token)
         vector_sum: np.ndarray = sum(vectors)
         norm = np.linalg.norm(vector_sum)
         if norm == 0:
             return vector_sum
         return vector_sum/norm
     
-def get_word2vec_skipgram_vector(token: str, word2vec: KeyedVectors) -> np.ndarray:
-    """ Generates word2vec (skip gram) vectors with gensim
-    """
-    return word2vec[token]
-    
 
-def embed_documents_with_lexical_and_semantical_vectors(corpus: Corpus, ngrams: NGramVectors) -> Dict[int,np.ndarray]:
+def embed_documents_with_lexical_and_semantical_vectors(corpus: Corpus, ngrams: NGramVectors, word_embedding_dimension: int = 100) -> Dict[int,np.ndarray]:
     """ Calculates lexical vectors with n-grams (bi- and tri-grams) and semantical vectors by Skip-grams (Word2Vec), concatenates and normalizes them
     """
     vectors: Dict[int,np.ndarray] = {}
     dict_tokens: Dict[int,List[str]] = corpus.get_all_tokens()
     texts: List[str] = corpus.get_all_texts_with_ids().values()
-    word2vec_model = Word2Vec(sentences=texts, vector_size=100, window=5, min_count=1, workers=4)
+    word2vec_model = Word2Vec(sentences=texts, vector_size=word_embedding_dimension, window=5, min_count=1, workers=4) # semantic vectors
     word2vec_model.save("word2vec.model")
     for doc_id,tokens in dict_tokens.items():
         doc_vectors: List[np.ndarray] = []
         lexical_vectors: List[np.ndarray] = [ngrams.get_lexical_token_vector(token) for token in tokens]
-        semantic_vectors: List[np.ndarray] = [get_word2vec_skipgram_vector(token,word2vec_model.wv) for token in tokens]
+        semantic_vectors: List[np.ndarray] = [word2vec_model.wv[token] for token in tokens]
         for lex,sem in zip(lexical_vectors,semantic_vectors):
             combined: np.ndarray = np.concatenate((sem,lex)) # concatenate semantic and lexical vectors for each token
             doc_vectors.append(combined)
@@ -84,8 +78,7 @@ def cluster_documents(corpus: Corpus, k: int, embeddings: Dict[int,np.ndarray]) 
     # get the distance to the corresponding cluster centroid for each document
     centers = model.cluster_centers_
     clustered_documents: List[ClusteredDocuments] = []
-    for i in range(len(list(embeddings.keys()))):
-        idx = list(embeddings.keys())[i]
+    for idx in list(embeddings.keys()):
         vector = embeddings[idx]
         distances = [np.linalg.norm(center - vector) for center in centers]
         clustered_documents.append(ClusterDocument(
