@@ -11,29 +11,32 @@ from ale.trainer.predictor import Predictor
 from ale.teacher.teacher_utils import ClusteredDocuments, ClusterDocument
 from ale.trainer.prediction_result import TokenConfidence, PredictionResult
 
+
 class NGramVectors:
     def __init__(self, sizes: List[int], seed: int, lexical_dimension: int = 50) -> None:
         self.sizes: List[int] = sizes
         self.seed: int = seed
         self.lexical_dimension: int = lexical_dimension
-        self.vector_dict: Dict[str,np.ndarray] = dict()
+        self.vector_dict: Dict[str, np.ndarray] = dict()
 
     def generate_lexical_token_vector(self, token: str) -> List[np.ndarray]:
         """ Generates n grams of the given sizes
-        """ 
+        """
         subsequences: List[str] = []
         vectors: List[np.ndarray] = []
         for size in self.sizes:
-            subsequences_of_size: List[str] = [token[i:i+size] for i in range(len(token)-size)]
+            subsequences_of_size: List[str] = [
+                token[i:i+size] for i in range(len(token)-size)]
             subsequences.extend(subsequences_of_size)
         for seq in subsequences:
             seq_vector = self.vector_dict.get(seq)
-            if not seq_vector: # vector n gram does not exist yet
-                np.random.seed(self.seed) # use ALE seed
-                self.vector_dict[seq] = np.random.random(size=(self.lexical_dimension)) # lexical vector of dimension given, per default 50
+            if not seq_vector:  # vector n gram does not exist yet
+                np.random.seed(self.seed)  # use ALE seed
+                # lexical vector of dimension given, per default 50
+                self.vector_dict[seq] = np.random.random(
+                    size=(self.lexical_dimension))
             vectors.append(self.vector_dict[seq])
         return vectors
-        
 
     def get_lexical_token_vector(self, token: str) -> np.ndarray:
         """ Get the normalized sum of the token n-grams
@@ -44,34 +47,40 @@ class NGramVectors:
         if norm == 0:
             return vector_sum
         return vector_sum/norm
-    
 
-def embed_documents_with_lexical_and_semantical_vectors(corpus: Corpus, ngrams: NGramVectors, word_embedding_dimension: int = 100) -> Dict[int,np.ndarray]:
+
+def embed_documents_with_lexical_and_semantical_vectors(corpus: Corpus, ngrams: NGramVectors, word_embedding_dimension: int = 100) -> Dict[int, np.ndarray]:
     """ Calculates lexical vectors with n-grams (bi- and tri-grams) and semantical vectors by Skip-grams (Word2Vec), concatenates and normalizes them
     """
-    vectors: Dict[int,np.ndarray] = {}
-    dict_tokens: Dict[int,List[str]] = corpus.get_all_tokens()
+    vectors: Dict[int, np.ndarray] = {}
+    dict_tokens: Dict[int, List[str]] = corpus.get_all_tokens()
     texts: List[str] = corpus.get_all_texts_with_ids().values()
-    word2vec_model = Word2Vec(sentences=texts, vector_size=word_embedding_dimension, window=5, min_count=1, workers=4) # semantic vectors
+    word2vec_model = Word2Vec(sentences=texts, vector_size=word_embedding_dimension,
+                              window=5, min_count=1, workers=4)  # semantic vectors
     word2vec_model.save("word2vec.model")
-    for doc_id,tokens in dict_tokens.items():
+    for doc_id, tokens in dict_tokens.items():
         doc_vectors: List[np.ndarray] = []
-        lexical_vectors: List[np.ndarray] = [ngrams.get_lexical_token_vector(token) for token in tokens]
-        semantic_vectors: List[np.ndarray] = [word2vec_model.wv[token] for token in tokens]
-        for lex,sem in zip(lexical_vectors,semantic_vectors):
-            combined: np.ndarray = np.concatenate((sem,lex)) # concatenate semantic and lexical vectors for each token
+        lexical_vectors: List[np.ndarray] = [
+            ngrams.get_lexical_token_vector(token) for token in tokens]
+        semantic_vectors: List[np.ndarray] = [
+            word2vec_model.wv[token] for token in tokens]
+        for lex, sem in zip(lexical_vectors, semantic_vectors):
+            # concatenate semantic and lexical vectors for each token
+            combined: np.ndarray = np.concatenate((sem, lex))
             doc_vectors.append(combined)
         sum_vectors = np.add.reduce(doc_vectors)
         norm = np.linalg.norm(sum_vectors)
         if norm == 0:
             vectors[doc_id] = sum_vectors
         else:
-            vectors[doc_id] = sum_vectors/norm # normalized sum of all token vectors is doc vector
+            # normalized sum of all token vectors is doc vector
+            vectors[doc_id] = sum_vectors/norm
     return vectors
 
-def cluster_documents(corpus: Corpus, k: int, embeddings: Dict[int,np.ndarray]) -> ClusteredDocuments:
+
+def cluster_documents(corpus: Corpus, k: int, embeddings: Dict[int, np.ndarray]) -> ClusteredDocuments:
     model = KMeans(n_clusters=k, init='k-means++',
-                    max_iter=300, n_init='auto')
+                   max_iter=300, n_init='auto')
     X = list(embeddings.values())
     model.fit(X)
 
@@ -87,14 +96,17 @@ def cluster_documents(corpus: Corpus, k: int, embeddings: Dict[int,np.ndarray]) 
 
     return clustered_obj
 
-def get_docs_in_clusters(docs: List[int], clustered_docs: ClusteredDocuments) -> Dict[int,List[int]]:
-    docs_by_cluster: Dict[int,List[int]] = {}
+
+def get_docs_in_clusters(docs: List[int], clustered_docs: ClusteredDocuments) -> Dict[int, List[int]]:
+    docs_by_cluster: Dict[int, List[int]] = {}
     for cluster in clustered_docs.clusters:
         docs_by_cluster[cluster] = []
-    batch_docs: List[ClusterDocument] = clustered_docs.get_clustered_docs_by_idx(docs)
+    batch_docs: List[ClusterDocument] = clustered_docs.get_clustered_docs_by_idx(
+        docs)
     for doc in batch_docs:
-        docs_by_cluster[doc.cluster_idx].append(doc.idx) 
+        docs_by_cluster[doc.cluster_idx].append(doc.idx)
     return clustered_docs
+
 
 @TeacherRegistry.register("sequential-representation-least-confidence")
 class SequentialRepresentationLCTeacher(BaseTeacher):
@@ -116,9 +128,11 @@ class SequentialRepresentationLCTeacher(BaseTeacher):
             nlp_task=nlp_task
         )
         self.k = len(self.labels)
-        self.ngrams = NGramVectors([2,3],seed) # bi- and tri-ngrams
-        self.embeddings: Dict[int,np.ndarray] = embed_documents_with_lexical_and_semantical_vectors(corpus=corpus, ngrams=self.ngrams)
-        self.clustered_documents: ClusteredDocuments = cluster_documents(corpus,self.k,self.embeddings)
+        self.ngrams = NGramVectors([2, 3], seed)  # bi- and tri-ngrams
+        self.embeddings: Dict[int, np.ndarray] = embed_documents_with_lexical_and_semantical_vectors(
+            corpus=corpus, ngrams=self.ngrams)
+        self.clustered_documents: ClusteredDocuments = cluster_documents(
+            corpus, self.k, self.embeddings)
         self.corpus = corpus
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
@@ -127,19 +141,20 @@ class SequentialRepresentationLCTeacher(BaseTeacher):
         idx2text = self.corpus.get_text_by_ids(batch)
         prediction_results: Dict[int, PredictionResult] = self.predictor.predict(
             idx2text)
-        lcs: Dict[int,float] = self.compute_function(
+        lcs: Dict[int, float] = self.compute_function(
             prediction_results, step_size)
 
         # Get sorted dict for all clusters and their best docs in descending order
         # {cluster: [idx]} in descending order
         label_docs_order: Dict[int, List[int]] = dict()
-        clustered_docs: Dict[int,List[int]] = get_docs_in_clusters(batch,self.clustered_documents)
+        clustered_docs: Dict[int, List[int]] = get_docs_in_clusters(
+            batch, self.clustered_documents)
         for cluster in self.clustered_documents.clusters:
             for key in list(clustered_docs.keys()):
                 docs = clustered_docs[key]
                 lc_docs = {doc: lcs[doc] for doc in docs}
                 sorted_dict_by_lc = sorted(lc_docs.items(), key=lambda x: x[1])
-                clustered_docs[key] = [key for key,value in sorted_dict_by_lc]
+                clustered_docs[key] = [key for key, value in sorted_dict_by_lc]
 
         # round robin for clusters, always take doc with lowest lc
         robin: int = 0  # Iterate over clusters
@@ -148,12 +163,12 @@ class SequentialRepresentationLCTeacher(BaseTeacher):
 
         while len(out_ids) < step_size:
             cur_cluster = robin % num_clusters
-            out_ids.append(clustered_docs[cur_cluster].pop(0)) # always add doc of cluster with max LC (lowest highest confidence)
+            # always add doc of cluster with max LC (lowest highest confidence)
+            out_ids.append(clustered_docs[cur_cluster].pop(0))
 
         return out_ids
 
-
-    def compute_ner(self, predictions: Dict[int, PredictionResult], step_size: int) -> Dict[int,float]:
+    def compute_ner(self, predictions: Dict[int, PredictionResult], step_size: int) -> Dict[int, float]:
         """
         LC is calculated on token-level and aggregated on instance-level as configured.
         """
@@ -167,8 +182,9 @@ class SequentialRepresentationLCTeacher(BaseTeacher):
             instance_score = self.aggregate_function(highest_confidences)
             scores[idx] = instance_score
         return scores
-    
-    def compute_cls(self, predictions: Dict[int, PredictionResult], step_size: int) -> Dict[int,int]:
+
+    def compute_cls(self, predictions: Dict[int, PredictionResult], step_size: int) -> Dict[int, int]:
         """ Not implemented
         """
-        raise NotImplementedError("Hybrid teacher is not implemented for text classification task.")
+        raise NotImplementedError(
+            "Hybrid teacher is not implemented for text classification task.")
