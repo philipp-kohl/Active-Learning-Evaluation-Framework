@@ -61,7 +61,7 @@ class RepresentativeDiversityTeacher(BaseTeacher):
             labeled_indices: List[int] = [
                 self.get_index_for_embeddings(id) for id in annotated_ids]
             embeddings_annotated: List[np.ndarray] = npm_tfidf[labeled_indices]
-            diversity_scores: np.ndarray = [np.dot(annotated_vector.flatten(),doc_vector.flatten())/(norm(
+            diversity_scores: np.ndarray = [np.dot(annotated_vector.reshape((len(annotated_vector),)),doc_vector.reshape((len(doc_vector),)))/(norm(
                 doc_vector)*norm(annotated_vector)) for annotated_vector in embeddings_annotated]
 
             # calculate representativeness score for doc with unlabeled docs, use average of all unlabeled docs: avg cosine-similarity
@@ -69,7 +69,7 @@ class RepresentativeDiversityTeacher(BaseTeacher):
                 self.get_index_for_embeddings(id) for id in batch
             ]
             embeddings_not_annotated: List[np.ndarray] = npm_tfidf[unlabeled_indices]
-            representative_scores: np.ndarray = [np.dot(not_annotated_vector.flatten(),doc_vector.flatten())/(norm(
+            representative_scores: np.ndarray = [np.dot(not_annotated_vector.reshape((len(not_annotated_vector),)),doc_vector.reshape((len(doc_vector),)))/(norm(
                 doc_vector)*norm(not_annotated_vector)) for not_annotated_vector in embeddings_not_annotated
             ]
 

@@ -104,7 +104,7 @@ class InformationDensityTeacher(BaseTeacher):
             idx: int = self.get_index_for_embeddings(id)
             embedding: np.ndarray = self.embeddings[idx]
             # get cosine similarity to all unannotated data points
-            similarity_scores: np.ndarray = [np.dot(unannotated_embedding.flatten(),embedding.flatten())/(np.linalg.norm(
+            similarity_scores: np.ndarray = [np.dot(unannotated_embedding.reshape((len(unannotated_embedding),)),embedding.reshape((len(embedding),)))/(np.linalg.norm(
                 embedding)*np.linalg.norm(unannotated_embedding)) for unannotated_embedding in self.embeddings[unannotated_indices]]
             # use average similarity score
             scores[id] = np.mean(similarity_scores)
