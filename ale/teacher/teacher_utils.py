@@ -4,6 +4,7 @@ from typing import Dict,List
 from scipy.sparse import spmatrix
 from sentence_transformers import SentenceTransformer
 import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 from numpy.linalg import norm
 
 def is_named_entity(label: str) -> bool:
@@ -43,9 +44,7 @@ def bert_vectorize(corpus: Corpus):
     return sentence_embeddings
 
 def get_cosine_similarity(vec_1: np.ndarray, vec_2: np.ndarray) -> float:
-    dot_product = vec_1@vec_2.T
-    normed = norm(vec_1.flatten())*norm(vec_2.flatten())
-    return (dot_product/normed)
+    return cosine_similarity(vec_1,vec_2)
 
 def embed_documents_with_tfidf(corpus: Corpus) -> spmatrix:
     """ Calculates embeddings for the given corpus data.
