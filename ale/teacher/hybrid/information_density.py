@@ -44,7 +44,10 @@ class InformationDensityTeacher(BaseTeacher):
             corpus.get_all_texts_with_ids().keys())
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
-        batch = random.sample(potential_ids, budget)
+        if budget < len(potential_ids):
+            batch: List[int] = random.sample(potential_ids, budget)
+        else:
+            batch: List[int] = potential_ids
         
         # get entropy confidence for documents (inside budget)
         idx2text = self.corpus.get_text_by_ids(batch)

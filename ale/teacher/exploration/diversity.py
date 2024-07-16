@@ -43,7 +43,10 @@ class DiversityTeacher(BaseTeacher):
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
         # only documents of the batch will be evaluated and sought for proposal
-        batch: List[int] = random.sample(potential_ids, budget)
+        if budget < len(potential_ids):
+            batch: List[int] = random.sample(potential_ids, budget)
+        else:
+            batch: List[int] = potential_ids
         annotated_ids: List[int] = self.corpus.get_not_annotated_data_points_ids()
         scores = dict()
 
