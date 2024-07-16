@@ -44,8 +44,8 @@ def bert_vectorize(corpus: Corpus):
     return sentence_embeddings
 
 def get_cosine_similarity(vec_1: np.matrix, vec_2: np.matrix) -> float:
-    a: np.ndarray = np.asarray(vec_1.T)
-    b: np.ndarray = np.asarray(vec_2.T)
+    a: np.ndarray = np.asarray(vec_1.T).reshape((vec_1.size,))
+    b: np.ndarray = np.asarray(vec_2.T).reshape((vec_2.size,))
     norm_a: float = norm(a)
     norm_b: float = norm(b)
     if norm_a!=0 and norm_b != 0:
