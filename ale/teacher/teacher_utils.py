@@ -1,6 +1,6 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from ale.corpus.corpus import Corpus
-from typing import Dict
+from typing import Dict,List
 from scipy.sparse import spmatrix
 from sentence_transformers import SentenceTransformer
 
