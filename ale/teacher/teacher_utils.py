@@ -43,7 +43,8 @@ def bert_vectorize(corpus: Corpus):
     return sentence_embeddings
 
 def get_cosine_similarity(vec_1: np.ndarray, vec_2: np.ndarray) -> float:
-    dot_product = np.dot(vec_1,vec_2.T)
+    dot_product = vec_1*vec_2
+    print(dot_product)
     normed = norm(vec_1.flatten())*norm(vec_2.flatten())
     return (dot_product/normed)
 
