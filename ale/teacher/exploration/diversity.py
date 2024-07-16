@@ -60,7 +60,7 @@ class DiversityTeacher(BaseTeacher):
             labeled_indices: List[int] = [
                 self.get_index_for_embeddings(id) for id in annotated_ids]
             embeddings_annotated: List[np.ndarray] = npm_tfidf[labeled_indices]
-            similarity_scores: np.ndarray = [get_cosine_similarity(annotated_vector[0],doc_vector[0]) for annotated_vector in embeddings_annotated]
+            similarity_scores: np.ndarray = [get_cosine_similarity(annotated_vector,doc_vector) for annotated_vector in embeddings_annotated]
 
             # use max_sim as overall similarity score of the current doc to labeled dataset
             scores[doc_id] = max(similarity_scores)
