@@ -44,7 +44,7 @@ def bert_vectorize(corpus: Corpus):
     return sentence_embeddings
 
 def get_cosine_similarity(vec_1: np.ndarray, vec_2: np.ndarray) -> float:
-    return cosine_similarity(vec_1,vec_2)
+    return cosine_similarity(np.asarray(vec_1),np.asarray(vec_2))
 
 def embed_documents_with_tfidf(corpus: Corpus) -> spmatrix:
     """ Calculates embeddings for the given corpus data.
