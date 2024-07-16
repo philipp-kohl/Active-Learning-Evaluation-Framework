@@ -3,6 +3,7 @@ from ale.corpus.corpus import Corpus
 from typing import Dict,List
 from scipy.sparse import spmatrix
 from sentence_transformers import SentenceTransformer
+import numpy as np
 
 
 def is_named_entity(label: str) -> bool:
