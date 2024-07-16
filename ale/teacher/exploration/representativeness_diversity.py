@@ -7,7 +7,7 @@ from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.trainer.predictor import Predictor
-from ale.teacher.teacher_utils import embed_documents_with_tfidf
+from ale.teacher.teacher_utils import embed_documents_with_tfidf, get_cosine_similarity
 
 
 @TeacherRegistry.register("representative-diversity")
@@ -55,23 +55,22 @@ class RepresentativeDiversityTeacher(BaseTeacher):
         npm_tfidf = self.embeddings.todense()
         for i in range(len(batch)):
             doc_id = batch[i]
-            doc_vector: np.ndarray = npm_tfidf[self.get_index_for_embeddings(doc_id)]
+            doc_vector: np.ndarray = npm_tfidf[self.get_index_for_embeddings(
+                doc_id)]
 
             # calculate diversity score for doc with labeled corpus, use average of all labeled docs: avg cosine-similarity
             labeled_indices: List[int] = [
                 self.get_index_for_embeddings(id) for id in annotated_ids]
             embeddings_annotated: List[np.ndarray] = npm_tfidf[labeled_indices]
-            diversity_scores: np.ndarray = [np.dot(annotated_vector.reshape((annotated_vector.size,)),doc_vector.reshape((doc_vector.size,)))/(norm(
-                doc_vector)*norm(annotated_vector)) for annotated_vector in embeddings_annotated]
+            diversity_scores: np.ndarray = [get_cosine_similarity(annotated_vector[0], doc_vector[0]) for annotated_vector in embeddings_annotated]
 
             # calculate representativeness score for doc with unlabeled docs, use average of all unlabeled docs: avg cosine-similarity
             unlabeled_indices: List[int] = [
                 self.get_index_for_embeddings(id) for id in batch
             ]
             embeddings_not_annotated: List[np.ndarray] = npm_tfidf[unlabeled_indices]
-            representative_scores: np.ndarray = [np.dot(not_annotated_vector.reshape((not_annotated_vector.size,)),doc_vector.reshape((doc_vector.size,)))/(norm(
-                doc_vector)*norm(not_annotated_vector)) for not_annotated_vector in embeddings_not_annotated
-            ]
+            representative_scores: np.ndarray = [get_cosine_similarity(not_annotated_vector[0], doc_vector[0]) for not_annotated_vector in embeddings_not_annotated
+                                                 ]
 
             # use max_sim as overall similarity score of the current doc to labeled dataset
             scores[doc_id] = (1-np.mean(diversity_scores)) * \

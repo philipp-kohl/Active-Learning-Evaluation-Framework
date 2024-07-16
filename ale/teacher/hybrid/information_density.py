@@ -6,7 +6,7 @@ from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.trainer.predictor import Predictor
-from ale.teacher.teacher_utils import ClusteredDocuments, ClusterDocument, bert_vectorize
+from ale.teacher.teacher_utils import bert_vectorize, get_cosine_similarity
 from ale.trainer.prediction_result import TokenConfidence, PredictionResult
 
 
@@ -104,8 +104,7 @@ class InformationDensityTeacher(BaseTeacher):
             idx: int = self.get_index_for_embeddings(id)
             embedding: np.ndarray = self.embeddings[idx]
             # get cosine similarity to all unannotated data points
-            similarity_scores: np.ndarray = [np.dot(unannotated_embedding.reshape((unannotated_embedding.size,)),embedding.reshape((embedding.size,)))/(np.linalg.norm(
-                embedding)*np.linalg.norm(unannotated_embedding)) for unannotated_embedding in self.embeddings[unannotated_indices]]
+            similarity_scores: np.ndarray = [get_cosine_similarity(unannotated_embedding[0],embedding[0]) for unannotated_embedding in self.embeddings[unannotated_indices]]
             # use average similarity score
             scores[id] = np.mean(similarity_scores)
         return scores

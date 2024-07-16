@@ -4,7 +4,7 @@ from typing import Dict,List
 from scipy.sparse import spmatrix
 from sentence_transformers import SentenceTransformer
 import numpy as np
-
+from numpy.linalg import norm
 
 def is_named_entity(label: str) -> bool:
     """ Checks whether the given label is a named entity (not '0').
@@ -42,6 +42,8 @@ def bert_vectorize(corpus: Corpus):
     sentence_embeddings = model.encode(data.values())
     return sentence_embeddings
 
+def get_cosine_similarity(vec_1: np.ndarray, vec_2: np.ndarray) -> float:
+    return (np.dot(vec_1,vec_2))/(norm(vec_1)*norm(vec_2))
 
 def embed_documents_with_tfidf(corpus: Corpus) -> spmatrix:
     """ Calculates embeddings for the given corpus data.
@@ -72,3 +74,4 @@ class ClusteredDocuments:
     def get_clustered_docs_by_idx(self, indices: List[int]) -> List[ClusterDocument]:
         output = [doc for doc in self.documents if doc.idx in indices]
         return output
+

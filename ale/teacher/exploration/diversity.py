@@ -2,7 +2,7 @@ from typing import List, Any
 import random
 from numpy.linalg import norm
 import numpy as np
-from ale.teacher.teacher_utils import embed_documents_with_tfidf
+from ale.teacher.teacher_utils import embed_documents_with_tfidf,get_cosine_similarity
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
@@ -60,8 +60,7 @@ class DiversityTeacher(BaseTeacher):
             labeled_indices: List[int] = [
                 self.get_index_for_embeddings(id) for id in annotated_ids]
             embeddings_annotated: List[np.ndarray] = npm_tfidf[labeled_indices]
-            similarity_scores: np.ndarray = [np.dot(annotated_vector.reshape((annotated_vector.size,)),doc_vector.reshape((doc_vector.size,)))/(norm(
-                doc_vector)*norm(annotated_vector)) for annotated_vector in embeddings_annotated]
+            similarity_scores: np.ndarray = [get_cosine_similarity(annotated_vector[0],doc_vector[0]) for annotated_vector in embeddings_annotated]
 
             # use max_sim as overall similarity score of the current doc to labeled dataset
             scores[doc_id] = max(similarity_scores)
