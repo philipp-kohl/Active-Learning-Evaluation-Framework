@@ -99,9 +99,9 @@ class InformationDensityTeacher(BaseTeacher):
             potential_ids)
         for id in batch:  # get score for all docs of the batch
             idx: int = self.get_index_for_embeddings(id)
-            embedding = self.embeddings[idx]
+            embedding: np.ndarray = self.embeddings[idx]
             # get cosine similarity to all unannotated data points
-            similarity_scores: np.ndarray = [np.dot(embedding, unannotated_embedding)/(np.linalg.norm(
+            similarity_scores: np.ndarray = [np.dot(unannotated_embedding,embedding.T)/(np.linalg.norm(
                 embedding)*np.linalg.norm(unannotated_embedding)) for unannotated_embedding in self.embeddings[unannotated_indices]]
             # use average similarity score
             scores[id] = np.mean(similarity_scores)

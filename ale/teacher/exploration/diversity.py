@@ -48,16 +48,16 @@ class DiversityTeacher(BaseTeacher):
         scores = dict()
 
         # get the distance for each doc of the batch to all already labeled documents
-        npm_tfidf = self.embeddings.todense()
+        npm_tfidf: np.ndarray = self.embeddings.todense()
         for i in range(len(batch)):
             doc_id = batch[i]
-            doc_vector = npm_tfidf[self.get_index_for_embeddings(doc_id)]
+            doc_vector: np.ndarray = npm_tfidf[self.get_index_for_embeddings(doc_id)]
 
             # calculate similarity score for doc with labeled corpus, use complete linkage: max cosine-similarity
             labeled_indices: List[int] = [
                 self.get_index_for_embeddings(id) for id in annotated_ids]
             embeddings_annotated = npm_tfidf[labeled_indices]
-            similarity_scores: np.ndarray = [np.dot(doc_vector, annotated_vector)/(norm(
+            similarity_scores: np.ndarray = [np.dot(annotated_vector,doc_vector.T)/(norm(
                 doc_vector)*norm(annotated_vector)) for annotated_vector in embeddings_annotated]
 
             # use max_sim as overall similarity score of the current doc to labeled dataset
