@@ -41,22 +41,18 @@ class DiversityTeacher(BaseTeacher):
             if self.corpus_idx_list[i] == id:
                 return i
         raise ValueError("Given id not in corpus.")
-    
+
     def get_indices_for_embeddings(self, ids: List[int]) -> List[int]:
         indices: List[int] = []
         for id in ids:
-            for i in range(len(self.corpus_idx_list)):
-                if self.corpus_idx_list[i] == id:
-                    indices.append(i)
-            print(indices)
-            raise ValueError("Given id "+str(id) + " not in corpus.")
+            indices.append(self.get_index_for_embeddings(id))
         return indices
 
     def calculate_cosine_similarities(self) -> None:
         """ Calculates pairwise cosine similarity between all docs
         """
-        self.cosine_similarities: np.ndarray = cosine_similarity(self.embeddings)
-
+        self.cosine_similarities: np.ndarray = cosine_similarity(
+            self.embeddings)
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
         # only documents of the batch will be evaluated and sought for proposal
@@ -66,9 +62,9 @@ class DiversityTeacher(BaseTeacher):
             batch: List[int] = potential_ids
         annotated_ids: List[int] = self.corpus.get_annotated_data_points_ids()
 
-        if len(annotated_ids)>0: # labeled docs exist
-            print(labeled_indices[0])
-            labeled_indices: List[int] = self.get_indices_for_embeddings(annotated_ids)
+        if len(annotated_ids) > 0:  # labeled docs exist
+            labeled_indices: List[int] = self.get_indices_for_embeddings(
+                annotated_ids)
             scores = dict()
 
             # get the similarity for each doc of the batch to all already labeled documents
@@ -85,6 +81,7 @@ class DiversityTeacher(BaseTeacher):
 
             out_ids = [item[0] for item in sorted_dict_by_score[:step_size]]
             return out_ids
-    
+
         else:
-            raise NotImplementedError("This active learning strategy can not be used for initial data proposal at the moment.")
+            raise NotImplementedError(
+                "This active learning strategy can not be used for initial data proposal at the moment.")

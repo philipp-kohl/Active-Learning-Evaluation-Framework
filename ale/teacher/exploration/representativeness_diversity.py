@@ -47,10 +47,7 @@ class RepresentativeDiversityTeacher(BaseTeacher):
     def get_indices_for_embeddings(self, ids: List[int]) -> List[int]:
         indices: List[int] = []
         for id in ids:
-            for i in range(len(self.corpus_idx_list)):
-                if self.corpus_idx_list[i] == id:
-                    indices.append(i)
-            raise ValueError("Given id"+str(id) + "not in corpus.")
+            indices.append(self.get_index_for_embeddings(id))
         return indices
 
     def calculate_cosine_similarities(self) -> None:
