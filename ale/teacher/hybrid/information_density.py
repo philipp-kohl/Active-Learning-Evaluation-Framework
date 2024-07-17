@@ -1,6 +1,7 @@
 from typing import List, Any, Dict
 import random
 import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
@@ -42,6 +43,8 @@ class InformationDensityTeacher(BaseTeacher):
         self.corpus = corpus
         self.corpus_idx_list: List[int] = list(
             corpus.get_all_texts_with_ids().keys())
+        self.calculate_cosine_similarities()
+    
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
         if budget < len(potential_ids):
@@ -93,6 +96,12 @@ class InformationDensityTeacher(BaseTeacher):
         raise NotImplementedError(
             "Hybrid teacher is not implemented for text classification task.")
 
+    def calculate_cosine_similarities(self) -> None:
+        """ Calculates pairwise cosine similarity between all docs
+        """
+        self.cosine_similarities: np.ndarray = cosine_similarity(
+            self.embeddings)
+
     def get_similarity_scores(self, batch: List[int], potential_ids: List[int]) -> Dict[int, float]:
         """ Compares bert embeddings of documents in batch with embeddings of all unannotated data points 
         by cosine similarity
@@ -102,11 +111,9 @@ class InformationDensityTeacher(BaseTeacher):
             potential_ids)
         for id in batch:  # get score for all docs of the batch
             idx: int = self.get_index_for_embeddings(id)
-            embedding: np.ndarray = self.embeddings[idx]
             # get cosine similarity to all unannotated data points
-            similarity_scores: np.ndarray = [get_cosine_similarity(unannotated_embedding,embedding) for unannotated_embedding in self.embeddings[unannotated_indices]]
-            # use average similarity score
-            scores[id] = np.mean(similarity_scores)
+            similarity_scores: np.ndarray = self.cosine_similarities[idx][unannotated_indices]
+            scores[id] = np.mean(similarity_scores) # use average similarity score
         return scores
 
     def get_index_for_embeddings(self, id: int) -> int:

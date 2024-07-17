@@ -1,13 +1,13 @@
-from typing import List, Any
+from typing import List, Any, Dict
 import random
-from numpy.linalg import norm
 import numpy as np
-from ale.teacher.teacher_utils import embed_documents_with_tfidf,get_cosine_similarity
+from ale.teacher.teacher_utils import embed_documents_with_tfidf, get_cosine_similarity
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.trainer.predictor import Predictor
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 @TeacherRegistry.register("diversity")
@@ -33,6 +33,7 @@ class DiversityTeacher(BaseTeacher):
         self.embeddings = embed_documents_with_tfidf(corpus=corpus)
         self.corpus_idx_list: List[int] = list(
             corpus.get_all_texts_with_ids().keys())
+        self.calculate_cosine_similarities()
         self.corpus = corpus
 
     def get_index_for_embeddings(self, id: int) -> int:
@@ -40,6 +41,21 @@ class DiversityTeacher(BaseTeacher):
             if self.corpus_idx_list[i] == id:
                 return i
         raise ValueError("Given id not in corpus.")
+    
+    def get_indices_for_embeddings(self, ids: List[int]) -> List[int]:
+        indices: List[int] = []
+        for id in ids:
+            for i in range(len(self.corpus_idx_list)):
+                if self.corpus_idx_list[i] == id:
+                    indices.append(i)
+            raise ValueError("Given id"+str(id) + "not in corpus.")
+        return indices
+
+    def calculate_cosine_similarities(self) -> None:
+        """ Calculates pairwise cosine similarity between all docs
+        """
+        self.cosine_similarities: np.ndarray = cosine_similarity(self.embeddings)
+
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
         # only documents of the batch will be evaluated and sought for proposal
@@ -47,22 +63,17 @@ class DiversityTeacher(BaseTeacher):
             batch: List[int] = random.sample(potential_ids, budget)
         else:
             batch: List[int] = potential_ids
-        annotated_ids: List[int] = self.corpus.get_not_annotated_data_points_ids()
+        annotated_ids: List[int] = self.corpus.get_annotated_data_points_ids()
         scores = dict()
 
-        # get the distance for each doc of the batch to all already labeled documents
-        npm_tfidf: np.ndarray = self.embeddings.todense()
+        # get the similarity for each doc of the batch to all already labeled documents
         for i in range(len(batch)):
             doc_id = batch[i]
-            doc_vector: np.ndarray = npm_tfidf[self.get_index_for_embeddings(doc_id)]
+            doc_idx = self.get_index_for_embeddings(doc_id)
 
-            # calculate similarity score for doc with labeled corpus, use complete linkage: max cosine-similarity
-            labeled_indices: List[int] = [
-                self.get_index_for_embeddings(id) for id in annotated_ids]
-            embeddings_annotated: List[np.ndarray] = npm_tfidf[labeled_indices]
-            similarity_scores: np.ndarray = [get_cosine_similarity(annotated_vector,doc_vector) for annotated_vector in embeddings_annotated]
-
-            # use max_sim as overall similarity score of the current doc to labeled dataset
+            # get similarity score for doc with labeled corpus, use complete linkage: max cosine-similarity
+            labeled_indices: List[int] = self.get_indices_for_embeddings(annotated_ids)
+            similarity_scores: np.ndarray = self.cosine_similarities[doc_idx][labeled_indices]
             scores[doc_id] = max(similarity_scores)
 
         sorted_dict_by_score = sorted(
