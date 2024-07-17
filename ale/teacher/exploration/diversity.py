@@ -48,7 +48,8 @@ class DiversityTeacher(BaseTeacher):
             for i in range(len(self.corpus_idx_list)):
                 if self.corpus_idx_list[i] == id:
                     indices.append(i)
-            raise ValueError("Given id"+str(id) + "not in corpus.")
+            print(indices)
+            raise ValueError("Given id "+str(id) + " not in corpus.")
         return indices
 
     def calculate_cosine_similarities(self) -> None:
@@ -66,6 +67,7 @@ class DiversityTeacher(BaseTeacher):
         annotated_ids: List[int] = self.corpus.get_annotated_data_points_ids()
 
         if len(annotated_ids)>0: # labeled docs exist
+            print(labeled_indices[0])
             labeled_indices: List[int] = self.get_indices_for_embeddings(annotated_ids)
             scores = dict()
 
