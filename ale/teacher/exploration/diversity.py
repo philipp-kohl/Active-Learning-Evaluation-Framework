@@ -54,7 +54,7 @@ class DiversityTeacher(BaseTeacher):
     def calculate_cosine_similarities(self) -> None:
         """ Calculates pairwise cosine similarity between all docs
         """
-        self.cosine_similarities: np.ndarray = cosine_similarity(self.embeddings)
+        self.cosine_similarities: np.ndarray = cosine_similarity(self.embeddings,self.embeddings)
 
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
@@ -74,7 +74,7 @@ class DiversityTeacher(BaseTeacher):
             # get similarity score for doc with labeled corpus, use complete linkage: max cosine-similarity
             labeled_indices: List[int] = self.get_indices_for_embeddings(annotated_ids)
             similarity_scores: np.ndarray = self.cosine_similarities[doc_idx][labeled_indices]
-            scores[doc_id] = max(similarity_scores)
+            scores[doc_id] = similarity_scores.max()
 
         sorted_dict_by_score = sorted(
             scores.items(), key=lambda x: x[1])  # select items with minimal similarity to labeled docs

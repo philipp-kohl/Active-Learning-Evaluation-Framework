@@ -1,6 +1,5 @@
 from enum import Enum
 from typing import Optional, List
-
 from pydantic import BaseModel, model_validator
 
 
@@ -115,6 +114,7 @@ class AppConfig(BaseModel):
         experiment: Experiment = values.get("experiment")
 
         if teacher.sampling_budget < experiment.step_size and teacher.sampling_budget != -1:
-            raise ValueError(f"Teacher.budget ({teacher.sampling_budget}) must be >= experiment.step_size ({experiment.step_size})")
+            raise ValueError(
+                f"Teacher.budget ({teacher.sampling_budget}) must be >= experiment.step_size ({experiment.step_size})")
 
         return values
