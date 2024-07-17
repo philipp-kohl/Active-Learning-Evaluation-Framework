@@ -33,10 +33,10 @@ class RepresentativeDiversityTeacher(BaseTeacher):
         )
         self.k = len(self.labels)
         self.embeddings = embed_documents_with_tfidf(corpus=corpus)
+        self.corpus = corpus
         self.corpus_idx_list: List[int] = list(
             corpus.get_all_texts_with_ids().keys())
         self.calculate_cosine_similarities()
-        self.corpus = corpus
 
     def get_index_for_embeddings(self, id: int) -> int:
         for i in range(len(self.corpus_idx_list)):
