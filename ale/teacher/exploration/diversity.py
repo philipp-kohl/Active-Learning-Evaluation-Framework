@@ -54,7 +54,7 @@ class DiversityTeacher(BaseTeacher):
     def calculate_cosine_similarities(self) -> None:
         """ Calculates pairwise cosine similarity between all docs
         """
-        self.cosine_similarities: np.ndarray = cosine_similarity(self.embeddings,self.embeddings)
+        self.cosine_similarities: np.ndarray = cosine_similarity(self.embeddings)
 
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
@@ -64,20 +64,24 @@ class DiversityTeacher(BaseTeacher):
         else:
             batch: List[int] = potential_ids
         annotated_ids: List[int] = self.corpus.get_annotated_data_points_ids()
-        scores = dict()
 
-        # get the similarity for each doc of the batch to all already labeled documents
-        for i in range(len(batch)):
-            doc_id = batch[i]
-            doc_idx = self.get_index_for_embeddings(doc_id)
-
-            # get similarity score for doc with labeled corpus, use complete linkage: max cosine-similarity
+        if len(annotated_ids)>0: # labeled docs exist
             labeled_indices: List[int] = self.get_indices_for_embeddings(annotated_ids)
-            similarity_scores: np.ndarray = self.cosine_similarities[doc_idx][labeled_indices]
-            scores[doc_id] = similarity_scores.max()
+            scores = dict()
 
-        sorted_dict_by_score = sorted(
-            scores.items(), key=lambda x: x[1])  # select items with minimal similarity to labeled docs
+            # get the similarity for each doc of the batch to all already labeled documents
+            for i in range(len(batch)):
+                doc_id = batch[i]
+                doc_idx = self.get_index_for_embeddings(doc_id)
 
-        out_ids = [item[0] for item in sorted_dict_by_score[:step_size]]
-        return out_ids
+                # get similarity score for doc with labeled corpus, use complete linkage: max cosine-similarity
+                similarity_scores: np.ndarray = self.cosine_similarities[doc_idx][labeled_indices]
+                scores[doc_id] = similarity_scores.max()
+
+            sorted_dict_by_score = sorted(
+                scores.items(), key=lambda x: x[1])  # select items with minimal similarity to labeled docs
+
+            out_ids = [item[0] for item in sorted_dict_by_score[:step_size]]
+            return out_ids
+    
+        return random.sample(potential_ids,step_size) # if no labeled corpus exists, use randomizer
