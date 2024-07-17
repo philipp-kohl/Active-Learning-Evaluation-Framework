@@ -65,31 +65,34 @@ class RepresentativeDiversityTeacher(BaseTeacher):
         else:
             batch: List[int] = potential_ids
         annotated_ids: List[int] = self.corpus.get_annotated_data_points_ids()
-        not_annotated_ids: List[int] = self.corpus.get_not_annotated_data_points_ids(
-        )
-        scores = dict()
+        if len(annotated_ids)>0: # labeled documents exist
+            not_annotated_ids: List[int] = self.corpus.get_not_annotated_data_points_ids(
+            )
+            scores = dict()
 
-        # get the similarity for each doc of the batch to all already labeled documents
-        for i in range(len(batch)):
-            doc_id = batch[i]
-            doc_idx = self.get_index_for_embeddings(doc_id)
+            # get the similarity for each doc of the batch to all already labeled documents
+            for i in range(len(batch)):
+                doc_id = batch[i]
+                doc_idx = self.get_index_for_embeddings(doc_id)
 
-            # get similarity score for doc with labeled corpus, use average of all labeled docs: avg cosine-similarity
-            labeled_indices: List[int] = self.get_indices_for_embeddings(
-                annotated_ids)
-            diversity_scores: np.ndarray = self.cosine_similarities[doc_idx][labeled_indices]
+                # get similarity score for doc with labeled corpus, use average of all labeled docs: avg cosine-similarity
+                labeled_indices: List[int] = self.get_indices_for_embeddings(
+                    annotated_ids)
+                diversity_scores: np.ndarray = self.cosine_similarities[doc_idx][labeled_indices]
 
-            # calculate representativeness score for doc with unlabeled docs, use average of all unlabeled docs: avg cosine-similarity
-            unlabeled_indices: List[int] = self.get_indices_for_embeddings(
-                not_annotated_ids)
-            representative_scores: np.ndarray = self.cosine_similarities[doc_idx][unlabeled_indices]
+                # calculate representativeness score for doc with unlabeled docs, use average of all unlabeled docs: avg cosine-similarity
+                unlabeled_indices: List[int] = self.get_indices_for_embeddings(
+                    not_annotated_ids)
+                representative_scores: np.ndarray = self.cosine_similarities[doc_idx][unlabeled_indices]
 
-            # use max_sim as overall similarity score of the current doc to labeled dataset
-            scores[doc_id] = (1-np.mean(diversity_scores)) * \
-                np.mean(representative_scores)
+                # use max_sim as overall similarity score of the current doc to labeled dataset
+                scores[doc_id] = (1-np.mean(diversity_scores)) * \
+                    np.mean(representative_scores)
 
-        sorted_dict_by_score = sorted(
-            scores.items(), key=lambda x: x[1], reverse=True)  # select items with minimal similarity to labeled docs (1-avg(diversity_scores)) and maximal similarity to unlabeled docs (avg(representative_scores))
+            sorted_dict_by_score = sorted(
+                scores.items(), key=lambda x: x[1], reverse=True)  # select items with minimal similarity to labeled docs (1-avg(diversity_scores)) and maximal similarity to unlabeled docs (avg(representative_scores))
 
-        out_ids = [item[0] for item in sorted_dict_by_score[:step_size]]
-        return out_ids
+            out_ids = [item[0] for item in sorted_dict_by_score[:step_size]]
+            return out_ids
+        else:
+            raise NotImplementedError("This active learning strategy can not be used for initial data proposal at the moment.")

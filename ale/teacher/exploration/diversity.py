@@ -84,4 +84,5 @@ class DiversityTeacher(BaseTeacher):
             out_ids = [item[0] for item in sorted_dict_by_score[:step_size]]
             return out_ids
     
-        return random.sample(potential_ids,step_size) # if no labeled corpus exists, use randomizer
+        else:
+            raise NotImplementedError("This active learning strategy can not be used for initial data proposal at the moment.")
