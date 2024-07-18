@@ -5,6 +5,8 @@ import logging
 
 from numpy.linalg import norm
 import numpy as np
+from sklearn.preprocessing import normalize
+
 from ale.teacher.teacher_utils import tfidf_vectorize, bert_vectorize, ClusterDocument, ClusteredDocuments, silhouette_analysis
 from sklearn.cluster import KMeans
 from ale.config import NLPTask
@@ -54,6 +56,7 @@ def cluster_documents_with_bert_km(corpus: Corpus, nr_labels: int, seed: int) ->
     lock.acquire()
     try:
         X = bert_vectorize(corpus)
+        X = normalize(X, norm="l2")
         best_k: int = silhouette_analysis(nr_labels, seed, "cosine", X)
 
         logger.info(f"Initial k-means clustering with k={best_k} started.")

@@ -1,18 +1,21 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
-from ale.corpus.corpus import Corpus
+import logging
 from typing import Dict, List, Tuple
+
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+import numpy as np
+import umap
+from numpy.linalg import norm
 from scipy.sparse import spmatrix
 from sentence_transformers import SentenceTransformer
-import numpy as np
-from numpy.linalg import norm
-import tempfile
-
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score, silhouette_samples
-import ale.mlflowutils.mlflow_utils as utils
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.manifold import TSNE
+from sklearn.metrics import silhouette_score, silhouette_samples
+
+from ale.corpus.corpus import Corpus
+
+logger = logging.getLogger(__name__)
 
 
 def is_named_entity(label: str) -> bool:
@@ -58,7 +61,7 @@ def get_cosine_similarity(vec_1: np.matrix, vec_2: np.matrix) -> float:
     norm_a: float = norm(a)
     norm_b: float = norm(b)
     if norm_a != 0 and norm_b != 0:
-        return np.dot(a, b)/(norm(a)*norm(b))
+        return np.dot(a, b) / (norm(a) * norm(b))
     return np.dot(a, b)
 
 
@@ -88,13 +91,15 @@ def silhouette_analysis(nr_labels: int, seed: int, metric: str, embeddings) -> i
     Returns:
         - k_best (int): K with highest silhouette score
     """
-    ks: List[int] = np.arange(2, max(
-        10, 2*nr_labels))  # range from 2 to maximum of double the size of labels and 10
+    ks: List[int] = np.arange(2, max(10, 2 * nr_labels))  # range from 2 to maximum of double the size of labels and 10
     best_k_with_score: Tuple[int, float] = [-1, -1]
     for k in ks:
+        logger.info(f"Test KMeans for {k} clusters")
         model_test = KMeans(n_clusters=k, init='k-means++',
                             max_iter=300, n_init='auto', random_state=seed)
         model_prediction = model_test.fit_predict(embeddings)
+
+        logger.info(f"Define silhouette score for {k} clusters")
         score = silhouette_score(embeddings, model_prediction)
         plot_silhouette(k, seed, metric, model_prediction, score, model_test, embeddings)
         if score > best_k_with_score[1]:
@@ -102,7 +107,8 @@ def silhouette_analysis(nr_labels: int, seed: int, metric: str, embeddings) -> i
     return best_k_with_score[0]
 
 
-def plot_silhouette(k: int, seed: int, metric: str, model_prediction: np.ndarray, score: float, model: KMeans, embeddings) -> None:
+def plot_silhouette(k: int, seed: int, metric: str, model_prediction: np.ndarray, score: float, model: KMeans,
+                    embeddings) -> None:
     """ Plots silhouette graph.
 
     Args:
@@ -141,7 +147,7 @@ def plot_silhouette(k: int, seed: int, metric: str, model_prediction: np.ndarray
         # Compute the new y_lower for next plot
         y_lower = y_upper + 10  # 10 for the 0 samples
 
-    ax1.set_title("Silhouette plot for "+str(k)+" clusters")
+    ax1.set_title("Silhouette plot for " + str(k) + " clusters")
     ax1.set_xlabel("Coefficient values")
     ax1.set_ylabel("Cluster label")
 
@@ -151,10 +157,8 @@ def plot_silhouette(k: int, seed: int, metric: str, model_prediction: np.ndarray
     ax1.set_yticks([])  # Clear the yaxis labels / ticks
     ax1.set_xticks([-0.1, 0, 0.2, 0.4, 0.6, 0.8, 1])
 
-    # 2nd Plot shows the actual clusters formed, do a TSNE to get 2-dimensional spac
-
-    X_embedded = TSNE(n_components=2, learning_rate='auto',
-                    init='random', perplexity=3, random_state=seed, metric=metric).fit_transform(embeddings)
+    logger.info(f"Compute UMAP for embeddings")
+    X_embedded = umap.UMAP(n_components=2, n_neighbors=10, metric="cosine", densmap=True).fit_transform(embeddings)
 
     colors = cm.nipy_spectral(model_prediction.astype(float) / k)
     ax2.scatter(
@@ -176,9 +180,9 @@ def plot_silhouette(k: int, seed: int, metric: str, model_prediction: np.ndarray
 
     for i, c in enumerate(centers):
         ax2.scatter(c[0], c[1], marker="$%d$" %
-                    i, alpha=1, s=50, edgecolor="k")
+                                       i, alpha=1, s=50, edgecolor="k")
 
-    ax2.set_title("Clustered data with "+str(k)+" clusters")
+    ax2.set_title("Clustered data with " + str(k) + " clusters")
     ax2.set_xlabel("Feature space of 1st feature")
     ax2.set_ylabel("Feature space of 2nd feature")
 
@@ -189,7 +193,7 @@ def plot_silhouette(k: int, seed: int, metric: str, model_prediction: np.ndarray
         fontweight="bold",
     )
 
-    fig.write_html("./silhouette_plots_debug.html")
+    plt.savefig(f"./silhouette_plots_debug_{k}.png")
 
 
 class ClusterDocument:
