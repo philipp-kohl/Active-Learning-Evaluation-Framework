@@ -1,7 +1,7 @@
 from typing import List, Any, Dict
 import random
-import numpy as np
 from gensim.models import Word2Vec
+import numpy as np
 from sklearn.cluster import KMeans
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
