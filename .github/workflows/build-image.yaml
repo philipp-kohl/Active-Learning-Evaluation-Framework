@@ -1,4 +1,4 @@
-name: Create New Lambda Layer
+name: Create New Docker Image
 
 on:
   workflow_dispatch:
