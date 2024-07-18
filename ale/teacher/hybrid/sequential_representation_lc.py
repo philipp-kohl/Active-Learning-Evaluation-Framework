@@ -20,6 +20,15 @@ class NGramVectors:
         self.lexical_dimension: int = lexical_dimension
         self.vector_dict: Dict[str, np.ndarray] = dict()
 
+    def get_lexical_subsequence_vector(self, seq: str) -> np.ndarray:
+        seq_vector = self.vector_dict.get(seq)
+        if seq_vector is None:  # vector n gram does not exist yet
+            np.random.seed(self.seed)  # use ALE seed
+            # lexical vector of dimension given, per default 50
+            self.vector_dict[seq] = np.random.random(
+                size=(self.lexical_dimension))
+        return self.vector_dict[seq]
+
     def generate_lexical_token_vector(self, token: str) -> List[np.ndarray]:
         """ Generates n grams of the given sizes
         """
@@ -29,21 +38,23 @@ class NGramVectors:
             subsequences_of_size: List[str] = [
                 token[i:i+size] for i in range(len(token)-size)]
             subsequences.extend(subsequences_of_size)
-        for seq in subsequences:
-            seq_vector = self.vector_dict.get(seq)
-            if not seq_vector:  # vector n gram does not exist yet
-                np.random.seed(self.seed)  # use ALE seed
-                # lexical vector of dimension given, per default 50
-                self.vector_dict[seq] = np.random.random(
-                    size=(self.lexical_dimension))
-            vectors.append(self.vector_dict[seq])
+
+        if len(subsequences) > 0:  # given token is longer than sizes for subsequences
+            for seq in subsequences:
+                subsequence_vector: np.ndarray = self.get_lexical_subsequence_vector(
+                    seq)
+                vectors.append(subsequence_vector)
+        else:
+            subsequence_vector: np.ndarray = self.get_lexical_subsequence_vector(
+                token)
+            vectors.append(subsequence_vector)
         return vectors
 
     def get_lexical_token_vector(self, token: str) -> np.ndarray:
         """ Get the normalized sum of the token n-grams
         """
         vectors: List[np.ndarray] = self.generate_lexical_token_vector(token)
-        vector_sum: np.ndarray = np.sum(vectors,axis=0)
+        vector_sum: np.ndarray = np.sum(vectors, axis=0)
         norm = np.linalg.norm(vector_sum)
         if norm == 0:
             return vector_sum
