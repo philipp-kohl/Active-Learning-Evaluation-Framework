@@ -1,2 +1,2 @@
-strategy: k-means-cluster-based
+strategy: k-means-cluster-based-bert-km
 sampling_budget: 13200
