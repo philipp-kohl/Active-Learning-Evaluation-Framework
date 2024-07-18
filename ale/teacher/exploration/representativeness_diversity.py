@@ -62,9 +62,14 @@ class RepresentativeDiversityTeacher(BaseTeacher):
         else:
             batch: List[int] = potential_ids
         annotated_ids: List[int] = self.corpus.get_annotated_data_points_ids()
+
         if len(annotated_ids)>0: # labeled documents exist
+            labeled_indices: List[int] = self.get_indices_for_embeddings(
+                annotated_ids)
             not_annotated_ids: List[int] = self.corpus.get_not_annotated_data_points_ids(
             )
+            unlabeled_indices: List[int] = self.get_indices_for_embeddings(
+                not_annotated_ids)
             scores = dict()
 
             # get the similarity for each doc of the batch to all already labeled documents
@@ -73,13 +78,9 @@ class RepresentativeDiversityTeacher(BaseTeacher):
                 doc_idx = self.get_index_for_embeddings(doc_id)
 
                 # get similarity score for doc with labeled corpus, use average of all labeled docs: avg cosine-similarity
-                labeled_indices: List[int] = self.get_indices_for_embeddings(
-                    annotated_ids)
                 diversity_scores: np.ndarray = self.cosine_similarities[doc_idx][labeled_indices]
 
                 # calculate representativeness score for doc with unlabeled docs, use average of all unlabeled docs: avg cosine-similarity
-                unlabeled_indices: List[int] = self.get_indices_for_embeddings(
-                    not_annotated_ids)
                 representative_scores: np.ndarray = self.cosine_similarities[doc_idx][unlabeled_indices]
 
                 # use max_sim as overall similarity score of the current doc to labeled dataset
