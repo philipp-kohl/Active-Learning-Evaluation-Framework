@@ -11,3 +11,4 @@ from ale.teacher.exploitation.fluctuation_historical_sequence import Fluctuation
 from ale.teacher.exploration.diversity import DiversityTeacher
 from ale.teacher.exploration.representativeness_diversity import RepresentativeDiversityTeacher
 from ale.teacher.hybrid.information_density import InformationDensityTeacher
+from ale.teacher.hybrid.sequential_representation_lc import SequentialRepresentationLCTeacher
