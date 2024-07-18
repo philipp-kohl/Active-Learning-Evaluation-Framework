@@ -29,15 +29,12 @@ ENV PATH=/opt/conda/bin:${PATH}
 FROM base AS runtime
 
 COPY ale/ ${SOURCE_DIR}/ale
-COPY pyproject.toml README.md poetry.toml poetry.lock dev-setup.sh ale-cuda.yaml ${SOURCE_DIR}/
+COPY pyproject.toml README.md poetry.toml poetry.lock ale-cuda.yaml ${SOURCE_DIR}/
 COPY .git/ ${SOURCE_DIR}/.git/
-
-RUN /bin/bash -c "source ${SOURCE_DIR}/dev-setup.sh ${SOURCE_DIR}/ale-cuda.yaml"
-
-#RUN conda run --no-capture-output -n ale-cuda pip install --no-build-isolation --no-deps -e ${SOURCE_DIR}
 
 WORKDIR ${SOURCE_DIR}
 
+RUN conda env create -f ale-cuda.yaml
 RUN conda run --no-capture-output -n ale-cuda poetry install
 
 CMD ["conda", "run", "--no-capture-output", "-n", "ale-cuda", "python", "ale/main.py"]

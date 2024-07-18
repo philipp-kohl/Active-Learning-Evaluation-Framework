@@ -7,10 +7,14 @@ jobs:
   build-docker-image:
     runs-on: ubuntu-latest
     steps:
+      - name: Check disk space
+        run: df . -h
       - name: Remove unnecessary files
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+      - name: Check disk space
+        run: df . -h
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up QEMU
@@ -29,3 +33,5 @@ jobs:
           file: DockerfileCUDA
           context: .
           tags: philippkohl/active-learning-evaluation-framework:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
