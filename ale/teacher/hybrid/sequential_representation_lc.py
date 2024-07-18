@@ -141,12 +141,12 @@ class SequentialRepresentationLCTeacher(BaseTeacher):
             nlp_task=nlp_task,
             aggregation_method=aggregation_method
         )
-        self.k = len(self.labels)
+        self.nr_labels = len(self.labels)
         self.ngrams = NGramVectors([2, 3], seed)  # bi- and tri-ngrams
         self.embeddings: Dict[int, np.ndarray] = embed_documents_with_lexical_and_semantical_vectors(
             corpus=corpus, ngrams=self.ngrams)
         self.clustered_documents: ClusteredDocuments = cluster_documents(
-            self.k, self.embeddings, seed)
+            self.nr_labels, self.embeddings, seed)
         self.corpus = corpus
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:

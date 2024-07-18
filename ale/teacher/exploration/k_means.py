@@ -178,8 +178,8 @@ class KMeansClusterBasedTeacher(BaseTeacher):
             labels=labels,
             nlp_task=nlp_task
         )
-        self.k = len(self.labels)
-        self.clustered_documents = cluster_documents(corpus=corpus, k=self.k, seed=seed)
+        self.nr_labels = len(self.labels)
+        self.clustered_documents = cluster_documents(corpus=corpus, nr_labels=self.nr_labels, seed=seed)
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
         return propose_nearest_neighbors_to_centroids(self.clustered_documents, potential_ids, step_size, budget)
@@ -195,9 +195,9 @@ class KMeansClusterBasedBERTTeacher(BaseTeacher):
             labels=labels,
             nlp_task=nlp_task
         )
-        self.k = len(self.labels)
+        self.nr_labels = len(self.labels)
         self.clustered_documents = cluster_documents_with_bert_km(
-            corpus=corpus, k=self.k, seed=seed)
+            corpus=corpus, nr_labels=self.nr_labels, seed=seed)
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
         return propose_nearest_neighbors_to_centroids(self.clustered_documents, potential_ids, step_size, budget)
