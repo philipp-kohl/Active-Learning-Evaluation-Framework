@@ -9,9 +9,8 @@ from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod
 from ale.trainer.predictor import Predictor
-from ale.teacher.teacher_utils import ClusteredDocuments, ClusterDocument
+from ale.teacher.teacher_utils import ClusteredDocuments, ClusterDocument, silhouette_analysis
 from ale.trainer.prediction_result import TokenConfidence, PredictionResult
-from ale.teacher.exploration.k_means import silhouette_analysis
 
 
 class NGramVectors:

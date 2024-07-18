@@ -1,12 +1,12 @@
 import logging
 from threading import Lock
-from typing import List, Dict, Any,Tuple
+from typing import List, Any
+import logging
 
 from numpy.linalg import norm
 import numpy as np
-from ale.teacher.teacher_utils import tfidf_vectorize, bert_vectorize, ClusterDocument, ClusteredDocuments
+from ale.teacher.teacher_utils import tfidf_vectorize, bert_vectorize, ClusterDocument, ClusteredDocuments, silhouette_analysis
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
@@ -16,16 +16,6 @@ from ale.trainer.predictor import Predictor
 logger = logging.getLogger(__name__)
 lock = Lock()
 
-def silhouette_analysis(nr_labels: int, seed: int, embeddings) -> int:
-        # use silhouette score to get best k
-        ks: List[int] = np.arange(2,max(10,2*nr_labels)) # range from 2 to maximum of double the size of labels and 10
-        best_k_with_score: Tuple[int,float] = [-1,-1]
-        for k in ks:
-            model_test = KMeans(n_clusters=k,init='k-means++',max_iter=300,n_init='auto', random_state=seed)
-            score = silhouette_score(embeddings,model_test.fit_predict(embeddings))
-            if score > best_k_with_score[1]:
-                best_k_with_score = [k,score]
-        return best_k_with_score[0]
 
 def cluster_documents(corpus: Corpus, nr_labels: int, seed: int) -> ClusteredDocuments:
     lock.acquire()
@@ -34,7 +24,7 @@ def cluster_documents(corpus: Corpus, nr_labels: int, seed: int) -> ClusteredDoc
         ids = list(data.keys())
         X = tfidf_vectorize(id2text=data)
 
-        best_k: int = silhouette_analysis(nr_labels,seed,X)
+        best_k: int = silhouette_analysis(nr_labels, seed, "euclidian", X)
 
         logger.info(f"Initial k-means clustering with k={best_k} started.")
         # tfidf vectorize the dataset and apply k-means++
@@ -64,7 +54,7 @@ def cluster_documents_with_bert_km(corpus: Corpus, nr_labels: int, seed: int) ->
     lock.acquire()
     try:
         X = bert_vectorize(corpus)
-        best_k: int = silhouette_analysis(nr_labels,seed,X)
+        best_k: int = silhouette_analysis(nr_labels, seed, "cosine", X)
 
         logger.info(f"Initial k-means clustering with k={best_k} started.")
         # bert vectorize the dataset and apply k-means++
@@ -179,7 +169,8 @@ class KMeansClusterBasedTeacher(BaseTeacher):
             nlp_task=nlp_task
         )
         self.nr_labels = len(self.labels)
-        self.clustered_documents = cluster_documents(corpus=corpus, nr_labels=self.nr_labels, seed=seed)
+        self.clustered_documents = cluster_documents(
+            corpus=corpus, nr_labels=self.nr_labels, seed=seed)
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
         return propose_nearest_neighbors_to_centroids(self.clustered_documents, potential_ids, step_size, budget)
