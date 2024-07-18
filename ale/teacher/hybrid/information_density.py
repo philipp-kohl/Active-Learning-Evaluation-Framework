@@ -7,8 +7,9 @@ from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.trainer.predictor import Predictor
-from ale.teacher.teacher_utils import bert_vectorize, get_cosine_similarity
+from ale.teacher.teacher_utils import bert_vectorize
 from ale.trainer.prediction_result import TokenConfidence, PredictionResult
+from ale.teacher.exploitation.aggregation_methods import AggregationMethod
 
 
 @TeacherRegistry.register("information-density")
@@ -30,13 +31,14 @@ class InformationDensityTeacher(BaseTeacher):
         (no detailed information on feature vectors/embeddings, used with CRF)
     """
 
-    def __init__(self, corpus: Corpus, predictor: Predictor, seed: int, labels: List[Any], nlp_task: NLPTask):
+    def __init__(self, corpus: Corpus, predictor: Predictor, seed: int, labels: List[Any], nlp_task: NLPTask, aggregation_method: AggregationMethod):
         super().__init__(
             corpus=corpus,
             predictor=predictor,
             seed=seed,
             labels=labels,
-            nlp_task=nlp_task
+            nlp_task=nlp_task,
+            aggregation_method=aggregation_method
         )
         self.k = len(self.labels)
         self.embeddings: List[np.ndarray] = bert_vectorize(corpus)
@@ -44,14 +46,13 @@ class InformationDensityTeacher(BaseTeacher):
         self.corpus_idx_list: List[int] = list(
             corpus.get_all_texts_with_ids().keys())
         self.calculate_cosine_similarities()
-    
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
         if budget < len(potential_ids):
             batch: List[int] = random.sample(potential_ids, budget)
         else:
             batch: List[int] = potential_ids
-        
+
         # get entropy confidence for documents (inside budget)
         idx2text = self.corpus.get_text_by_ids(batch)
         prediction_results: Dict[int, PredictionResult] = self.predictor.predict(
@@ -113,8 +114,10 @@ class InformationDensityTeacher(BaseTeacher):
             idx: int = self.get_index_for_embeddings(id)
             # get cosine similarity to all unannotated data points
             similarity_scores: np.ndarray = self.cosine_similarities[idx][unannotated_indices]
-            scores[id] = np.mean(similarity_scores) # use average similarity score
+            # use average similarity score
+            scores[id] = np.mean(similarity_scores)
         return scores
+
     def get_index_for_embeddings(self, id: int) -> int:
         for i in range(len(self.corpus_idx_list)):
             if self.corpus_idx_list[i] == id:
