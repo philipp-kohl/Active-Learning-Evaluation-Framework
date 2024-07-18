@@ -43,7 +43,7 @@ class NGramVectors:
         """ Get the normalized sum of the token n-grams
         """
         vectors: List[np.ndarray] = self.generate_lexical_token_vector(token)
-        vector_sum: np.ndarray = sum(vectors)
+        vector_sum: np.ndarray = np.sum(vectors,axis=0)
         norm = np.linalg.norm(vector_sum)
         if norm == 0:
             return vector_sum
