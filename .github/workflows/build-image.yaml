@@ -25,4 +25,5 @@ jobs:
         with:
           push: true
           file: DockerfileCUDA
+          context: .
           tags: philippkohl/active-learning-evaluation-framework:latest
