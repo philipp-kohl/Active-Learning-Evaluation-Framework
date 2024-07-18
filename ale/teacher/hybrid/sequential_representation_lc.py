@@ -116,7 +116,7 @@ def get_docs_in_clusters(docs: List[int], clustered_docs: ClusteredDocuments) ->
         docs)
     for doc in batch_docs:
         docs_by_cluster[doc.cluster_idx].append(doc.idx)
-    return clustered_docs
+    return docs_by_cluster
 
 
 @TeacherRegistry.register("sequential-representation-least-confidence")
