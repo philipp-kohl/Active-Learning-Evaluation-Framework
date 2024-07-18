@@ -11,6 +11,7 @@ from ale.teacher.exploitation.aggregation_methods import AggregationMethod
 from ale.trainer.predictor import Predictor
 from ale.teacher.teacher_utils import ClusteredDocuments, ClusterDocument
 from ale.trainer.prediction_result import TokenConfidence, PredictionResult
+from ale.teacher.exploration.k_means import silhouette_analysis
 
 
 class NGramVectors:
@@ -89,10 +90,11 @@ def embed_documents_with_lexical_and_semantical_vectors(corpus: Corpus, ngrams: 
     return vectors
 
 
-def cluster_documents(corpus: Corpus, k: int, embeddings: Dict[int, np.ndarray]) -> ClusteredDocuments:
-    model = KMeans(n_clusters=k, init='k-means++',
-                   max_iter=300, n_init='auto')
+def cluster_documents(nr_labels: int, embeddings: Dict[int, np.ndarray], seed) -> ClusteredDocuments:
     X = list(embeddings.values())
+    best_k: int = silhouette_analysis(nr_labels, seed, X)
+    model = KMeans(n_clusters=best_k, init='k-means++',
+                   max_iter=300, n_init='auto')
     model.fit(X)
 
     # get the distance to the corresponding cluster centroid for each document
@@ -144,7 +146,7 @@ class SequentialRepresentationLCTeacher(BaseTeacher):
         self.embeddings: Dict[int, np.ndarray] = embed_documents_with_lexical_and_semantical_vectors(
             corpus=corpus, ngrams=self.ngrams)
         self.clustered_documents: ClusteredDocuments = cluster_documents(
-            corpus, self.k, self.embeddings)
+            self.k, self.embeddings, seed)
         self.corpus = corpus
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
