@@ -55,10 +55,9 @@ def embed_documents_with_lexical_and_semantical_vectors(corpus: Corpus, ngrams: 
     """
     vectors: Dict[int, np.ndarray] = {}
     dict_tokens: Dict[int, List[str]] = corpus.get_all_tokens()
-    texts: List[str] = corpus.get_all_texts_with_ids().values()
+    texts: List[str] = list(corpus.get_all_texts_with_ids().values())
     word2vec_model = Word2Vec(sentences=texts, vector_size=word_embedding_dimension,
                               window=5, min_count=1, workers=4)  # semantic vectors
-    word2vec_model.save("word2vec.model")
     for doc_id, tokens in dict_tokens.items():
         doc_vectors: List[np.ndarray] = []
         lexical_vectors: List[np.ndarray] = [
