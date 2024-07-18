@@ -39,7 +39,7 @@ def bert_vectorize(corpus: Corpus):
     """
     data: Dict[int, str] = corpus.get_all_texts_with_ids()
     model = SentenceTransformer('bert-base-nli-mean-tokens')
-    sentence_embeddings = model.encode(data.values())
+    sentence_embeddings = model.encode(list(data.values()))
     return sentence_embeddings
 
 def get_cosine_similarity(vec_1: np.matrix, vec_2: np.matrix) -> float:
