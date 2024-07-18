@@ -1,4 +1,4 @@
-from typing import List, Any, Dict
+from typing import List, Any, Dict, Optional
 import random
 from gensim.models import Word2Vec
 import numpy as np
@@ -7,6 +7,7 @@ from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
+from ale.teacher.exploitation.aggregation_methods import AggregationMethod
 from ale.trainer.predictor import Predictor
 from ale.teacher.teacher_utils import ClusteredDocuments, ClusterDocument
 from ale.trainer.prediction_result import TokenConfidence, PredictionResult
@@ -119,13 +120,14 @@ class SequentialRepresentationLCTeacher(BaseTeacher):
         (in paper AL strategie is called "Unsupervised Least Confidence" (ULC))
     """
 
-    def __init__(self, corpus: Corpus, predictor: Predictor, seed: int, labels: List[Any], nlp_task: NLPTask):
+    def __init__(self, corpus: Corpus, predictor: Predictor, seed: int, labels: List[Any], nlp_task: NLPTask, aggregation_method: Optional[AggregationMethod]):
         super().__init__(
             corpus=corpus,
             predictor=predictor,
             seed=seed,
             labels=labels,
-            nlp_task=nlp_task
+            nlp_task=nlp_task,
+            aggregation_method=aggregation_method
         )
         self.k = len(self.labels)
         self.ngrams = NGramVectors([2, 3], seed)  # bi- and tri-ngrams
@@ -146,15 +148,13 @@ class SequentialRepresentationLCTeacher(BaseTeacher):
 
         # Get sorted dict for all clusters and their best docs in descending order
         # {cluster: [idx]} in descending order
-        label_docs_order: Dict[int, List[int]] = dict()
         clustered_docs: Dict[int, List[int]] = get_docs_in_clusters(
             batch, self.clustered_documents)
-        for cluster in self.clustered_documents.clusters:
-            for key in list(clustered_docs.keys()):
-                docs = clustered_docs[key]
-                lc_docs = {doc: lcs[doc] for doc in docs}
-                sorted_dict_by_lc = sorted(lc_docs.items(), key=lambda x: x[1])
-                clustered_docs[key] = [key for key, value in sorted_dict_by_lc]
+        for key in list(clustered_docs.keys()):
+            docs = clustered_docs[key]
+            lc_docs = {doc: lcs[doc] for doc in docs}
+            sorted_dict_by_lc = sorted(lc_docs.items(), key=lambda x: x[1])
+            clustered_docs[key] = [key for key, value in sorted_dict_by_lc]
 
         # round robin for clusters, always take doc with lowest lc
         robin: int = 0  # Iterate over clusters
