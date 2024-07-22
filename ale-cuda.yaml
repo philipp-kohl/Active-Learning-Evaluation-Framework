@@ -4,6 +4,4 @@ channels:
   - conda-forge
 dependencies:
   - python=3.9
-#  - pytorch=1.12.1
-#  - cudatoolkit=12.1
   - pip
