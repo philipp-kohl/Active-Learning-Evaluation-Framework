@@ -52,12 +52,23 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
+      - name: Build and push for main
         uses: docker/build-push-action@v6
+        if: github.ref == 'refs/heads/main'
         with:
           push: true
           file: DockerfileCUDA
           context: .
           tags: philippkohl/active-learning-evaluation-framework:latest,philippkohl/active-learning-evaluation-framework:${{ steps.set_version.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push for other branches
+        uses: docker/build-push-action@v6
+        if: github.ref != 'refs/heads/main'
+        with:
+          push: true
+          file: DockerfileCUDA
+          context: .
+          tags: philippkohl/active-learning-evaluation-framework:${{ steps.set_version.outputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
