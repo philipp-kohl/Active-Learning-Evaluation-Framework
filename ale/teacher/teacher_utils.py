@@ -211,3 +211,4 @@ class ClusteredDocuments:
     def get_clustered_docs_by_idx(self, indices: List[int]) -> List[ClusterDocument]:
         output = [doc for doc in self.documents if doc.idx in indices]
         return output
+
