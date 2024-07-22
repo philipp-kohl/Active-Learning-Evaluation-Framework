@@ -161,10 +161,3 @@ If you find this code useful in your research, please cite:
   keywords = {Active learning,Deep learning,Natural language processing,Query learning,Reproducible research}
 }
 ```
-
-
-docker run -it --network host \
---gpus '"device=0"' \
--v /home/philipp/Repositories/Diss/Active-Learning-Evaluation-Framework/data/:/app/data/ \
-ale-cuda:latest \
-conda run --no-capture-output -n ale-cuda python ale/main.py teacher=randomizer mlflow.experiment_name=randomizer mlflow.url=http://localhost:5000
