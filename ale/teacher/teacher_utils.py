@@ -10,7 +10,6 @@ from scipy.sparse import spmatrix
 from sentence_transformers import SentenceTransformer
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.manifold import TSNE
 from sklearn.metrics import silhouette_score, silhouette_samples
 
 from ale.corpus.corpus import Corpus
