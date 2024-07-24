@@ -33,8 +33,12 @@ class TokenConfidence(BaseModel):
         for label_confidence in self.label_confidence:
             if label_confidence.label == label:
                 return label_confidence.confidence
-            
+
     def get_predicted_label(self) -> str:
+        """
+        If no predicted label was set, the label with the highest confidence score is returned.
+        The label will be set in case of a CRF classifier because the highest confidence label might not be the predicted label.
+        """
         if not self.predicted_label:
             self.predicted_label = max(self.label_confidence, key=lambda x: x.confidence).label
         return self.predicted_label
@@ -76,7 +80,7 @@ class PredictionResult(BaseModel):
             return max(self.ner_confidences_span, key=self.ner_confidences_span.get).label
         else:
             return None
-        
+
     def get_all_label_classes(self) -> List[str]:
         if self.classification_confidences:
             return list(self.classification_confidences.keys())
@@ -85,6 +89,5 @@ class PredictionResult(BaseModel):
         else:
             token_confidence: TokenConfidence = self.ner_confidences_token[0]
             label_confidences: List[LabelConfidence] = token_confidence.label_confidence
-            # def is_named_entity(asfs):
-            #     return None
+
             return [conf.label for conf in label_confidences if is_named_entity(conf.label)]
