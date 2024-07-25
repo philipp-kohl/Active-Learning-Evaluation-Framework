@@ -1,14 +1,15 @@
-from typing import List, Any
 import random
-from numpy.linalg import norm
+from typing import List, Any
+
 import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
+from ale.teacher.teacher_utils import tfidf_vectorize
 from ale.trainer.predictor import Predictor
-from ale.teacher.teacher_utils import embed_documents_with_tfidf
-from sklearn.metrics.pairwise import cosine_similarity
 
 
 @TeacherRegistry.register("representative-diversity")
@@ -32,7 +33,7 @@ class RepresentativeDiversityTeacher(BaseTeacher):
             nlp_task=nlp_task
         )
         self.k = len(self.labels)
-        self.embeddings = embed_documents_with_tfidf(corpus=corpus)
+        self.embeddings = tfidf_vectorize(texts=list(corpus.get_all_texts_with_ids().values()))
         self.corpus = corpus
         self.corpus_idx_list: List[int] = list(
             corpus.get_all_texts_with_ids().keys())

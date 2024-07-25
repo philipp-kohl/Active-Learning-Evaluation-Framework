@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
@@ -25,17 +25,17 @@ def is_named_entity(label: str) -> bool:
     return False
 
 
-def tfidf_vectorize(id2text: Dict[int, str]):
+def tfidf_vectorize(texts: List[str], max_features: Optional[int] = None) -> np.ndarray:
     """ Vectorizes the given data with TFIDF
 
     Args:
-        - id2text (Dict[int, str]): A dict with the document's ids as keys and the texts as values.
+        - texts (List[str]): A list of texts representing documents
 
     Returns:
         - X (spmatrix): An spmatrix containing the TFIDF embeddings for the corpus.
     """
-    vectorizer = TfidfVectorizer(analyzer="word", lowercase=True)
-    X = vectorizer.fit_transform(id2text.values())
+    vectorizer = TfidfVectorizer(analyzer="word", lowercase=True, max_features=max_features)
+    X = vectorizer.fit_transform(texts)
     return X
 
 
@@ -62,20 +62,6 @@ def get_cosine_similarity(vec_1: np.matrix, vec_2: np.matrix) -> float:
     if norm_a != 0 and norm_b != 0:
         return np.dot(a, b) / (norm(a) * norm(b))
     return np.dot(a, b)
-
-
-def embed_documents_with_tfidf(corpus: Corpus) -> spmatrix:
-    """ Calculates embeddings for the given corpus data.
-
-    Args:
-        - corpus (Corpus): The corpus.
-
-    Returns: 
-        - X (spmatrix): An spmatrix containing the TFIDF embeddings for the corpus.
-    """
-    # tfidf vectorize the dataset
-    data: Dict[int, str] = corpus.get_all_texts_with_ids()
-    return tfidf_vectorize(id2text=data)
 
 
 def silhouette_analysis(nr_labels: int, seed: int, metric: str, embeddings) -> int:
