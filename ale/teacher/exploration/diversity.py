@@ -8,7 +8,7 @@ from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
-from ale.teacher.exploration.embedding_helper import EmbeddingHelper
+from ale.teacher.exploration.utils.embedding_helper import EmbeddingHelper
 from ale.teacher.teacher_utils import tfidf_vectorize
 from ale.trainer.predictor import Predictor
 
