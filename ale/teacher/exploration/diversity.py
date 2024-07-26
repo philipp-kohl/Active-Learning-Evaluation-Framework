@@ -8,6 +8,7 @@ from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
+from ale.teacher.exploration.embedding_helper import EmbeddingHelper
 from ale.teacher.teacher_utils import tfidf_vectorize
 from ale.trainer.predictor import Predictor
 
@@ -34,14 +35,8 @@ class DiversityTeacher(BaseTeacher):
             labels=labels,
             nlp_task=nlp_task
         )
-        self.doc_id2embedding_index: Dict[int, int] = {}
-        texts: List[str] = []
-        for i, (doc_id, text) in enumerate(corpus.get_all_texts_with_ids().items()):
-            self.doc_id2embedding_index[doc_id] = i
-            texts.append(text)
-
-        embeddings = tfidf_vectorize(texts=texts)
-        self.cosine_similarities: np.ndarray = cosine_similarity(embeddings)
+        self.embedding_helper = EmbeddingHelper(corpus, tfidf_vectorize)
+        self.cosine_similarities: np.ndarray = cosine_similarity(self.embedding_helper.get_embeddings())
 
     def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
         # only documents of the batch will be evaluated and sought for proposal
@@ -63,7 +58,8 @@ class DiversityTeacher(BaseTeacher):
 
     def compute_similarity_scores_for_docs(self, annotated_ids: List[int], batch: List[int]):
         scores: Dict[int, float] = {}
-        labeled_data_embedding_indices: List[int] = self.get_embedding_indices_for_doc_ids(annotated_ids)
+        labeled_data_embedding_indices: List[int] = (self.embedding_helper.
+                                                     get_embedding_indices_for_doc_ids(annotated_ids))
         # get the similarity for each doc of the batch to all already labeled documents
         for doc_id in batch:
             scores[doc_id] = self.compute_similarity_score_for_single_doc(doc_id, labeled_data_embedding_indices)
@@ -71,19 +67,11 @@ class DiversityTeacher(BaseTeacher):
         return scores
 
     def compute_similarity_score_for_single_doc(self, doc_id: int, labeled_indices: List[int]) -> float:
-        embedding_idx = self.get_embedding_index_for_doc_id(doc_id)
+        embedding_idx = self.embedding_helper.get_embedding_index_for_doc_id(doc_id)
         similarity_scores: np.ndarray = self.cosine_similarities[embedding_idx][labeled_indices]
         # get similarity score for doc with labeled corpus, use complete linkage: max cosine-similarity
         return similarity_scores.max()
 
-    def get_embedding_index_for_doc_id(self, idx: int) -> int:
-        if idx not in self.doc_id2embedding_index:
-            raise ValueError("Given id not in corpus.")
-
-        return self.doc_id2embedding_index[idx]
-
-    def get_embedding_indices_for_doc_ids(self, ids: List[int]) -> List[int]:
-        return [self.get_embedding_index_for_doc_id(idx) for idx in ids]
 
 
 

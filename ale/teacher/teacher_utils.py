@@ -54,16 +54,6 @@ def bert_vectorize(corpus: Corpus):
     return sentence_embeddings
 
 
-def get_cosine_similarity(vec_1: np.matrix, vec_2: np.matrix) -> float:
-    a: np.ndarray = np.asarray(vec_1.T).reshape((vec_1.size,))
-    b: np.ndarray = np.asarray(vec_2.T).reshape((vec_2.size,))
-    norm_a: float = norm(a)
-    norm_b: float = norm(b)
-    if norm_a != 0 and norm_b != 0:
-        return np.dot(a, b) / (norm(a) * norm(b))
-    return np.dot(a, b)
-
-
 def silhouette_analysis(nr_labels: int, seed: int, metric: str, embeddings) -> int:
     """ Analyses clustering with k different clusters between 2 and max(10,2*nr_labels). Plots silhouette graphs.
 
