@@ -97,10 +97,8 @@ class KMeansClusterBasedBERTTeacher(BaseTeacher):
       - Paper cites: https://aclanthology.org/2020.emnlp-main.637.pdf
         Information taken: use k-means instead of k-means++, use [CLS] token, L2 normalized embeddings
 
-    "We use AL for fine-tuning, so the input should be in the same format for AL and fine-tuning.
-    Otherwise, there is a mismatch between the two stages"
-
-    Questions: which bert model? roberta has no cls token, how to define k? They used 100 and 200?
+    Questions: which bert model? How to define k? They used 100 and 200?
+    We take SOTA sentence transformer and define k based on silhouette_analysis.
 
     """
 
