@@ -1,4 +1,4 @@
-data_dir: data/conll2003
+data_dir: data/conll2003_small
 train_file: train
 test_file: test
 dev_file: dev

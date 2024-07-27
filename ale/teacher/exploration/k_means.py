@@ -1,140 +1,49 @@
 import logging
-from threading import Lock
 from typing import List, Any
-import logging
 
-from numpy.linalg import norm
 import numpy as np
-from sklearn.preprocessing import normalize
-
-from ale.teacher.teacher_utils import tfidf_vectorize, bert_vectorize, ClusterDocument, ClusteredDocuments, silhouette_analysis
+from numpy.linalg import norm
 from sklearn.cluster import KMeans
+
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
+from ale.teacher.exploration.utils.cluster_helper import ClusterHelper, ClusteredDocuments, ClusterDocument
+from ale.teacher.exploration.utils.silhouette_helper import silhouette_analysis
+from ale.teacher.teacher_utils import tfidf_vectorize, sentence_transformer_vectorize
 from ale.trainer.predictor import Predictor
 
 logger = logging.getLogger(__name__)
-lock = Lock()
 
 
-def cluster_documents(corpus: Corpus, nr_labels: int, seed: int) -> ClusteredDocuments:
-    lock.acquire()
-    try:
-        data = corpus.get_all_texts_with_ids()
-        ids = list(data.keys())
-        X = tfidf_vectorize(id2text=data)
+def cluster_documents(corpus: Corpus, num_labels: int, seed: int) -> ClusteredDocuments:
+    data = corpus.get_all_texts_with_ids()
+    ids = list(data.keys())
+    X = tfidf_vectorize(texts=list(data.values()))
 
-        best_k: int = silhouette_analysis(nr_labels, seed, "euclidian", X)
+    best_k: int = silhouette_analysis(num_labels, seed, "euclidian", X)
 
-        logger.info(f"Initial k-means clustering with k={best_k} started.")
-        # tfidf vectorize the dataset and apply k-means++
-        model = KMeans(n_clusters=best_k, init='k-means++',
-                       max_iter=300, n_init='auto')
-        model.fit(X)
+    logger.info(f"Initial k-means clustering with k={best_k} started.")
+    # tfidf vectorize the dataset and apply k-means++
+    model = KMeans(n_clusters=best_k, init='k-means++',
+                   max_iter=300, n_init='auto')
+    model.fit(X)
 
-        # get the distance to the corresponding cluster centroid for each document
-        npm_tfidf = X.todense()
-        centers = model.cluster_centers_
-        clustered_documents: List[ClusteredDocuments] = []
-        for i in range(len(ids)):
-            idx = ids[i]
-            tfidf_vector = npm_tfidf[i]
-            distances = [norm(center - tfidf_vector) for center in centers]
-            clustered_documents.append(ClusterDocument(
-                idx, np.argmin(distances), np.min(distances)))
-        clustered_obj = ClusteredDocuments(clustered_documents, len(centers))
-        logger.info("Initial k-means clustering done.")
-    finally:
-        lock.release()
+    # get the distance to the corresponding cluster centroid for each document
+    npm_tfidf = X.todense()
+    centers = model.cluster_centers_
+    clustered_documents: List[ClusterDocument] = []
+    for i in range(len(ids)):
+        idx = ids[i]
+        tfidf_vector = npm_tfidf[i]
+        distances = [norm(center - tfidf_vector) for center in centers]
+        clustered_documents.append(ClusterDocument(idx, np.argmin(distances), np.min(distances)))
+    clustered_docs = ClusteredDocuments(clustered_documents, len(centers))
+    logger.info("Initial k-means clustering done.")
 
-    return clustered_obj
+    return clustered_docs
 
-
-def cluster_documents_with_bert_km(corpus: Corpus, nr_labels: int, seed: int) -> ClusteredDocuments:
-    lock.acquire()
-    try:
-        X = bert_vectorize(corpus)
-        X = normalize(X, norm="l2")
-        best_k: int = silhouette_analysis(nr_labels, seed, "cosine", X)
-
-        logger.info(f"Initial k-means clustering with k={best_k} started.")
-        # bert vectorize the dataset and apply k-means++
-        model = KMeans(n_clusters=best_k, init='k-means++',
-                       max_iter=300, n_init='auto')
-        model.fit(X)
-
-        # get the distance to the corresponding cluster centroid for each document
-        centers = model.cluster_centers_
-        clustered_documents: List[ClusteredDocuments] = []
-        data = corpus.get_all_texts_with_ids()
-        ids = list(data.keys())
-        for i in range(len(ids)):
-            id = ids[i]
-            distances = [norm(center - X[i]) for center in centers]
-            clustered_documents.append(ClusterDocument(
-                id, np.argmin(distances), np.min(distances)))
-        clustered_obj = ClusteredDocuments(clustered_documents, len(centers))
-        logger.info("Initial k-means clustering done.")
-    finally:
-        lock.release()
-
-    return clustered_obj
-
-
-def propose_nearest_neighbors_to_centroids(clustered_docs: ClusteredDocuments, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
-    """ Selects docs that are nearest to cluster centroids.
-    """
-
-    docs = clustered_docs.get_clustered_docs_by_idx(potential_ids)
-    clusters = clustered_docs.clusters
-    docs_per_cluster = int(step_size/len(clusters))  # equal distribution
-    output_ids: List[ClusterDocument] = []
-    empty_clusters = []
-
-    for cluster in clusters:
-        potential_docs_cluster = [
-            doc for doc in docs if doc.cluster_idx == cluster]
-        potential_docs_cluster.sort(key=lambda x: x.distance, reverse=True)
-        if len(potential_docs_cluster) < docs_per_cluster:  # less docs in cluster left than needed
-            output_ids.extend(potential_docs_cluster)
-            empty_clusters.append(cluster)
-        else:
-            output_ids.extend(potential_docs_cluster[:docs_per_cluster])
-
-    while step_size > len(output_ids) and len(empty_clusters) < len(clusters):  # rest left
-        # equally distribute to not empty clusters
-        docs_per_rest_clusters = int(
-            (step_size-len(output_ids))/(len(clusters)-len(empty_clusters)))
-        if docs_per_rest_clusters == 0:  # less than 1 per empty cluster needed for stepsize reached
-            rest = step_size-len(output_ids)
-            for i in range(0, rest):  # add 1 doc from first n not empty clusters (n: rest)
-                not_empty_clusters = [
-                    cluster for cluster in clusters if cluster not in empty_clusters]
-                curr_cluster = not_empty_clusters[i]
-                potential_docs_cluster = [
-                    doc for doc in docs if doc.cluster_idx == curr_cluster]
-                potential_docs_cluster.sort(
-                    key=lambda x: x.distance, reverse=True)
-                output_ids.append(potential_docs_cluster[0])
-
-        for cluster in clusters:
-            if cluster not in empty_clusters:
-                potential_docs_cluster = [
-                    doc for doc in docs if doc.cluster_idx == cluster]
-                potential_docs_cluster.sort(
-                    key=lambda x: x.distance, reverse=True)
-                # less docs in cluster left than needed
-                if len(potential_docs_cluster) < docs_per_rest_clusters:
-                    output_ids.extend(potential_docs_cluster)
-                    empty_clusters.append(cluster)
-                else:
-                    output_ids.extend(
-                        potential_docs_cluster[:docs_per_rest_clusters])
-
-    out_ids = [item.idx for item in output_ids]
-    return out_ids
 
 
 @TeacherRegistry.register("k-means")
@@ -149,12 +58,10 @@ class KMeansTeacher(BaseTeacher):
             nlp_task=nlp_task
         )
         self.k = len(self.labels)
-        self.clustered_documents: ClusteredDocuments = cluster_documents(
-            corpus=corpus, k=self.k, seed=seed)
+        self.clustered_documents: ClusteredDocuments = cluster_documents(corpus=corpus, num_labels=self.k, seed=seed)
 
-    def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
-        docs = self.clustered_documents.get_clustered_docs_by_idx(
-            potential_ids)
+    def propose(self, potential_ids: List[int], step_size: int, budget: int) -> List[int]:
+        docs = self.clustered_documents.get_clustered_docs_by_idx(potential_ids)
         sorted_docs = docs.sort(key=lambda x: x.distance, reverse=True)
         out_ids = [item.idx for item in sorted_docs[:step_size]]
 
@@ -171,16 +78,32 @@ class KMeansClusterBasedTeacher(BaseTeacher):
             labels=labels,
             nlp_task=nlp_task
         )
-        self.nr_labels = len(self.labels)
-        self.clustered_documents = cluster_documents(
-            corpus=corpus, nr_labels=self.nr_labels, seed=seed)
+        self.num_labels = len(self.labels)
+        self.clustered_documents = cluster_documents(corpus=corpus, num_labels=self.num_labels, seed=seed)
 
-    def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
-        return propose_nearest_neighbors_to_centroids(self.clustered_documents, potential_ids, step_size, budget)
+    def propose(self, potential_ids: List[int], step_size: int, budget: int) -> List[int]:
+        pass#return propose_nearest_neighbors_to_centroids(self.clustered_documents, potential_ids, step_size, budget)
 
 
 @TeacherRegistry.register("k-means-cluster-based-bert-km")
 class KMeansClusterBasedBERTTeacher(BaseTeacher):
+    """
+    M. Van Nguyen, N. T. Ngo, B. Min, and T. H. Nguyen,
+    “FAMIE: A Fast Active Learning Framework for Multilingual Information Extraction” presented at the NAACL 2022 -
+    2022 Conference of the North American Chapter of the Association for Computational Linguistics:
+    Human Language Technologies, Proceedings of the Demonstrations Session, 2022, pp. 131–139.
+
+    Notes:
+      - Paper cites: https://aclanthology.org/2020.emnlp-main.637.pdf
+        Information taken: use k-means instead of k-means++, use [CLS] token, L2 normalized embeddings
+
+    "We use AL for fine-tuning, so the input should be in the same format for AL and fine-tuning.
+    Otherwise, there is a mismatch between the two stages"
+
+    Questions: which bert model? roberta has no cls token, how to define k? They used 100 and 200?
+
+    """
+
     def __init__(self, corpus: Corpus, predictor: Predictor, seed: int, labels: List[Any], nlp_task: NLPTask):
         super().__init__(
             corpus=corpus,
@@ -189,9 +112,13 @@ class KMeansClusterBasedBERTTeacher(BaseTeacher):
             labels=labels,
             nlp_task=nlp_task
         )
-        self.nr_labels = len(self.labels)
-        self.clustered_documents = cluster_documents_with_bert_km(
-            corpus=corpus, nr_labels=self.nr_labels, seed=seed)
+        self.num_labels = len(self.labels)
+        # all-mpnet-base-v2: currently (07-2024) the SOTA sentence transformer
+        embeddings = sentence_transformer_vectorize(corpus, model_name="all-mpnet-base-v2")
+        self.cluster_helper = ClusterHelper(embeddings)
+        self.cluster_helper.adaptive_cluster(corpus=corpus,
+                                             num_labels=self.num_labels,
+                                             seed=seed)
 
-    def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
-        return propose_nearest_neighbors_to_centroids(self.clustered_documents, potential_ids, step_size, budget)
+    def propose(self, potential_ids: List[int], step_size: int, budget: int) -> List[int]:
+        return self.cluster_helper.propose_nearest_neighbors_to_centroids(potential_ids, step_size, budget)

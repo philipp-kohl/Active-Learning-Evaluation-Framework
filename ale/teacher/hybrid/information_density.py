@@ -7,7 +7,7 @@ from ale.corpus.corpus import Corpus
 from ale.registry.registerable_teacher import TeacherRegistry
 from ale.teacher.base_teacher import BaseTeacher
 from ale.trainer.predictor import Predictor
-from ale.teacher.teacher_utils import bert_vectorize
+from ale.teacher.teacher_utils import sentence_transformer_vectorize
 from ale.trainer.prediction_result import TokenConfidence, PredictionResult
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod
 
@@ -41,7 +41,7 @@ class InformationDensityTeacher(BaseTeacher):
             aggregation_method=aggregation_method
         )
         self.k = len(self.labels)
-        self.embeddings: List[np.ndarray] = bert_vectorize(corpus)
+        self.embeddings: List[np.ndarray] = sentence_transformer_vectorize(corpus)
         self.corpus = corpus
         self.corpus_idx_list: List[int] = list(
             corpus.get_all_texts_with_ids().keys())
