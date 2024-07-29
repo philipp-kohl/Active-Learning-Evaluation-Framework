@@ -50,9 +50,13 @@ class ClusterHelper:
     def adaptive_cluster(self, corpus: Corpus,
                          num_labels: int,
                          seed: int,
-                         k_means_init: str = "k-means++") -> ClusteredDocuments:
-        embeddings = normalize(self.embeddings, norm="l2")
-        best_k: int = silhouette_analysis(num_labels, seed, "cosine", embeddings, k_means_init)
+                         k_means_init: str = "k-means++",
+                         metric: str = "cosine",
+                         normalize_embeddings: str = None) -> ClusteredDocuments:
+        embeddings = self.embeddings
+        if normalize_embeddings:
+            embeddings = normalize(self.embeddings, norm=normalize_embeddings)
+        best_k: int = silhouette_analysis(num_labels, seed, metric, embeddings, k_means_init)
 
         logger.info(f"Initial k-means clustering with k={best_k} started.")
         # bert vectorize the dataset and apply k-means

@@ -116,7 +116,8 @@ class KMeansClusterBasedBERTTeacher(BaseTeacher):
         self.cluster_helper = ClusterHelper(embeddings)
         self.cluster_helper.adaptive_cluster(corpus=corpus,
                                              num_labels=self.num_labels,
-                                             seed=seed)
+                                             seed=seed,
+                                             normalize_embeddings="l2")
 
     def propose(self, potential_ids: List[int], step_size: int, budget: int) -> List[int]:
         return self.cluster_helper.propose_nearest_neighbors_to_centroids(potential_ids, step_size, budget)

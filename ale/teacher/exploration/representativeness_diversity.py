@@ -26,7 +26,7 @@ class RepresentativeDiversityTeacher(BaseTeacher):
         pp. 143–152 (2015). doi: 10.1145/2806416.280655
 
         Notes:
-          - "We employed a typical feature set, including linguistic (part-ofspeech tags), orthographical
+          - "We employed a typical feature set, including linguistic (part-of-speech tags), orthographical
             (regular expression patterns), lexical and morphological (suffixes/prefixes and character n-grams),
             contextual (window of k words), and semantic features. The Medtex system [18] was leveraged to extract
             semantic features" cited from paper
