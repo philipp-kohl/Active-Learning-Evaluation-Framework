@@ -26,6 +26,7 @@ class TrainerConfig(BaseModel):
     early_stopping_patience: int
     label_smoothing: float
     model: str
+    freeze_layers: Optional[List[str]] = None
 
 
 class AggregationMethod(str, Enum):

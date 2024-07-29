@@ -41,7 +41,8 @@ class PyTorchLightningTrainer(BaseTrainer):
                                       cfg.trainer.learning_rate,
                                       cfg.trainer.weight_decay,
                                       ignore_labels=["O"],
-                                      label_smoothing=cfg.trainer.label_smoothing)
+                                      label_smoothing=cfg.trainer.label_smoothing,
+                                      freeze_layers=cfg.trainer.freeze_layers)
         self.cfg = cfg
 
     def train(self, train_corpus: Corpus, active_run: ActiveRun) -> MetricsType:

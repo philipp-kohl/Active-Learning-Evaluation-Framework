@@ -11,3 +11,9 @@ early_stopping_delta: 0.0005
 early_stopping_patience: 5
 label_smoothing: 0
 model: "trf_ffn"
+freeze_layers:
+  - "model.embeddings.word_embeddings.weight"
+  - "model.embeddings.position_embeddings.weight"
+  - "model.embeddings.token_type_embeddings.weight"
+  - "model.embeddings.LayerNorm.weight"
+  - "model.embeddings.LayerNorm.bias"

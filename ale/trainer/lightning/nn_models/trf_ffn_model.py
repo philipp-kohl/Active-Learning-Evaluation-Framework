@@ -1,3 +1,4 @@
+import logging
 from typing import List, Dict
 
 import torch
@@ -10,11 +11,13 @@ from transformers import AutoModel
 from ale.registry.registerable_model import ModelRegistry
 from ale.trainer.lightning.utils import derive_labels, create_metrics, LabelGeneralizer, is_valid_for_prog_bar
 
+logger = logging.getLogger(__name__)
 
 @ModelRegistry.register("trf_ffn")
 class TransformerFfnLightning(LightningModule):
     def __init__(self, model_name: str, labels: List[str], learn_rate: float, weight_decay: float,
-                 ignore_labels: List[str] = None, label_smoothing: float = 0.0):
+                 ignore_labels: List[str] = None, label_smoothing: float = 0.0,
+                 freeze_layers: List[str] = None):
         super().__init__()
         self.save_hyperparameters()
         if ignore_labels is None:
@@ -41,6 +44,13 @@ class TransformerFfnLightning(LightningModule):
         self.train_metrics = create_metrics(self.num_labels)
         self.val_metrics = create_metrics(self.num_labels)
         self.test_metrics = create_metrics(self.num_labels)
+
+        # Freeze the specified layers
+        for name, param in self.named_parameters():
+            if name in freeze_layers:
+                logger.warning(f"Freeze layer: {name}")
+                param.requires_grad = False
+
 
     def generalize_labels(self, labels):
         label_generalizer = LabelGeneralizer(self.bio_id_to_coarse_label_id, self.device)
