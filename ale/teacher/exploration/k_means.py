@@ -112,7 +112,8 @@ class KMeansClusterBasedBERTTeacher(BaseTeacher):
         )
         self.num_labels = len(self.labels)
         # all-mpnet-base-v2: currently (07-2024) the SOTA sentence transformer
-        embeddings = sentence_transformer_vectorize(corpus, model_name="all-mpnet-base-v2")
+        all_texts = list(corpus.get_all_texts_with_ids().values())
+        embeddings = sentence_transformer_vectorize(all_texts, model_name="all-mpnet-base-v2")
         self.cluster_helper = ClusterHelper(embeddings)
         self.cluster_helper.adaptive_cluster(corpus=corpus,
                                              num_labels=self.num_labels,

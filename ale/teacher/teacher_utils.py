@@ -32,7 +32,7 @@ def tfidf_vectorize(texts: List[str], max_features: Optional[int] = None) -> np.
     return X
 
 
-def sentence_transformer_vectorize(corpus: Corpus, model_name: str = "bert-base-nli-mean-tokens"):
+def sentence_transformer_vectorize(texts: List[str], model_name: str = "bert-base-nli-mean-tokens"):
     """ Vectorizes the given data with BERT
 
     Args:
@@ -41,7 +41,6 @@ def sentence_transformer_vectorize(corpus: Corpus, model_name: str = "bert-base-
     Returns:
         - sentence_embeddings (ndarray): ND-Array containing the BERT embeddings for the corpus.
     """
-    data: Dict[int, str] = corpus.get_all_texts_with_ids()
     model = SentenceTransformer(model_name)
-    sentence_embeddings = model.encode(list(data.values()))
+    sentence_embeddings = model.encode(texts)
     return sentence_embeddings
