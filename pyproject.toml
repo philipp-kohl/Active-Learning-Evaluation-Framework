@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ale"
-version = "0.1.1"
+version = "2.2.0"
 description = "Active Learning Evaluation Framework"
 authors = ["Philipp Kohl <p.kohl@fh-aachen.de>"]
 readme = "README.md"
