@@ -37,7 +37,7 @@ if [ -z "$run_name_suffix" ]; then run_name_suffix=$default_run_name_suffix; els
 
 
 docker_image=philippkohl/active-learning-evaluation-framework
-ale_version=2.2.0-dev
+ale_version=2.3.0-dev
 tracking_url="http://localhost:5000"
 
 batch_size=64
