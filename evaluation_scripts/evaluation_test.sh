@@ -45,7 +45,7 @@ label_smoothing=0.2
 early_stopping_delta=0.000005
 early_stopping_patience=50
 
-echo -e "Parameters for the experiment:\n Ale version: $ale_version, \n Tracking URL: $tracking_url, \n Batch size: $batch_size,\n Label smoothing: $label_smoothing, \n Early stopping delta: $early_stopping_delta, \n Early stopping patience: $early_stopping_patience"
+echo -e "Parameters for the experiment:\n Ale version: $docker_image:$ale_version, \n Tracking URL: $tracking_url, \n Batch size: $batch_size,\n Label smoothing: $label_smoothing, \n Early stopping delta: $early_stopping_delta, \n Early stopping patience: $early_stopping_patience"
 
 echo "Show test command with substitutions:"
 mlflow_experiment_name=$(construct_experiment_name "variance_test_conll" "$teacher" "$experiment_name_suffix")
