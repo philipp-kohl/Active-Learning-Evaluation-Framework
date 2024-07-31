@@ -14,7 +14,7 @@ from ale.trainer.lightning.utils import derive_labels, create_metrics, LabelGene
 @ModelRegistry.register("trf")
 class TransformerLightning(LightningModule):
     def __init__(self, model_name: str, labels: List[str], learn_rate: float, weight_decay: float,
-                 ignore_labels: List[str] = None):
+                 ignore_labels: List[str] = None, freeze_layers: List[str] = None):
         super().__init__()
         self.save_hyperparameters()
         if ignore_labels is None:
@@ -38,6 +38,12 @@ class TransformerLightning(LightningModule):
         self.train_metrics = create_metrics(self.num_labels)
         self.val_metrics = create_metrics(self.num_labels)
         self.test_metrics = create_metrics(self.num_labels)
+
+        # Freeze the specified layers
+        for name, param in self.named_parameters():
+            if name in freeze_layers:
+                logger.warning(f"Freeze layer: {name}")
+                param.requires_grad = False
 
     def generalize_labels(self, labels):
         label_generalizer = LabelGeneralizer(self.bio_id_to_coarse_label_id, self.device)
