@@ -26,6 +26,9 @@ class TrainerConfig(BaseModel):
     early_stopping_patience: int
     label_smoothing: float
     model: str
+    precision: Optional[int] = None
+    accumulate_grad_batches: Optional[int] = None
+    check_val_every_n_epoch: Optional[int] = None
     freeze_layers: Optional[List[str]] = None
 
 

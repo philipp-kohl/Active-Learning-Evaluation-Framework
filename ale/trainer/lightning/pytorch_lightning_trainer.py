@@ -64,7 +64,11 @@ class PyTorchLightningTrainer(BaseTrainer):
         self.trainer = Trainer(max_epochs=self.cfg.trainer.max_epochs, devices=1, accelerator=self.cfg.trainer.device,
                                logger=mlf_logger, deterministic=False,  # deterministic True raises exception for crf
                                # profiler="simple"
-                               callbacks=callbacks
+                               callbacks=callbacks,
+                               precision=self.cfg.trainer.precision,
+                               accumulate_grad_batches=self.cfg.trainer.accumulate_grad_batches,
+                               check_val_every_n_epoch=self.cfg.trainer.check_val_every_n_epoch
+                               # Impact on best model checkpoint? Always last?
                                )
 
     def evaluate(self) -> MetricsType:
