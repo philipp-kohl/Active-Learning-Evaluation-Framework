@@ -1,11 +1,10 @@
-from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Callable, Optional
 
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod, Aggregation
-from ale.trainer.predictor import Predictor
 from ale.trainer.prediction_result import PredictionResult
+from ale.trainer.predictor import Predictor
 
 
 class BaseTeacher:
@@ -37,7 +36,7 @@ class BaseTeacher:
         """
         :type potential_ids: object
         :type actual_step_size: int
-        :return: data_uri and List of data indices
+        :return: List of data indices
         """
         pass
 

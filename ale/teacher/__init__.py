@@ -2,9 +2,13 @@ from ale.teacher.baseline.randomizer import RandomTeacher
 from ale.teacher.exploitation.margin_confidence import MarginTeacher
 from ale.teacher.exploitation.entropy_confidence import EntropyTeacher
 from ale.teacher.exploitation.least_confidence import LeastConfidenceTeacher
-from ale.teacher.exploration.k_means import KMeansTeacher, KMeansClusterBasedTeacher
+from ale.teacher.exploration.k_means import KMeansTeacher, KMeansClusterBasedTeacher, KMeansClusterBasedBERTTeacher
 from ale.teacher.hybrid.k_means_margin import KMeansMarginTeacher
 from ale.teacher.exploitation.tag_flip_historical import TagFlipTeacher
 from ale.teacher.exploitation.round_robin import RoundRobinHighestConfidenceTeacher
 from ale.teacher.exploitation.max_tag_count import MaxTagCountTeacher
 from ale.teacher.exploitation.fluctuation_historical_sequence import FluctuationHistoricalSequenceTeacher
+from ale.teacher.exploration.diversity import DiversityTeacher
+from ale.teacher.exploration.representativeness_diversity import RepresentativeDiversityTeacher
+from ale.teacher.hybrid.information_density import InformationDensityTeacher
+from ale.teacher.hybrid.sequential_representation_lc import SequentialRepresentationLCTeacher

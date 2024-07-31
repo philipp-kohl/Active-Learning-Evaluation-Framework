@@ -260,9 +260,7 @@ class AleBartenderPerSeed:
 
         sampling_budget, step_size = self.determine_step_size(len(corpus), potential_ids)
 
-        new_data_points = self.teacher.propose(
-            potential_ids, step_size, sampling_budget
-        )
+        new_data_points = self.teacher.propose(potential_ids, step_size, sampling_budget)
 
         detected_step_size = len(new_data_points)
         if corpus.do_i_have_to_annotate() and \

@@ -280,3 +280,4 @@ outputs/
 /tb_logs/
 /ml-runs/
 /pt_lightning/
+/data/conll2003_small/

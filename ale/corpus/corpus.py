@@ -64,3 +64,10 @@ class Corpus(ABC):
 
     def get_text_by_id(self, idx: int) -> str:
         return self.get_text_by_ids([idx])[0]
+    
+    def get_annotated_data_points_ids(self) -> List[int]:
+        return self.relevant_ids
+    
+    @abstractmethod
+    def get_all_tokens(self) -> Dict[int, List[str]]:
+        pass

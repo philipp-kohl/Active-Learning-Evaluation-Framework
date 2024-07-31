@@ -53,3 +53,9 @@ class PytorchLightningCorpus(Corpus):
 
     def get_text_by_ids(self, idxs: List[int]) -> Dict[int, str]:
         return {idx: self.index[idx] for idx in idxs}
+    
+    def get_all_tokens(self) -> Dict[int, List[str]]:
+        token_dict: Dict[int, List[str]] = {}
+        for entry in srsly.read_jsonl(self.data_dir / "train.jsonl"):
+            token_dict[entry["id"]] = entry["tokens"]
+        return token_dict
