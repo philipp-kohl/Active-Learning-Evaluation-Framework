@@ -44,6 +44,8 @@ services:
         - --serve-artifacts
         - --host=0.0.0.0
         - --port=5000
+        - --workers=5
+        - --gunicorn-opts='--timeout=90 --max-requests 1000 --max-requests-jitter 50'
       volumes:
         - mlflow:/home/mlflow/
       ports:

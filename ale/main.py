@@ -54,6 +54,11 @@ def run(cfg: AppConfig):
                        f"It will be replaced with '{cfg.mlflow.url}' for this process!")
 
     os.environ["MLFLOW_TRACKING_URI"] = cfg.mlflow.url
+    os.environ["MLFLOW_HTTP_REQUEST_MAX_RETRIES"] = str(cfg.mlflow.max_retries)
+    os.environ["MLFLOW_HTTP_REQUEST_TIMEOUT"] = str(cfg.mlflow.timeout)
+    os.environ["MLFLOW_HTTP_REQUEST_BACKOFF_FACTOR"] = str(cfg.mlflow.backoff_factor)
+    os.environ["MLFLOW_HTTP_REQUEST_BACKOFF_JITTER"] = str(cfg.mlflow.backoff_jitter)
+
     cfg.mlflow.user = getpass.getuser()
     cfg.mlflow.source_name = sys.argv[0]
     cfg.mlflow.git_hash = get_git_revision_hash()
