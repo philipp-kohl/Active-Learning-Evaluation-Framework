@@ -38,7 +38,7 @@ class DiversityTeacher(BaseTeacher):
         self.embedding_helper = EmbeddingHelper(corpus, tfidf_vectorize)
         self.cosine_similarities: np.ndarray = cosine_similarity(self.embedding_helper.get_embeddings())
 
-    def propose(self, potential_ids: List[int], step_size: int,  budget: int) -> List[int]:
+    def propose(self, potential_ids: List[int], step_size: int, budget: int) -> List[int]:
         # only documents of the batch will be evaluated and sought for proposal
         if budget < len(potential_ids):
             batch: List[int] = random.sample(potential_ids, budget)
@@ -71,7 +71,3 @@ class DiversityTeacher(BaseTeacher):
         similarity_scores: np.ndarray = self.cosine_similarities[embedding_idx][labeled_indices]
         # get similarity score for doc with labeled corpus, use complete linkage: max cosine-similarity
         return similarity_scores.max()
-
-
-
-
