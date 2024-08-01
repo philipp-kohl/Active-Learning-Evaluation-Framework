@@ -41,10 +41,17 @@ class AleBartender:
         if number_threads == -1:
             number_threads = len(self.seeds)
 
-        logger.info(f"Starting thread pool with {number_threads} threads to run {len(self.seeds)} seeds.")
-        executor = ThreadPoolExecutor(max_workers=number_threads)
-        run_ids = [run_id for run_id in executor.map(self.resume_or_start_seed_run, self.seeds)]
-        executor.shutdown(wait=True)
+        if number_threads == 1:
+            logger.info(f"Process seed runs sequentially")
+            run_ids = []
+            for seed in self.seeds:
+                run_id = self.resume_or_start_seed_run(seed)
+                run_ids.append(run_id)
+        else:
+            logger.info(f"Starting thread pool with {number_threads} threads to run {len(self.seeds)} seeds.")
+            executor = ThreadPoolExecutor(max_workers=number_threads)
+            run_ids = [run_id for run_id in executor.map(self.resume_or_start_seed_run, self.seeds)]
+            executor.shutdown(wait=True)
 
         logger.info(f"All seed runs finished. Run ids to aggregate: {run_ids}")
 

@@ -6,6 +6,10 @@ from pydantic import BaseModel, model_validator
 class MlFlowConfig(BaseModel):
     url: str
     experiment_name: str
+    max_retries: int
+    timeout: int
+    backoff_factor: int
+    backoff_jitter: float
     run_name: Optional[str] = None
     git_hash: Optional[str] = None
     user: Optional[str] = None
