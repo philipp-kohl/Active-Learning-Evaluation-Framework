@@ -1,11 +1,19 @@
+import logging
+import os
+import pickle
+import tempfile
 from typing import List, Dict, Any, Callable, Optional
+
+from mlflow.entities import Run
 
 from ale.config import NLPTask
 from ale.corpus.corpus import Corpus
+from ale.mlflowutils import mlflow_utils
 from ale.teacher.exploitation.aggregation_methods import AggregationMethod, Aggregation
 from ale.trainer.prediction_result import PredictionResult
 from ale.trainer.predictor import Predictor
 
+logger = logging.getLogger(__name__)
 
 class BaseTeacher:
     """
@@ -75,3 +83,35 @@ class BaseTeacher:
         :type metrics: object
         :return:
         """
+
+    def store_state(self, run: Run):
+        pass
+
+    def restore_from_artifacts(self, run: Run):
+        pass
+
+    def store_state_objects(self, run: Run, objects: Dict[str, Any]):
+        logger.info("Store state for teacher resume")
+        with tempfile.TemporaryDirectory() as temp_dir:
+            for name, obj in objects.items():
+                temp_filepath = os.path.join(temp_dir, name)
+                logger.info(f"Store teacher state to: {temp_filepath}")
+                with open(temp_filepath, "wb") as f:
+                    pickle.dump(obj, f)
+
+                mlflow_utils.log_artifact(run, temp_filepath, "teacher_state")
+            logger.info("Teacher state stored successfully")
+
+    def restore_state_objects(self, run: Run, names: List[str]) -> Dict[str, Any]:
+        logger.info("Restore state for teacher resume")
+
+        state: Dict[str, Any] = {}
+        for name in names:
+            artifact_path = f"teacher_state/{name}"
+            logger.info(f"Restore state from: {run.info.run_id}/{artifact_path}")
+            model_path = mlflow_utils.load_artifact(run, artifact_path)
+            with open(model_path, 'rb') as temp_file:
+                state[name] = pickle.load(temp_file)
+        logger.info(f"Restore state successfully")
+
+        return state

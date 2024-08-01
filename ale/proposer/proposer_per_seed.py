@@ -119,6 +119,7 @@ class AleBartenderPerSeed:
             logger.info(f"Restore run: {newest_run.info.run_name}")
             self.trainer.restore_from_artifacts(newest_run)
             self.corpus.restore_from_artifacts(newest_run)
+            self.teacher.restore_from_artifacts(newest_run)
             old_run = newest_run
         else:
             initial_data_ids = self.initial_teacher.propose(all_ids, first_step_size, self.cfg.teacher.sampling_budget)
@@ -162,6 +163,7 @@ class AleBartenderPerSeed:
                 self.corpus, f"train {len(self.corpus)}", self.seed
             )
             self.teacher.after_train(evaluation_metrics)
+            self.teacher.store_state(new_run)
             [h.after_training(new_run, evaluation_metrics, test_metrics) for h in hooks]
 
             [h.before_prediction() for h in hooks]
