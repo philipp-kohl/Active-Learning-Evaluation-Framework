@@ -1,5 +1,5 @@
 import logging
-from typing import List, Tuple
+from typing import Tuple
 
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
@@ -23,24 +23,30 @@ def silhouette_analysis(num_labels: int, seed: int, metric: str, embeddings, k_m
     Returns:
         - k_best (int): K with highest silhouette score
     """
-    ks: List[int] = np.arange(2, max(10, 2 * num_labels))  # range from 2 to maximum of double the size of labels and 10
-    best_k_with_score: Tuple[int, float] = [-1, -1]
+    # range from 2 to maximum of double the size of labels and 10
+    ks: np.ndarray = np.arange(2, max(10, 2 * num_labels))
+    best_k_with_score: Tuple[int, float] = (-1, -1)
     for k in ks:
-        logger.info(f"Test KMeans for {k} clusters")
-        model_test = KMeans(n_clusters=k, init=k_means_init,
-                            max_iter=300, n_init='auto', random_state=seed)
-        model_prediction = model_test.fit_predict(embeddings)
-
-        logger.info(f"Define silhouette score for {k} clusters")
-        score = silhouette_score(embeddings, model_prediction)
-        plot_silhouette(k, seed, metric, model_prediction, score, model_test, embeddings)
-        if score > best_k_with_score[1]:
-            best_k_with_score = [k, score]
+        best_k_with_score = test_single_config(best_k_with_score, embeddings, k, k_means_init, seed, metric)
     return best_k_with_score[0]
 
 
-def plot_silhouette(k: int, seed: int, metric: str, model_prediction: np.ndarray, score: float, model: KMeans,
-                    embeddings) -> None:
+def test_single_config(best_k_with_score: Tuple[int, float], embeddings, k: int,
+                       k_means_init: str, seed: int, metric: str) -> Tuple[int, float]:
+    logger.info(f"Test KMeans for {k} clusters")
+    model_test = KMeans(n_clusters=k, init=k_means_init,
+                        max_iter=300, n_init='auto', random_state=seed)
+    model_prediction = model_test.fit_predict(embeddings)
+    logger.info(f"Define silhouette score for {k} clusters")
+    score = silhouette_score(embeddings, model_prediction)
+    plot_silhouette(k, model_prediction, score, model_test, embeddings, metric)
+    if score > best_k_with_score[1]:
+        best_k_with_score = (k, score)
+    return best_k_with_score
+
+
+def plot_silhouette(k: int, model_prediction: np.ndarray, score: float, model: KMeans,
+                    embeddings, metric: str = "cosine") -> None:
     """ Plots silhouette graph.
 
     Args:
@@ -90,7 +96,7 @@ def plot_silhouette(k: int, seed: int, metric: str, model_prediction: np.ndarray
     ax1.set_xticks([-0.1, 0, 0.2, 0.4, 0.6, 0.8, 1])
 
     logger.info(f"Compute UMAP for embeddings")
-    X_embedded = umap.UMAP(n_components=2, n_neighbors=10, metric="cosine", densmap=True).fit_transform(embeddings)
+    X_embedded = umap.UMAP(n_components=2, n_neighbors=10, metric=metric, densmap=True).fit_transform(embeddings)
 
     colors = cm.nipy_spectral(model_prediction.astype(float) / k)
     ax2.scatter(
