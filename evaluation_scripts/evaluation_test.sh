@@ -5,7 +5,7 @@ default_experiment_name_suffix=""
 default_run_name_suffix="v1"
 
 docker_image=philippkohl/active-learning-evaluation-framework
-ale_version=2.3.0-dev
+ale_version=2.4.0-dev
 tracking_url="http://localhost:5000"
 
 batch_size=64
