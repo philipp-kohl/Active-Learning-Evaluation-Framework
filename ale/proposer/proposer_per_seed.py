@@ -1,7 +1,10 @@
 import logging
 from pathlib import Path
+import random
 from typing import Any, List, Tuple, Optional
 
+import numpy as np
+import torch
 from mlflow import MlflowClient
 from mlflow.entities import RunStatus, Run
 from mlflow.utils import mlflow_tags
@@ -39,7 +42,7 @@ class AleBartenderPerSeed:
                  parent_run_id: str,
                  tracking_metrics: List[str]):
         self.cfg = cfg
-        self.seed = seed
+        self.seed = self.seed_everything(seed=seed)
         self.experiment_id = experiment_id
         self.parent_run_id = parent_run_id
         self.tracking_metrics = tracking_metrics
@@ -320,3 +323,35 @@ class AleBartenderPerSeed:
                 logger.info(f"Hook ({hook.__class__.__name__}) caused the AL cycle to stop!")
                 return False
         return True
+
+    def seed_everything(self, seed: int) -> int:
+        max_seed_value = np.iinfo(np.uint32).max
+        min_seed_value = np.iinfo(np.uint32).min
+        if not (min_seed_value <= seed <= max_seed_value):
+            adjusted_seed = self.adjust_seed(seed, max_seed_value)
+            logger.warning(f"Seed '{seed}' is not in bounds, numpy accepts from {min_seed_value} to {max_seed_value}. "
+                           f"ALE adjust seed to {adjusted_seed}.")
+            seed = adjusted_seed
+
+        random.seed(seed)
+        np.random.seed(seed)
+        torch.manual_seed(seed)
+
+        return seed
+
+    def adjust_seed(self, number: int, max_value: int):
+        # Get the number of digits in the max_value
+        max_digits = len(str(max_value))
+
+        # Convert the number to string and trim its last digits to match the max_digits length
+        trimmed_number_str = str(number)[:max_digits]
+
+        # Convert back to integer
+        trimmed_number = int(trimmed_number_str)
+
+        # Ensure the trimmed number does not exceed the max_value
+        if trimmed_number > max_value:
+            trimmed_number = int(trimmed_number_str[:max_digits - 1])
+
+        return trimmed_number
+
