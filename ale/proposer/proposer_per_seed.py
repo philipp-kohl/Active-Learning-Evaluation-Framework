@@ -59,7 +59,7 @@ class AleBartenderPerSeed:
             self.corpus,
             # Path(self.cfg.trainer.config_path),
             # self.cfg.technical.use_gpu,
-            seed,
+            self.seed,
             labels,
             # self.cfg.data.nlp_task,
             # self.cfg.trainer.recreate_pipeline_each_run
@@ -73,7 +73,7 @@ class AleBartenderPerSeed:
             self.teacher: BaseTeacher = teacher_strategy_class(
                 corpus=self.corpus,
                 predictor=self.trainer,
-                seed=seed,
+                seed=self.seed,
                 labels=labels,
                 nlp_task=self.cfg.data.nlp_task,
                 aggregation_method=self.cfg.teacher.aggregation_method)
@@ -81,7 +81,7 @@ class AleBartenderPerSeed:
             self.teacher: BaseTeacher = teacher_strategy_class(
                 corpus=self.corpus,
                 predictor=self.trainer,
-                seed=seed,
+                seed=self.seed,
                 labels=labels,
                 nlp_task=self.cfg.data.nlp_task)
 
@@ -92,7 +92,7 @@ class AleBartenderPerSeed:
         self.initial_teacher: BaseTeacher = initial_teacher_strategy_class(
             corpus=self.corpus,
             predictor=self.trainer,
-            seed=seed,
+            seed=self.seed,
             labels=labels,
             nlp_task=self.cfg.data.nlp_task
         )
