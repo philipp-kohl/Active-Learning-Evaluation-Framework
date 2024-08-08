@@ -78,38 +78,7 @@ echo "docker run -it --network host --gpus \""device=$gpu"\" -v /home/pk9678e/re
 echo "Press Enter to continue..."
 read
 
-echo "Start evaluation experiments for teacher $teacher with aggregation method $aggregation."
-
-echo "Start variance test on CoNLL 2003 data."
-run_experiment "variance_test_conll" "./variance_test_conll_$teacher.log" 500 "conll2003" "$variance_seeds" "true"
-echo "Variance test on CoNLL 2003 data done."
-
-echo "Start variance test on MedMentions data."
-run_experiment "variance_test_medmentions" "./variance_test_medmentions_$teacher.log" 100 "medmentions" "$variance_seeds" "true"
-echo "Variance test on MedMentions data done."
-echo "Variance tests done."
-
 echo "Start performance tests."
-
-echo "Start performance test on AURC data."
-run_experiment "performance_test_aurc" "./performance_test_aurc_$teacher.log" 375 "aurc" "$performance_seeds" "false"
-echo "Performance test on AURC data done."
-
-echo "Start performance test on WNUT data."
-run_experiment "performance_test_wnut" "./performance_test_wnut_$teacher.log" 500 "wnut16" "$performance_seeds" "false"
-echo "Performance test on WNUT data done."
-
-echo "Start performance test on SCIERC data."
-run_experiment "performance_test_scierc" "./performance_test_scierc$teacher.log" 75 "scierc" "$performance_seeds" "false"
-echo "Performance test on SCIERC data done."
-
-echo "Start performance test on JNLPBA data."
-run_experiment "performance_test_jnlpba" "./performance_test_jnlpba$teacher.log" 375 "jnlpba" "$performance_seeds" "false"
-echo "Performance test on JNLPBA data done."
-
-echo "Start performance test on GermEval data."
-run_experiment "performance_test_germeval" "./performance_test_germeval$teacher.log" 500 "germeval_14" "$performance_seeds" "false"
-echo "Performance test on GermEval data done."
 
 echo "Start performance test on CoNLL 2003 data."
 run_experiment "performance_test_conll" "./performance_test_conll_$teacher.log" 500 "conll2003" "$performance_seeds" "false"
