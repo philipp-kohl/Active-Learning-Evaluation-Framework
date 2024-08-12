@@ -4,6 +4,8 @@ default_gpu=0
 default_experiment_name_suffix=""
 default_run_name_suffix="v1"
 
+dry_run=false
+
 docker_image=philippkohl/active-learning-evaluation-framework
 ale_version=2.4.2-dev
 tracking_url="http://localhost:5000"
@@ -50,17 +52,24 @@ run_experiment() {
     fi
 
     command="experiment run --send-mail --logging $log_file \"$ale_command\""
-    eval $command
+
+    if [ ${dry_run} = true ];
+    then
+      echo $command
+    else
+      eval $command
+    fi
 }
 
 # Parse the command-line arguments
-while getopts "t:a:g:e:r:" option; do
+while getopts "t:a:g:e:r:d" option; do
    case "$option" in
        t) teacher=${OPTARG};;
        a) aggregation=${OPTARG};;
        g) gpu=${OPTARG};;
        e) experiment_name_suffix=${OPTARG};;
        r) run_name_suffix=${OPTARG};;
+       d) dry_run=true;;
    esac
 done
 
@@ -68,6 +77,9 @@ if [ -z "$gpu" ]; then gpu=$default_gpu; else echo "GPU: $gpu"; fi;
 if [ -z "$experiment_name_suffix" ]; then experiment_name_suffix=$default_experiment_name_suffix; else echo "Experiment name suffix: $experiment_name_suffix"; fi;
 if [ -z "$run_name_suffix" ]; then run_name_suffix=$default_run_name_suffix; else echo "Run name suffix: $run_name_suffix"; fi;
 
+if [ ${dry_run} = true ]; then
+  echo "Start DRY run!"
+fi
 
 echo -e "Parameters for the experiment:\n Ale version: $docker_image:$ale_version, \n Tracking URL: $tracking_url, \n Batch size: $batch_size,\n Label smoothing: $label_smoothing, \n Early stopping delta: $early_stopping_delta, \n Early stopping patience: $early_stopping_patience"
 

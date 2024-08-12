@@ -4,6 +4,8 @@ default_gpu=0
 default_experiment_name_suffix=""
 default_run_name_suffix="v1"
 
+dry_run=false
+
 docker_image=philippkohl/active-learning-evaluation-framework
 ale_version=2.4.2-dev
 tracking_url="http://localhost:5000"
@@ -50,17 +52,24 @@ run_experiment() {
     fi
 
     command="experiment run --send-mail --logging $log_file \"$ale_command\""
-    eval $command
+
+    if [ ${dry_run} = true ];
+    then
+      echo $command
+    else
+      eval $command
+    fi
 }
 
 # Parse the command-line arguments
-while getopts "t:a:g:e:r:" option; do
+while getopts "t:a:g:e:r:d" option; do
    case "$option" in
        t) teacher=${OPTARG};;
        a) aggregation=${OPTARG};;
        g) gpu=${OPTARG};;
        e) experiment_name_suffix=${OPTARG};;
        r) run_name_suffix=${OPTARG};;
+       d) dry_run=true;;
    esac
 done
 
@@ -68,6 +77,9 @@ if [ -z "$gpu" ]; then gpu=$default_gpu; else echo "GPU: $gpu"; fi;
 if [ -z "$experiment_name_suffix" ]; then experiment_name_suffix=$default_experiment_name_suffix; else echo "Experiment name suffix: $experiment_name_suffix"; fi;
 if [ -z "$run_name_suffix" ]; then run_name_suffix=$default_run_name_suffix; else echo "Run name suffix: $run_name_suffix"; fi;
 
+if [ ${dry_run} = true ]; then
+  echo "Start DRY run!"
+fi
 
 echo -e "Parameters for the experiment:\n Ale version: $docker_image:$ale_version, \n Tracking URL: $tracking_url, \n Batch size: $batch_size,\n Label smoothing: $label_smoothing, \n Early stopping delta: $early_stopping_delta, \n Early stopping patience: $early_stopping_patience"
 
@@ -100,15 +112,15 @@ run_experiment "performance_test_wnut" "./performance_test_wnut_$teacher.log" 50
 echo "Performance test on WNUT data done."
 
 echo "Start performance test on SCIERC data."
-run_experiment "performance_test_scierc" "./performance_test_scierc$teacher.log" 75 "scierc" "$performance_seeds" "false"
+run_experiment "performance_test_scierc" "./performance_test_scierc_$teacher.log" 75 "scierc" "$performance_seeds" "false"
 echo "Performance test on SCIERC data done."
 
 echo "Start performance test on JNLPBA data."
-run_experiment "performance_test_jnlpba" "./performance_test_jnlpba$teacher.log" 375 "jnlpba" "$performance_seeds" "false"
+run_experiment "performance_test_jnlpba" "./performance_test_jnlpba_$teacher.log" 375 "jnlpba" "$performance_seeds" "false"
 echo "Performance test on JNLPBA data done."
 
 echo "Start performance test on GermEval data."
-run_experiment "performance_test_germeval" "./performance_test_germeval$teacher.log" 500 "germeval_14" "$performance_seeds" "false"
+run_experiment "performance_test_germeval" "./performance_test_germeval_$teacher.log" 500 "germeval_14" "$performance_seeds" "false"
 echo "Performance test on GermEval data done."
 
 echo "Start performance test on CoNLL 2003 data."
