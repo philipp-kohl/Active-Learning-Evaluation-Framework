@@ -269,16 +269,24 @@ class AleBartenderPerSeed:
 
         detected_step_size = len(new_data_points)
         if corpus.do_i_have_to_annotate() and \
-                detected_step_size != self.cfg.experiment.step_size:
+                detected_step_size != step_size:
             error_message = f"Step size deviation detected: " \
-                            f"Actual '{detected_step_size}', expected '{self.cfg.experiment.step_size}' " \
+                            f"Actual '{detected_step_size}', expected '{step_size}' " \
                             f"(Corpus not exhausted!)"
             if not self.cfg.technical.adjust_wrong_step_size:
                 raise ValueError(error_message)
             else:
                 logger.warning(error_message)
-                logger.warning(f"Take the first {self.cfg.experiment.step_size} points from the {detected_step_size}!")
-                new_data_points = new_data_points[:self.cfg.experiment.step_size]
+                if detected_step_size > step_size:
+                    logger.warning(f"Take the first {step_size} points from the {detected_step_size}!")
+                    new_data_points = new_data_points[:step_size]
+                else:
+                    logger.warning(
+                        f"Too few datapoints selected: {detected_step_size}/{step_size}! Adding random ones.")
+                    remaining_pot_ids = [idx for idx in potential_ids if idx not in new_data_points]
+                    number_of_data_points_needed = step_size - detected_step_size
+                    additional_data_points = random.sample(remaining_pot_ids, number_of_data_points_needed)
+                    new_data_points.extend(additional_data_points)
 
         corpus.add_increment(new_data_points)
 
