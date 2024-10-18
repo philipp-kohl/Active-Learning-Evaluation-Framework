@@ -7,15 +7,15 @@ from mlflow.artifacts import download_artifacts
 
 from ale.config import AppConfig
 from ale.mlflowutils.ale_mlflow_artifact_files import AleArtifactFiles
-from ale.pipeline.pipeline_component import PipelineComponent
 from ale.pipeline.components import PipelineComponents
+from ale.pipeline.pipeline_component import PipelineComponent
 from ale.proposer.proposer import AleBartender
 
 
 class ProposeDataComponent(PipelineComponent):
     @staticmethod
-    def propose_data(data_converted: Path, cfg: AppConfig, labels: List[Any]):
-        proposer = AleBartender(data_converted, cfg, labels)
+    def propose_data(data_converted: Path, data_raw: Path, cfg: AppConfig, labels: List[Any]):
+        proposer = AleBartender(data_converted, data_raw, cfg, labels)
         proposer.run()
 
     def prepare_run(self):
@@ -44,6 +44,7 @@ class ProposeDataComponent(PipelineComponent):
         self.store_function(
             ProposeDataComponent.propose_data,
             data_converted=Path(data_converted_uri),
+            data_raw=Path(data_raw_uri),
             cfg=self.pipeline_storage.cfg,
             labels=labels
         )

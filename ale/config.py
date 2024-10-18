@@ -1,59 +1,97 @@
 from enum import Enum
 from typing import Optional, List
-
-from hydra.core.config_store import ConfigStore
-from pydantic import root_validator
-from pydantic.dataclasses import dataclass
+from pydantic import BaseModel, model_validator
 
 
-@dataclass
-class MlFlowConfig:
+class MlFlowConfig(BaseModel):
     url: str
     experiment_name: str
+    max_retries: int
+    timeout: int
+    backoff_factor: int
+    backoff_jitter: float
     run_name: Optional[str] = None
     git_hash: Optional[str] = None
     user: Optional[str] = None
     source_name: Optional[str] = None
 
 
-
-@dataclass
-class TrainerConfig:
+class TrainerConfig(BaseModel):
     trainer_name: str
-    config_path: str
-    language: str
+    huggingface_model: str
     corpus_manager: str
-    recreate_pipeline_each_run: bool
+    batch_size: int
+    learning_rate: float
+    weight_decay: float
+    max_epochs: int
+    num_workers: int
+    device: str
+    early_stopping_delta: float
+    early_stopping_patience: int
+    label_smoothing: float
+    model: str
+    precision: Optional[int] = None
+    accumulate_grad_batches: Optional[int] = None
+    check_val_every_n_epoch: Optional[int] = None
+    freeze_layers: Optional[List[str]] = None
 
 
-@dataclass
-class TeacherConfig:
+class AggregationMethod(str, Enum):
+    AVERAGE = "AVG"
+    STD = "STD"
+    MAXIMUM = "MAX"
+    MINIMUM = "MIN"
+    SUM = "SUM"
+
+
+class TeacherConfig(BaseModel):
     strategy: str
-    budget: int
+    sampling_budget: int
+    aggregation_method: Optional[AggregationMethod] = None
 
 
-@dataclass
-class Experiment:
+class Experiment(BaseModel):
     step_size: int
-    initial_data_ratio: float
+    initial_data_size: float
+    """
+    Value between 0 and 1 is treated as ratio.
+    Value > 1 is treated as nominal value.
+    """
     initial_data_strategy: str
     tracking_metrics: List[str]
     seeds: List[int]
+    annotation_budget: int
+    assess_data_bias: bool
+    assess_data_bias_eval_freq: int
+    assess_overconfidence: bool
+    assess_overconfidence_eval_freq: int
+    stop_after_n_al_cycles: int
+    """
+    value < 1 is treated as no stopping.
+    value > 0 is treated as stopping.
+    """
+    early_stopping_threshold: float
+    """
+    Defines the threshold for the optimization metric
+    """
+    early_stopping_n_iter: int
+    """
+    Number of consecutive iterations the threshold is reached before stopping.
+    """
 
 
-@dataclass
-class TechnicalConfig:
+class TechnicalConfig(BaseModel):
     use_gpu: int
     number_threads: int
     adjust_wrong_step_size: bool
+
 
 class NLPTask(str, Enum):
     CLS = "CLS"
     NER = "NER"
 
 
-@dataclass
-class DataConfig:
+class DataConfig(BaseModel):
     data_dir: str
     train_file: str
     test_file: str
@@ -64,14 +102,12 @@ class DataConfig:
     label_column: Optional[str] = "label"
 
 
-@dataclass
-class ConverterConfig:
+class ConverterConfig(BaseModel):
     converter_class: str
     target_format: str
 
 
-@dataclass
-class AppConfig:
+class AppConfig(BaseModel):
     data: DataConfig
     experiment: Experiment
     mlflow: MlFlowConfig
@@ -80,17 +116,13 @@ class AppConfig:
     converter: ConverterConfig
     technical: TechnicalConfig
 
-    @root_validator(pre=True)
+    @model_validator(mode="before")
     def check_configuration(cls, values):
         teacher: TeacherConfig = values.get("teacher")
         experiment: Experiment = values.get("experiment")
 
-        if teacher.budget < experiment.step_size and teacher.budget != -1:
-            raise ValueError(f"Teacher.budget ({teacher.budget}) must be >= experiment.step_size ({experiment.step_size})")
+        if teacher.sampling_budget < experiment.step_size and teacher.sampling_budget != -1:
+            raise ValueError(
+                f"Teacher.budget ({teacher.sampling_budget}) must be >= experiment.step_size ({experiment.step_size})")
 
         return values
-
-
-def register_configs():
-    cs = ConfigStore.instance()
-    cs.store(name="config", node=AppConfig)

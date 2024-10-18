@@ -1,5 +1,3 @@
-from mlflow import ActiveRun
-
 from ale.data.data import load_local_data
 from ale.pipeline.pipeline_component import PipelineComponent
 

@@ -1,27 +1,26 @@
-from mlflow.artifacts import download_artifacts
-
-import ale.mlflowutils.mlflow_utils as utils
-import tempfile
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import List, Union, Any, Dict
 
-import mlflow
 import srsly
+from mlflow.artifacts import download_artifacts
 from mlflow.entities import Run
-import ale.mlflowutils.mlflow_utils as mlflow_utils
 
-from ale.config import TrainerConfig
+import ale.mlflowutils.mlflow_utils as mlflow_utils
+from ale.config import AppConfig
 
 
 class Corpus(ABC):
 
     ARTIFACT_FILE = "relevant_ids.json"
 
-    def __init__(self, path: Union[str, Path], cfg: TrainerConfig):
-        self.train_path = path
+    def __init__(self, cfg: AppConfig, data_dir: Union[str, Path]):
         self.cfg = cfg
-        self.relevant_ids = []
+        self.data_dir = data_dir
+        self.relevant_ids: List[int] = []
+
+    def get_relevant_ids(self) -> List[int]:
+        return self.relevant_ids
 
     def add_increment(self, ids: List[int]):
         same_ids = set(ids).intersection(set(self.relevant_ids))
@@ -65,3 +64,10 @@ class Corpus(ABC):
 
     def get_text_by_id(self, idx: int) -> str:
         return self.get_text_by_ids([idx])[0]
+    
+    def get_annotated_data_points_ids(self) -> List[int]:
+        return self.relevant_ids
+    
+    @abstractmethod
+    def get_all_tokens(self) -> Dict[int, List[str]]:
+        pass

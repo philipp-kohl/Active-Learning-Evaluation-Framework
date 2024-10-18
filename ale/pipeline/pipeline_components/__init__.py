@@ -1,0 +1,1 @@
+from ale.pipeline.pipeline_components.pass_through_component import PassThroughComponent

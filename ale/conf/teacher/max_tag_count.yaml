@@ -1,0 +1,3 @@
+strategy: max-tag-count
+sampling_budget: 13200
+aggregation_method: SUM

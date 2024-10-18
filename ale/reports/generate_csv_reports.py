@@ -4,7 +4,6 @@ import click
 import pandas as pd
 import plotly.graph_objs as go
 
-
 line_style = ["dash", "dot", "dashdot"]
 
 INPUT_PATH = "output_csvs/trec_coarse/"

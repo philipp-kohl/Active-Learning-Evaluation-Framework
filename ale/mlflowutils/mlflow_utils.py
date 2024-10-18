@@ -2,14 +2,18 @@
 Utils for usage with mlflow.
 """
 import logging
+import os
+import shutil
 import subprocess
 import tempfile
 import threading
 import time
+from datetime import datetime
 from pathlib import Path
-from typing import Dict, Callable, Optional, Any, Type, List
+from typing import Dict, Callable, Optional, Any, List, Union
 
 import mlflow
+import pandas as pd
 import srsly
 from mlflow import MlflowClient
 from mlflow.artifacts import download_artifacts
@@ -131,7 +135,7 @@ def walk_params_from_omegaconf_dict(
     if function is not None:
         for param_name, param_value in global_dict.items():
             to_log = param_value
-            if len(str(to_log)) > 500: # TODO log each list entry?
+            if len(str(to_log)) > 500:  # TODO log each list entry?
                 if error_on_long_param:
                     raise ValueError(f"Param value '{to_log}' for '{param_name}' too long!")
 
@@ -158,15 +162,17 @@ def log_param(run: Run, key: str, value: Any):
 def log_artifact(run: Run, local_path: str, artifact_path: str = None):
     MlflowClient().log_artifact(run.info.run_id, local_path=local_path, artifact_path=artifact_path)
 
+
 def load_artifact(run: Run, path: str, dst_path: str = None) -> str:
     return download_artifacts(run_id=run.info.run_id, artifact_path=path, dst_path=dst_path)
 
 
-
 lock = threading.Lock()
+
 
 def mark_run_as_finished(run: Run, run_status: RunStatus):
     MlflowClient().set_terminated(run.info.run_id, RunStatus.to_string(run_status))
+
 
 def mark_run_as_running(run: Run):
     MlflowClient().set_terminated(run.info.run_id, RunStatus.to_string(RunStatus.RUNNING))
@@ -178,6 +184,7 @@ def log_dict_as_artifact(run: Run, value: Dict, artifact_file: str):
         srsly.write_json(path, value)
         log_artifact(run, str(path.resolve()))
 
+
 def get_or_create_experiment(experiment_seed_name: str) -> str:
     with lock:
         client = MlflowClient()
@@ -186,6 +193,7 @@ def get_or_create_experiment(experiment_seed_name: str) -> str:
             return client.create_experiment(name=experiment_seed_name)
         else:
             return experiment.experiment_id
+
 
 def get_all_child_runs(experiment_id: str, run_id: str, run_status: RunStatus = RunStatus.RUNNING) -> List[Run]:
     filter_string = f"attributes.status = '{RunStatus.to_string(run_status)}' " \
@@ -206,3 +214,80 @@ def get_all_child_runs(experiment_id: str, run_id: str, run_status: RunStatus = 
         all_runs.extend(child_runs)
 
     return all_runs
+
+
+def store_bar_plot(distribution: Dict[str, float], mlflow_run: Run, artifact_name: str,
+                   columns: List[str]) -> None:
+    import plotly.express as px
+
+    sorted_label_data = sorted(distribution.items(), key=lambda x: x[0])
+    df = pd.DataFrame(sorted_label_data, columns=columns)
+    fig = px.bar(df, x=columns[0], y=columns[1], title=artifact_name)
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        # Define file paths within the temporary directory
+        html_path = f'{temp_dir}/bar_plot.html'
+        csv_path = f'{temp_dir}/data.csv'
+
+        # Generate and save the HTML plot
+        fig.write_html(html_path)
+        log_artifact(mlflow_run, html_path, artifact_path=artifact_name)
+
+        # Save the DataFrame to a CSV file
+        df.to_csv(csv_path, index=False)
+        log_artifact(mlflow_run, csv_path, artifact_path=artifact_name)
+
+
+def store_csv(data_frame: pd.DataFrame, mlflow_run: Run, artifact_name: str):
+    with tempfile.TemporaryDirectory() as temp_dir:
+        csv_path = f'{temp_dir}/data.csv'
+        # Save the DataFrame to a CSV file
+        data_frame.to_csv(csv_path, index=False)
+        log_artifact(mlflow_run, csv_path, artifact_path=artifact_name)
+
+
+def store_histogram(data: List[Union[int, float]], mlflow_run: Run, artifact_name: str,
+                    columns: List[str], bins=10) -> None:
+    data = pd.DataFrame({
+        columns[0]: pd.Series(data)
+    })
+    import plotly.express as px
+    # Create a histogram using Plotly
+    fig = px.histogram(data, x=columns[0], nbins=bins, title='Histogram')
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        histogram_html_path = f'{temp_dir}/histogram.html'
+        fig.write_html(histogram_html_path)
+
+        log_artifact(mlflow_run, histogram_html_path, artifact_path=artifact_name)
+
+
+def store_log_file_to_mlflow(file: str, run_id: str):
+    root_run = _find_root_run_id(run_id)
+
+    new_file_name = f"{datetime.now().isoformat()}.log"
+
+    with tempfile.TemporaryDirectory() as temp_directory:
+        # Construct the full path for the new file in the temporary directory
+        new_file_path = os.path.join(temp_directory, new_file_name)
+        # Copy the source file to the new location with the new name
+        shutil.copy(file, new_file_path)
+
+        log_artifact(root_run, new_file_path, artifact_path="logs")
+
+
+def _find_root_run_id(current_run_id: str) -> Run:
+    """
+    Recursively finds the root parent run ID of a given MLflow run.
+
+    :param current_run_id: The run ID of the current MLflow run.
+    :return: The run ID of the root parent run.
+    """
+    parent_run = mlflow.get_parent_run(current_run_id)
+
+    # Base case: If there's no parent, this run is the root
+    if not parent_run:
+        return mlflow.get_run(current_run_id)
+    else:
+        # Recursive case: Keep looking for the parent
+        return _find_root_run_id(parent_run.info.run_id)

@@ -1,3 +1,5 @@
+lightning_logs/
+
 # Spacy binary data
 **/*.spacy
 **/*.pdf
@@ -275,3 +277,7 @@ outputs/
 /mlruns.db
 /mlartifacts/
 /data/conll2003/
+/tb_logs/
+/ml-runs/
+/pt_lightning/
+/data/conll2003_small/

@@ -3,9 +3,10 @@ from typing import List, Optional
 
 import click
 import numpy as np
-from mlflow import MlflowClient
 import plotly.graph_objs as go
 import plotly.io as pio
+from mlflow import MlflowClient
+
 pio.kaleido.scope.mathjax = None
 
 

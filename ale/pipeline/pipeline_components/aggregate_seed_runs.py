@@ -1,18 +1,16 @@
-import ast
 import logging
 from collections import defaultdict
 from typing import List
 
 import mlflow
 import pandas as pd
+import plotly.graph_objs as go
 from mlflow.entities import RunStatus, ViewType, Run
 from mlflow.utils.mlflow_tags import MLFLOW_PARENT_RUN_ID
 from pandas import DataFrame
 
-from ale.pipeline.pipeline_component import PipelineComponent
 from ale.pipeline.components import PipelineComponents
-
-import plotly.graph_objs as go
+from ale.pipeline.pipeline_component import PipelineComponent
 
 logger = logging.getLogger(__name__)
 

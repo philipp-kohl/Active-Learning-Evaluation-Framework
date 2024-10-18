@@ -1,0 +1,22 @@
+trainer_name: pytorch-lightning-trainer
+corpus_manager: pytorch-lightning-corpus
+huggingface_model: "FacebookAI/roberta-large"
+batch_size: 32
+learning_rate: 2e-5
+weight_decay: 0.01
+max_epochs: 50
+num_workers: 4
+device: gpu
+early_stopping_delta: 0.0005
+early_stopping_patience: 5
+label_smoothing: 0
+precision: 16
+accumulate_grad_batches: 4
+check_val_every_n_epoch: 10
+model: "trf_ffn"
+freeze_layers:
+  - "model.embeddings.word_embeddings.weight"
+  - "model.embeddings.position_embeddings.weight"
+  - "model.embeddings.token_type_embeddings.weight"
+  - "model.embeddings.LayerNorm.weight"
+  - "model.embeddings.LayerNorm.bias"

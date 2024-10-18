@@ -1,13 +1,15 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Union
+from typing import Dict, Mapping
 
 from mlflow import ActiveRun
 from mlflow.entities import Run
+from torch.utils.data import DataLoader
 
 from ale.corpus.corpus import Corpus
 from ale.trainer.prediction_result import PredictionResult
 
-MetricsType = Dict[str, Union[str, float, "MetricsType"]]
+# MetricsType = Dict[str, Union[str, float, "MetricsType"]]
+MetricsType = Mapping[str, float]
 
 
 class BaseTrainer(ABC):
@@ -35,17 +37,7 @@ class BaseTrainer(ABC):
     def delete_artifacts(self, run: Run):
         pass
 
-class Predictor(ABC):
-    """
-    Mixin for all prediction trainers to implement the predict method.
-    """
-
     @abstractmethod
-    def predict(self, docs: Dict[int, str]) -> Dict[int, PredictionResult]:
-        ...
+    def predict_with_known_gold_labels(self, data_loader: DataLoader) -> Dict[int, PredictionResult]:
+        pass
 
-
-class PredictionTrainer(BaseTrainer, Predictor):
-    """
-    Trainer for prediction tasks.
-    """

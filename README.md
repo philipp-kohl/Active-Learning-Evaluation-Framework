@@ -16,7 +16,7 @@ Provides features:
 - **Reproducible**: Tracking parameters, models, git revision enables reproducible research
 - Simulation with **different seeds**: to avoid "lucky punches" and inspect model's and strategy's stability
 - Arbitrary usage of **datasets**
-- Arbitrary usage of **ML/DL framework**: we inspect the NLP domain, and therefore we provide a [spaCy](https://spacy.io/) implementation.
+- Arbitrary usage of **ML/DL framework**: we provide a [PyTorch Lightning](https://lightning.ai/docs/pytorch/stable/) implementation.
 - Experiment with **cold start phase**: analog to the active learning strategy, the framework enables researcher to test
   strategies to select the first data increment.
 - **Parallel computation**: different experiments can be run in parallel and report the results to a central MLFlow instance.
@@ -26,15 +26,13 @@ Provides features:
 
 Prerequisite:
 - [git](https://git-scm.com/)
+- [poetry](https://python-poetry.org/docs/main/#installing-with-pipx)
 - [docker](https://www.docker.com/)
 
 Set up dependencies:
 
 ```
-conda env create -f ale-cuda.yaml
-conda activate ale-cuda
-poetry config virtualenvs.create false --local
-poetry install
+source ./dev-setup.sh ale-cuda.yaml
 ```
 
 If poetry complains about not finding any specific version, try `poetry update`.
@@ -45,7 +43,7 @@ If poetry complains about not finding any specific version, try `poetry update`.
 
 2. Test
 ```bash
-docker run --rm --gpus all nvidia/cuda:11.6.2-base-ubuntu20.04 nvidia-smi
+docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi
 ```
 
 ### Load Data
@@ -76,7 +74,7 @@ docker compose -f docker-compose.mlflow.yaml up --build
 2. Build your docker image:
 
 ```bash 
-docker build -f DockerfileCUDA -t ale-cuda .
+docker build -f DockerfileCUDA -t ale-cuda:1.6 .
 ```
 
 3. Start your experiment:
@@ -86,11 +84,16 @@ Please replace `</absolute/path/to/your/data/folder>` with your data folder path
 docker run -it --network host \
 --gpus '"device=0"' \
 -v </absolute/path/to/your/data/folder>:/app/data/ \
-ale-cuda \
+ale-cuda:1.0 \
 conda run --no-capture-output -n ale-cuda python ale/main.py teacher=randomizer mlflow.experiment_name=randomizer mlflow.url=http://localhost:5000
 ```
 
-4. Shutdown mlflow services:
+4. Evaluate a teacher: If you want to use our pre-defined experiment series for evaluating a teacher, please run:
+```
+./evaluation_scripts/evaluation_test.sh -t <your_teacher> -a <aggregation_method> -g <gpu_number>
+```
+
+5. Shutdown mlflow services:
     1. Without deleting volumes
        ```bash
        docker compose -f docker-compose.mlflow.yaml down
@@ -132,6 +135,9 @@ The configuration will be instantiated into python objects (see ale/conf/).
 |              | config_path           | Path to the config path relative to the project root. The config will be packaged into the docker image.                                                                                                                                                                               |
 |              | corpus_manager        | Corpus class registered via CorpusRegistry.register(''name'')`.                                                                                                                                                                                                                        |
 |              | language              | Language abbreviation (en, de, etc. )                                                                                                                                                                                                                                                  |
+## Run tests with pytest
+To run all tests in the repository, run `pytest .` in the root directory. 
+If you want to run just one test, use `python -m pytest tests/<test_name>.py`
 
 ## Citation
 If you find this code useful in your research, please cite:

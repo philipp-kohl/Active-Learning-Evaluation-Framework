@@ -1,7 +1,4 @@
-import pkgutil
-
-__all__ = []
-for loader, module_name, is_pkg in pkgutil.walk_packages(__path__):
-    __all__.append(module_name)
-    _module = loader.find_module(module_name).load_module(module_name)
-    globals()[module_name] = _module
+from ale.trainer.dummy_trainer import DummyTrainer
+from ale.trainer.lightning.pytorch_lightning_trainer import PyTorchLightningTrainer
+from ale.trainer.lightning.nn_models.trf_ffn_model import TransformerFfnLightning
+from ale.trainer.lightning.nn_models.trf_crf_model import TransformerCrfLightning

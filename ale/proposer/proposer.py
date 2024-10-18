@@ -1,37 +1,27 @@
-import importlib
-from concurrent.futures.thread import ThreadPoolExecutor
-
-from mlflow import MlflowClient
-from mlflow.utils import mlflow_tags
-
-importlib.import_module("ale.teacher")
-importlib.import_module("ale.trainer")
-importlib.import_module("ale.corpus")
-
-from ale.proposer.proposer_per_seed import AleBartenderPerSeed
-import ast
 import logging
+from concurrent.futures.thread import ThreadPoolExecutor
 from pathlib import Path
 from typing import List, Any, Dict
 
 import mlflow
+from mlflow import MlflowClient
 from mlflow.entities import RunStatus, Run
-
-from ale.config import AppConfig
+from mlflow.utils import mlflow_tags
 
 import ale.mlflowutils.mlflow_utils as utils
+from ale.config import AppConfig
+from ale.proposer.proposer_per_seed import AleBartenderPerSeed
 
 logger = logging.getLogger(__name__)
 
 
 class AleBartender:
-    def __init__(self, converted_data: Path, cfg: AppConfig, labels: List[Any]):
+    def __init__(self, converted_data: Path, raw_data: Path, cfg: AppConfig, labels: List[Any]):
         self.cfg = cfg
         self.labels = labels
-        target_format = cfg.converter.target_format
-        self.train_file_converted = converted_data / f"train.{target_format}"
-        self.dev_file_converted = converted_data / f"dev.{target_format}"
-        self.test_file_converted = converted_data / f"test.{target_format}"
+        self.converted_data_dir = converted_data
+        self.train_file_raw = raw_data / "train.jsonl"
+        self.dev_file_raw = raw_data / "dev.jsonl"
 
         self.seeds = self.cfg.experiment.seeds
 
@@ -51,10 +41,17 @@ class AleBartender:
         if number_threads == -1:
             number_threads = len(self.seeds)
 
-        logger.info(f"Starting thread pool with {number_threads} threads to run {len(self.seeds)} seeds.")
-        executor = ThreadPoolExecutor(max_workers=number_threads)
-        run_ids = [run_id for run_id in executor.map(self.resume_or_start_seed_run, self.seeds)]
-        executor.shutdown(wait=True)
+        if number_threads == 1:
+            logger.info(f"Process seed runs sequentially")
+            run_ids = []
+            for seed in self.seeds:
+                run_id = self.resume_or_start_seed_run(seed)
+                run_ids.append(run_id)
+        else:
+            logger.info(f"Starting thread pool with {number_threads} threads to run {len(self.seeds)} seeds.")
+            executor = ThreadPoolExecutor(max_workers=number_threads)
+            run_ids = [run_id for run_id in executor.map(self.resume_or_start_seed_run, self.seeds)]
+            executor.shutdown(wait=True)
 
         logger.info(f"All seed runs finished. Run ids to aggregate: {run_ids}")
 
@@ -113,9 +110,9 @@ class AleBartender:
             utils.mark_run_as_running(run)
             seed_simulator = AleBartenderPerSeed(self.cfg,
                                                  seed,
-                                                 self.train_file_converted,
-                                                 self.dev_file_converted,
-                                                 self.test_file_converted,
+                                                 self.converted_data_dir,
+                                                 self.train_file_raw,
+                                                 self.dev_file_raw,
                                                  self.labels,
                                                  run.info.experiment_id,
                                                  run.info.run_id,
@@ -125,6 +122,9 @@ class AleBartender:
         except Exception as e:
             utils.mark_run_as_finished(run, RunStatus.FAILED)
             raise e
+        finally:
+            utils.store_log_file_to_mlflow("main.log", run.info.run_id)
+
         return run
 
 
@@ -148,9 +148,9 @@ class AleBartender:
             )
             seed_simulator = AleBartenderPerSeed(self.cfg,
                                                  seed,
-                                                 self.train_file_converted,
-                                                 self.dev_file_converted,
-                                                 self.test_file_converted,
+                                                 self.converted_data_dir,
+                                                 self.train_file_raw,
+                                                 self.dev_file_raw,
                                                  self.labels,
                                                  experiment_seed_id,
                                                  run.info.run_id,
@@ -160,4 +160,6 @@ class AleBartender:
         except Exception as e:
             utils.mark_run_as_finished(run, RunStatus.FAILED)
             raise e
+        finally:
+            utils.store_log_file_to_mlflow("main.log", run.info.run_id)
         return run

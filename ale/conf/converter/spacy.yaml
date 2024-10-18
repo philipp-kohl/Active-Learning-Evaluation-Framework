@@ -1,2 +1,0 @@
-converter_class: jsonl_to_docbin
-target_format: spacy

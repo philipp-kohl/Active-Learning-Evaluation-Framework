@@ -14,10 +14,10 @@ from ale.config import AppConfig
 from ale.mlflowutils.mlflow_utils import (
     get_git_revision_hash,
     _already_ran,
-    walk_params_from_omegaconf_dict,
+    walk_params_from_omegaconf_dict, store_log_file_to_mlflow,
 )
-from ale.pipeline.pipeline_component import PipelineComponent
 from ale.pipeline.components import PipelineComponents
+from ale.pipeline.pipeline_component import PipelineComponent
 from ale.pipeline.pipeline_storage import PipelineStorage
 
 logger = logging.getLogger(__name__)
@@ -77,6 +77,10 @@ class MLFlowPipeline:
             for run in all_run_infos:
                 logger.error(f"Mark run ({run.info.run_id}) as failed.")
                 client.set_terminated(run.info.run_id, RunStatus.to_string(RunStatus.FAILED))
+
+                if mlflow.get_parent_run(run.info.run_id) is None:
+                    logger.info(f"Run ({run.info.run_id}) seems to be the parent run. Let's try to log the log file")
+                    store_log_file_to_mlflow("main.log", run.info.run_id)
 
             sys.exit(0)
 

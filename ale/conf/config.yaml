@@ -1,10 +1,10 @@
 defaults:
-  - data: trec_coarse
-  - teacher: k_means
-  - trainer: spacy_cls
+  - data: onto_notes5
+  - teacher: k_means_margin
+  - trainer: pytorch_lightning
   - mlflow: localhost
-  - experiment: cls
-  - converter: spacy
+  - experiment: ner
+  - converter: pass_through
   - technical: default
   - override hydra/job_logging: custom
   - override hydra/hydra_logging: custom

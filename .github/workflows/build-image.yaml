@@ -1,4 +1,4 @@
-name: Create New Lambda Layer
+name: Create New Docker Image
 
 on:
   workflow_dispatch:
@@ -7,8 +7,42 @@ jobs:
   build-docker-image:
     runs-on: ubuntu-latest
     steps:
+      - name: Check disk space
+        run: df . -h
+      - name: Remove unnecessary files
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/.ghcup
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+      - name: Check disk space
+        run: df . -h
+      - name: Install pipx
+        run: sudo apt-get install -y pipx
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+      - name: Install Poetry
+        run: pipx install poetry
+      - name: Get project version
+        id: get_version
+        run: echo "PROJECT_VERSION=$(poetry version -s)" >> $GITHUB_ENV
+      - name: Set version
+        id: set_version
+        run: |
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            VERSION=${{ env.PROJECT_VERSION }}
+          else
+            BRANCH_NAME=$(echo "${{ github.ref_name }}" | tr '/' '-')
+            VERSION="${{ env.PROJECT_VERSION }}-${BRANCH_NAME}"
+          fi
+          echo "version=$VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -18,8 +52,23 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
+      - name: Build and push for main
         uses: docker/build-push-action@v6
+        if: github.ref == 'refs/heads/main'
         with:
           push: true
-          tags: philippkohl/active-learning-evaluation-framework:latest
+          file: DockerfileCUDA
+          context: .
+          tags: philippkohl/active-learning-evaluation-framework:latest,philippkohl/active-learning-evaluation-framework:${{ steps.set_version.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push for other branches
+        uses: docker/build-push-action@v6
+        if: github.ref != 'refs/heads/main'
+        with:
+          push: true
+          file: DockerfileCUDA
+          context: .
+          tags: philippkohl/active-learning-evaluation-framework:${{ steps.set_version.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
